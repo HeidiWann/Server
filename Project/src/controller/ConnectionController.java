@@ -1,7 +1,8 @@
 package controller;
 
 
-import module.User;
+
+import model.User;
 import view.ConnectionListerner;
 
 import java.io.IOException;
