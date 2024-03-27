@@ -7,8 +7,10 @@ import java.util.List;
 public class RecipeController {
     private Recipe recipe;
     private List<Recipe> idUser;
+    private DatabaseController dbController;
 
-    public RecipeController() {
+    public RecipeController(DatabaseController dbController) {
+        this.dbController = dbController;
     }
     public void createRecipe() {
     }
@@ -24,3 +26,5 @@ public class RecipeController {
     }
 
 }
+
+

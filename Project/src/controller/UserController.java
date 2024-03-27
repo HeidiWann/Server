@@ -2,10 +2,16 @@ package controller;
 
 import model.User;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class UserController {
     private User user;
-    public UserController() {
+    private DatabaseController dbController;
 
+    public UserController(DatabaseController dbController) {
+        this.dbController = dbController;
     }
     public void login() {
     }
@@ -15,3 +21,5 @@ public class UserController {
     public void updateProfile() {
     }
 }
+
+
