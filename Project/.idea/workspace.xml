@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConnectionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/postgresql-42.7.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/DatabaseConnection.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,9 +22,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2eESi7jZh3ZLZ9Fd7DHdqkxtRQX" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -28,12 +35,91 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "last_opened_file_path": "C:/Users/Heidi/IdealProdjects/NyTester/latest/PG35_Server",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "Application.DatabaseConnection.executor": "Run",
+    "Application.Main.executor": "Run",
+    "JAR Application.postgresql-42.7.3.jar (1).executor": "Run",
+    "JAR Application.postgresql-42.7.3.jar (2).executor": "Run",
+    "JAR Application.postgresql-42.7.3.jar.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Heidi/OneDrive/Dokument/GitHub/GitHubSchool/Server/Project/src/postgresql-42.7.3.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.testRunning",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Heidi\OneDrive\Dokument\GitHub\GitHubSchool\Server\Project\src\view" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Heidi\OneDrive\Dokument\GitHub\GitHubSchool\Server\Project\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/.env" />
+      </option>
+      <option name="MAIN_CLASS_NAME" value="controller.Main" />
+      <module name="Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="postgresql-42.7.3.jar (1)" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/lib/postgresql-42.7.3.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="postgresql-42.7.3.jar (2)" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/src/postgresql-42.7.3.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="postgresql-42.7.3.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/src/lib/postgresql-42.7.3.jar" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JAR Application.postgresql-42.7.3.jar" />
+      <item itemvalue="JAR Application.postgresql-42.7.3.jar (1)" />
+      <item itemvalue="JAR Application.postgresql-42.7.3.jar (2)" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.postgresql-42.7.3.jar (2)" />
+        <item itemvalue="JAR Application.postgresql-42.7.3.jar (1)" />
+        <item itemvalue="JAR Application.postgresql-42.7.3.jar" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="" />
+      <created>1711533141577</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711533141577</updated>
+      <workItem from="1711533142656" duration="14297000" />
+    </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
