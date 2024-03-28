@@ -7,6 +7,7 @@ import view.ConnectionListerner;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.*;
 
@@ -26,11 +27,16 @@ public class ConnectionController {
     }
 
 
-    public void newConnection(Socket socket) {
+    public void newConnection(Socket socket) throws IOException {
         ClientHandler newClientHandler = new ClientHandler(socket);
         addClientHandler(newClientHandler);
         newClientHandler.start();
-        serverController.newConnection(newClientHandler);
+
+        ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
+        serverController.newConnection(oos);
+
+
+
     }
 
     private synchronized void addClientHandler(ClientHandler clientHandler) {

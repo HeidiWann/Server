@@ -1,25 +1,24 @@
 package view;
 
 import controller.DatabaseController;
+import model.Recipe;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseConnection {
+    private DatabaseController dbController;
+    private Connection connection;
+    private String user = System.getenv("DBUSER");
+    private String password = System.getenv("DBPASSWORD");
+    private String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
+
     public DatabaseConnection() {
         this.connection = getDatabaseconnection();
     }
 
-    private DatabaseController dbController;
-    private Connection connection;
-
     public Connection getDatabaseconnection() {
-        String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
-        //String user = ""; //put your user here or put it in a .env file
-        String user = System.getenv("DBUSER");
-        //String password = ""; //put your password here or put it in a .env file
-        String password = System.getenv("DBPASSWORD");
         try {
-
             Connection conn = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
             return conn;
@@ -28,22 +27,33 @@ public class DatabaseConnection {
             e.printStackTrace();
             return null;
         }
-
-
     }
 
-    //Todo är samma som connect?
-
-    public void endConnection() {
+    public void endDatabaseConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public void executeQueryVoidReturn(String query) {
+
+
+    }
+
+    public ArrayList<Recipe> getRecipesForNewConnection(String query) {
+
+        try (Statement stmt = connection.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery(query);
+            return new ArrayList<>();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
 
     }
 }

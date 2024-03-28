@@ -1,27 +1,39 @@
 package controller;
 
+import model.Recipe;
+import model.User;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 /**
- * Class that starts the whole server. This includes all controllers mm
+ * Class that starts the whole server. This includes all controllers.
  */
 public class ServerController {
-    private DatabaseController dbController;
     private RecipeController recipeController;
     private UserController userController;
-    private ConnectionController clientListener;
+    private ConnectionController connectionController;
 
     public ServerController() {
-        dbController = new DatabaseController();
+        DatabaseController dbController = new DatabaseController();
         recipeController = new RecipeController(dbController);
         userController = new UserController(dbController);
-    }
-
-    public void startServer() {
-        clientListener = new ConnectionController(this);
+        connectionController = new ConnectionController(this);
 
     }
 
-    public void newConnection(ConnectionController.ClientHandler newClientHandler) {
+    public void newConnection(ObjectOutputStream newClientOutputStream) {
+        ArrayList<Recipe> listOfRecipes=recipeController.getNewConnectionInfo();
+        ArrayList<User> listOfUsers=userController.getNewConnectionInfo();;
 
+
+        try {
+            newClientOutputStream.writeObject(listOfRecipes);
+            newClientOutputStream.writeObject(listOfUsers);
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 }
 

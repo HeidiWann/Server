@@ -2,9 +2,7 @@ package controller;
 
 import model.User;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.ArrayList;
 
 public class UserController {
     private User user;
@@ -19,6 +17,12 @@ public class UserController {
     public void register() {
     }
     public void updateProfile() {
+    }
+
+    public ArrayList<User> getNewConnectionInfo() {
+        String getNewConnectionInfoQuerry="";
+        dbController.executeQuery(getNewConnectionInfoQuerry);
+        return new ArrayList<>();
     }
 }
 

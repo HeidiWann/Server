@@ -13,7 +13,7 @@ public class ConnectionListerner extends Thread {
 
     private ServerSocket serverSocket;
     private ConnectionController connectionController;
-    private int portNbr = 780;
+    private final int portNbr = 780;
 
     public ConnectionListerner(ConnectionController connectionController) {
         try {
@@ -39,7 +39,7 @@ public class ConnectionListerner extends Thread {
         }
     }
 
-    public void sendNewSocket(Socket socket){
+    public void sendNewSocket(Socket socket) throws IOException {
         connectionController.newConnection(socket);
     }
 
