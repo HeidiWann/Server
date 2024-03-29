@@ -16,12 +16,8 @@ public class RecipeController {
 
     }
     public void createRecipe() {
-    }
-    public List<Recipe> recipeList() {
-        return null;
-    }
-    public Recipe viewRecipe() {
-        return null;
+    String createRecipeQuery = "";
+    dbController.executeQuery(createRecipeQuery);
     }
     public void updateRecipe() {
         String updateRecipeQuery="";

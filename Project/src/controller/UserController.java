@@ -14,15 +14,18 @@ public class UserController {
     public void login() {
     }
 
-    public void register() {
+    public void register(User user) {
+        String query = " ";
+        dbController.executeQuery(query);
     }
-    public void updateProfile() {
+    public void updateProfile(User user) {
+        String query = " ";
+        dbController.executeQuery(query);
     }
 
-   public ArrayList<User> getNewConnectionInfo() {
-        String getNewConnectionInfoQuerry="";
-        dbController.executeQuery(getNewConnectionInfoQuerry);
-        return new ArrayList<>();
+    public ArrayList<User> getNewConnectionInfo() {
+        return dbController.getUsersForNewConnection();
+
     }
 }
 
