@@ -7,17 +7,21 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseConnection {
+
     private DatabaseController dbController;
-    private Connection connection;
-    private String user = System.getenv("DBUSER");
-    private String password = System.getenv("DBPASSWORD");
-    private String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
+    public Connection connection;
+
+
 
     public DatabaseConnection() {
         this.connection = getDatabaseconnection();
     }
 
     public Connection getDatabaseconnection() {
+        String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
+        String password = "8v2y4xyu";
+        String user = "ao7830";
+
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");

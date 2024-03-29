@@ -27,7 +27,7 @@ public class ConnectionListerner extends Thread {
         this.start();
     }
 
-    @Override
+   @Override
     public void run() {
         while (!interrupted()) {
             try {
@@ -39,7 +39,7 @@ public class ConnectionListerner extends Thread {
         }
     }
 
-    public void sendNewSocket(Socket socket) throws IOException {
+  public void sendNewSocket(Socket socket) throws IOException {
         connectionController.newConnection(socket);
     }
 

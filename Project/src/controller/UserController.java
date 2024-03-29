@@ -19,7 +19,7 @@ public class UserController {
     public void updateProfile() {
     }
 
-    public ArrayList<User> getNewConnectionInfo() {
+   public ArrayList<User> getNewConnectionInfo() {
         String getNewConnectionInfoQuerry="";
         dbController.executeQuery(getNewConnectionInfoQuerry);
         return new ArrayList<>();
