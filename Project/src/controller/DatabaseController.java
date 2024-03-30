@@ -1,8 +1,9 @@
 package controller;
 
+import model.DatabasCommunicator;
+import model.DatabaseConnection;
 import model.Recipe;
 import model.User;
-import view.*;
 
 
 import java.sql.ResultSet;

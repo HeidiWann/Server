@@ -1,6 +1,8 @@
-package view;
+package model;
 
 
+
+import model.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
