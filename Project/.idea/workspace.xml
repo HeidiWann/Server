@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ScrapinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ScrapinController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Ingredient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/DatabasCommunicator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabasCommunicator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/WebScraping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/WebScraping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraping.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +57,7 @@
     &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Heidi/IdealProdjects/LoanManagermentSysJV_/LoanManagermentSysJV&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Heidi/OneDrive/Dokument/GitHub/GitHubSchool/Client/Project&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
@@ -125,6 +122,8 @@
       <workItem from="1711701985225" duration="3786000" />
       <workItem from="1711706308284" duration="605000" />
       <workItem from="1711728782635" duration="12718000" />
+      <workItem from="1711756553806" duration="1312000" />
+      <workItem from="1711787742696" duration="4732000" />
     </task>
     <servers />
   </component>
