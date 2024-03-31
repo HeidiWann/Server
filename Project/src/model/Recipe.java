@@ -1,5 +1,9 @@
 package model;
-
+/**
+ * Clas that represents recipes
+ *
+ * @author Heidi Wännman
+ */
 public class Recipe {
     private int id;
     private String title;

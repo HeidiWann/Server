@@ -7,7 +7,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Class that listens for new connections and gives these connections a separate handler
+ * Class that listens for new connections and sends connections forward to the ConnectionController
+ *
+ * @author Anton Jansson
  */
 public class ConnectionListerner extends Thread {
 
@@ -27,7 +29,7 @@ public class ConnectionListerner extends Thread {
         this.start();
     }
 
-   @Override
+    @Override
     public void run() {
         while (!interrupted()) {
             try {
@@ -39,7 +41,7 @@ public class ConnectionListerner extends Thread {
         }
     }
 
-  public void sendNewSocket(Socket socket) throws IOException {
+    public void sendNewSocket(Socket socket) throws IOException {
         connectionController.newConnection(socket);
     }
 

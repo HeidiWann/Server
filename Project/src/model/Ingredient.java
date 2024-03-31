@@ -1,11 +1,17 @@
 package model;
 
+/**
+ * Clas that represents ingredients
+ *
+ * @author Heidi Wännman
+ */
 public class Ingredient {
     private int id;
     private String ingredientName;
     private double price;
     private String measure;
-    public Ingredient( String ingredientName, double price) {
+
+    public Ingredient(String ingredientName, double price) {
 
         this.ingredientName = ingredientName;
         this.price = price;
