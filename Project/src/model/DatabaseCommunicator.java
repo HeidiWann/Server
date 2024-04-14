@@ -1,24 +1,19 @@
 package model;
 
 
-import model.DatabaseConnection;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Class responsible for communicating with the database
  *
  * @author Anton Jansson
  */
-public class DatabasCommunicator {
+public class DatabaseCommunicator {
 
 
     private DatabaseConnection databaseConnection;
 
-    public DatabasCommunicator(DatabaseConnection databaseConnection) {
+    public DatabaseCommunicator(DatabaseConnection databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -50,4 +45,14 @@ public class DatabasCommunicator {
 
     }
 
+
+    public Statement createStatement() throws SQLException {
+        return databaseConnection.getDatabaseconnection().createStatement();
+
+    }
+
+    public PreparedStatement prepareStatement(String query) throws SQLException {
+
+        return databaseConnection.getDatabaseconnection().prepareStatement(query);
+    }
 }

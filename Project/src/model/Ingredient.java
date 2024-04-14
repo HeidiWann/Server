@@ -6,10 +6,11 @@ package model;
  * @author Heidi Wännman
  */
 public class Ingredient {
-    private int id;
+    private int ingredientId;
     private String ingredientName;
     private double price;
     private String measure;
+    private String store; //Kan vara att det är bättre att skapa en affärklass
 
     public Ingredient(String ingredientName, double price) {
 
@@ -19,12 +20,15 @@ public class Ingredient {
 
     }
 
-    public int getId() {
-        return id;
+    public Ingredient(int measureID, String measure) {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId() {
+        return ingredientId;
+    }
+
+    public void setId(int ingredientId) {
+        this.ingredientId = ingredientId;
     }
 
     public String getIngredientName() {
@@ -49,5 +53,23 @@ public class Ingredient {
 
     public void setMeasure(String measure) {
         this.measure = measure;
+    }
+
+    public String getStore() {
+        return store;
+    }
+
+    public double getIngredientCost() {
+
+        return price;
+    }
+
+    public int getIngredientID() {
+        return ingredientId;
+    }
+
+    public int getMeasureID() {
+        int measureID = 0;
+        return measureID;
     }
 }
