@@ -30,7 +30,7 @@ public class DatabaseController {
         databaseCommunicator = new DatabaseCommunicator(databaseConnection);
 
     }
-
+//Nu kommer det svåra hur vi ska få all information att fundera från DB, Server, Client utan strul
     public void addRecipe(Recipe recipe) throws SQLException {
         String query = "INSERT INTO recipes (RecipeName, RecipeImage, RecipeInstructions) VALUES (?, ?, ?)";
         try (PreparedStatement preparedStatement = databaseCommunicator.prepareStatement(query)) {
@@ -65,7 +65,7 @@ public class DatabaseController {
         String query = "UPDATE Recipes SET RecipeName = ?, RecipeImage = ?, RecipeInstructions = ? WHERE RecipeID = ?";
         try (PreparedStatement preparedStatement = databaseCommunicator.prepareStatement(query)) {
             preparedStatement.setString(1, recipe.getRecipeName());
-            preparedStatement.setBytes(2, recipe.getRecipeImage());
+            preparedStatement.setBytes(2, recipe.getRecipeImage()); //kan behövas ändras.
             preparedStatement.setString(3, recipe.getRecipeInstructions());
             preparedStatement.setInt(4, recipe.getRecipeID());
             preparedStatement.executeUpdate();
@@ -157,7 +157,7 @@ public class DatabaseController {
     }
 
     public void getAllIngredients() {
-        String query = "SELECT * FROM Ingredients"; //kan behöva åndras för att man åndrat vid specific id
+        String query = "SELECT * FROM Ingredients"; //kan behöva ändras för att man ändrat vid specific id
         try (Statement statement = databaseCommunicator.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
@@ -206,7 +206,7 @@ public class DatabaseController {
 
     public Recipe getAllFoods(int foodId) throws SQLException { //Vet inte hur jag annars ska lösa detta utan en Food klass, känner jag behöver hjälp att fatta om det ska utföras på annat vis.
         Recipe food = null;
-        String query = "SELECT * FROM Food"; //kan behöva åndras för att man åndrat vid specific id
+        String query = "SELECT * FROM Food"; //kan behöva ändras för att man ändrat vid specific id
         try (PreparedStatement preparedStatement = databaseCommunicator.prepareStatement(query)) {
             preparedStatement.setInt(1, foodId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -255,7 +255,7 @@ public class DatabaseController {
 
     public Recipe getFavoriteRecipe(int theUserId, int theRecipeId) throws SQLException {
         Recipe favoriteRecipe = null;
-        String query = "SELECT * FROM FavoriteRecipes"; //kan behöva åndras för att man åndrat vid specific id
+        String query = "SELECT * FROM FavoriteRecipes"; //kan behöva åndras för att man ändrat vid specific id
         try (PreparedStatement preparedStatement = databaseCommunicator.prepareStatement(query)) { //vet inte hur jag ska lösa detta, tror jag är för trött
             preparedStatement.setInt(1, theUserId);
             preparedStatement.setInt(2, theRecipeId);
