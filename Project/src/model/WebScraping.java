@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class WebScraping {
 
-    private List<String> webpageProductList = new ArrayList<>();
+    private final List<String> webpageProductList = new ArrayList<>();
 
 
     /**
