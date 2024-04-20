@@ -1,10 +1,13 @@
 package controller;
 
+import model.DatabaseCommunicator;
 import model.Recipe;
 import model.User;
+import view.ClientConnection;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -14,9 +17,14 @@ import java.util.ArrayList;
  * @author Heidi Wännman
  */
 public class ServerController {
+
+    private DatabaseCommunicator databaseCommunicator;
+    private ClientConnection clientConnection;
+    private DatabaseController databaseController;
     private RecipeController recipeController;
     private UserController userController;
     private ConnectionController connectionController;
+
 
     /**
      * Clas constructor. It starts a few controllers
@@ -24,12 +32,20 @@ public class ServerController {
      * @author Anton Jansson
      * @author Heidi Wännman
      */
-    public ServerController() {
-        DatabaseController dbController = new DatabaseController();
-        recipeController = new RecipeController(dbController);
-        userController = new UserController(dbController);
-        connectionController = new ConnectionController(this);
+    public ServerController() throws SQLException {
 
+
+
+        this.databaseController = new DatabaseController();
+        this.recipeController = new RecipeController(databaseController);
+
+        this.connectionController = new ConnectionController(this);
+
+
+
+    }
+    public void establishConnection() throws SQLException {
+        databaseCommunicator.getDatabaseconnection();
     }
 
     /**
@@ -44,7 +60,7 @@ public class ServerController {
      */
     public void newConnection(ObjectOutputStream newClientOutputStream) {
         ArrayList<Recipe> listOfRecipes = recipeController.getNewConnectionInfo();
-        ArrayList<User> listOfUsers = userController.getNewConnectionInfo();
+        ArrayList<User> listOfUsers = userController.getAllUsers();
         try {
             newClientOutputStream.writeObject(listOfRecipes);
             newClientOutputStream.writeObject(listOfUsers);

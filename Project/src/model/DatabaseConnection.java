@@ -20,7 +20,7 @@ public class DatabaseConnection {
      * @author Heidi Wännman
      */
     public DatabaseConnection() {
-        this.connection = getDatabaseconnection();
+
 
     }
 
@@ -30,18 +30,21 @@ public class DatabaseConnection {
      * @return Connection
      * @author Heidi Wännman
      */
-    public Connection getDatabaseconnection() {
+
+    public Connection getDatabaseconnection() throws SQLException {
+
         String user = System.getenv("DBUSER");
         String password = System.getenv("DBPASSWORD");
         String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
+
+
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
             return conn;
-        } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            System.err.println("Database connection failed: " + e.getMessage());
+            throw e;
         }
     }
 

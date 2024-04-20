@@ -1,5 +1,6 @@
 package controller;
 
+import model.DatabaseCommunicator;
 import model.Recipe;
 
 import java.util.ArrayList;
@@ -13,50 +14,27 @@ import java.util.List;
  */
 public class RecipeController {
     private Recipe recipe;
+    private ArrayList<Recipe> recipes;
     private List<Recipe> idUser;
-    private DatabaseController dbController;
+    private DatabaseController databaseController;
+    private DatabaseCommunicator databaseCommunicator;
 
 
     /**
      * Clas constructor
-     * @param dbController
+     * @param databaseController
      * @author Anton Jansson
      */
-    public RecipeController(DatabaseController dbController) {
-        this.dbController = dbController;
+    public RecipeController(DatabaseController databaseController) {
+        this.databaseController = databaseController;
     }
-
-    /**
-     * @author Heidi Wännman
-     */
-    public void createRecipe() {
-        String createRecipeQuery = "";
-        dbController.executeQueryVoidReturn(createRecipeQuery);
-    }
-
-    /**
-     * @author Heidi Wännman
-     */
-    public void updateRecipe() {
-        String updateRecipeQuery = "";
-        dbController.executeQueryVoidReturn(updateRecipeQuery);
-    }
-
-    /**
-     * @author Heidi Wännman
-     */
-    public void deleteRecipe() {
-        String deleteRecipeQuery = "";
-        dbController.executeQueryVoidReturn(deleteRecipeQuery);
-    }
-
     /**
      * Method used for fetching recipes from the database
      *
      * @return An ArrayList of recipes
      */
     public ArrayList<Recipe> getNewConnectionInfo() {
-        return dbController.getRecipesForNewConnection();
+        return recipes;
     }
 }
 

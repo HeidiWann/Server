@@ -1,5 +1,6 @@
 package controller;
 
+import model.DatabaseCommunicator;
 import model.User;
 
 import java.util.ArrayList;
@@ -12,24 +13,18 @@ import java.util.ArrayList;
  */
 public class UserController {
     private User user;
-    private DatabaseController dbController;
+    private DatabaseCommunicator databaseCommunicator;
+
 
     /**
      * Clas constructor
      *
-     * @param dbController
+     * @param databaseCommunicator
      * @author Anton Jansson
      */
-    public UserController(DatabaseController dbController) {
-        this.dbController = dbController;
+    public UserController(DatabaseCommunicator databaseCommunicator) {
+        this.databaseCommunicator = databaseCommunicator;
     }
-
-    /**
-     * @author Heidi Wännman
-     */
-    public void login() {
-    }
-
     /**
      * Method used for when a client registers to the database
      * @param user User
@@ -37,7 +32,7 @@ public class UserController {
      */
     public void register(User user) {
         String query = " ";
-        dbController.executeQueryVoidReturn(query);
+        databaseCommunicator.executeQueryVoidReturn(query);
     }
     /**
      * Method used for when a user updates it profile
@@ -46,7 +41,7 @@ public class UserController {
      */
     public void updateProfile(User user) {
         String query = " ";
-        dbController.executeQueryVoidReturn(query);
+        databaseCommunicator.executeQueryVoidReturn(query);
     }
 
     /**
@@ -54,9 +49,10 @@ public class UserController {
      * @return An ArrayList of users
      * @author Anton Jansson
      */
-    public ArrayList<User> getNewConnectionInfo() {
-        return dbController.getUsersForNewConnection();
 
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> users = new ArrayList<>();
+        return users;
     }
 }
 
