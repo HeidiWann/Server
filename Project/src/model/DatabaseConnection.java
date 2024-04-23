@@ -1,6 +1,5 @@
 package model;
 
-import controller.DatabaseController;
 
 import java.sql.*;
 
@@ -12,14 +11,16 @@ import java.sql.*;
  */
 
 public class DatabaseConnection {
-    private DatabaseController dbController;
+
     private Connection connection;
+    private DatabaseCommunicator databaseCommunicator;
 
 
     /**
      * @author Heidi Wännman
      */
     public DatabaseConnection() {
+        this.databaseCommunicator = databaseCommunicator;
 
 
     }
@@ -30,37 +31,18 @@ public class DatabaseConnection {
      * @return Connection
      * @author Heidi Wännman
      */
-
     public Connection getDatabaseconnection() throws SQLException {
-
-        String user = System.getenv("DBUSER");
-        String password = System.getenv("DBPASSWORD");
-        String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
-
-
-        try {
-            Connection conn = DriverManager.getConnection(url, user, password);
+        if (this.connection == null || this.connection.isClosed()) {
+            String user = System.getenv("DBUSER");
+            String password = System.getenv("DBPASSWORD");
+            String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
+            this.connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
-            return conn;
-        } catch (SQLException e) {
-            System.err.println("Database connection failed: " + e.getMessage());
-            throw e;
+
         }
+
+        return this.connection;
     }
-
-
-    //TODO behövs kanske inte ifall "con.close();" eller liknande används i metoderna
-    public void endDatabaseConnection(Connection connection) {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 
 }
 

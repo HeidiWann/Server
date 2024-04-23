@@ -1,14 +1,18 @@
 package controller;
 
-
+import model.ClientConnection;
+import model.Recipe;
 import model.User;
-import view.ConnectionListerner;
+import view.ConnectionListener;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.HashMap;
+
+import static controller.Constans.*;
 
 
 /**
@@ -16,109 +20,111 @@ import java.util.*;
  * and it extends thread. Each connected client is given its own Clienthandler.
  */
 public class ConnectionController {
-    private ServerController serverController;
-    private ConnectionListerner connectionListerner;
-
-    private List<ClientHandler> synchronizedClientHandlers;
-
+    public UserController userController;
+    private ConnectionListener connectionListener;
+    private RecipeController recipeController;
+    private ClientConnection clientConnection;
 
     /**
      * Class constructor.
      *
-     * @param serverController
+     * @param
      * @author Anton Jansson
      */
-    public ConnectionController(ServerController serverController) {
-        this.serverController = serverController;
-        connectionListerner = new ConnectionListerner(this);
-        List<ClientHandler> clientHandlers = new ArrayList<>();
-        synchronizedClientHandlers = Collections.synchronizedList(clientHandlers);
+
+    public ConnectionController(UserController userController, RecipeController recipeController) {
+        this.userController = userController;
+        this.recipeController = recipeController;
+        this.connectionListener = new ConnectionListener(2343, this);
 
     }
 
-
-    /**
-     * Method that creates new Clienthandlers and gives them to the newly connected
-     * clients. It also starts the process for giving these new clients some data
-     *
-     * @param socket
-     * @throws IOException
-     * @author Anton Jansson
-     */
-    public void newConnection(Socket socket) throws IOException {
-        ClientHandler newClientHandler = new ClientHandler(socket);
-        addClientHandler(newClientHandler);
-        newClientHandler.start();
-
-        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        serverController.newConnection(oos);
-
-
-    }
-
-    private synchronized void addClientHandler(ClientHandler clientHandler) {
-        synchronizedClientHandlers.add(clientHandler);
-    }
-
-    /**
-     * Class responsible for handling a specific client connection
-     *
-     * @author Anton Jansson
-     */
-    public class ClientHandler extends Thread {
-        private ObjectInputStream ois;
-        private User user;
-
-        public ClientHandler(Socket socket) {
-            try {
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
+    public void clientConnectionHandler(Socket clientSocket) {
+        try {
+            ClientConnection clientConnection = new ClientConnection(clientSocket, this);
+            new Thread(clientConnection).start();
+        } catch (IOException e) {
+            System.out.println("IOExcetion in clientConnectionHandler");
+            e.printStackTrace();
         }
+    }
 
+    private void sendUserData(ObjectOutputStream oos) throws SQLException, IOException {
+        HashMap<User, ClientConnection> listOfUsers = userController.getNewUserInfo();
+        oos.writeObject(listOfUsers);
+    }
 
-        @Override
-        public void run() {
-            while (!interrupted()) {
-                try {
-                    Object objectFromClient = ois.readObject();
-                    if (objectFromClient != null) {
-                        newRequest(objectFromClient);
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
+    private void sendRecipeData(ObjectOutputStream oos) throws SQLException, IOException {
+        HashMap<Recipe, ClientConnection> listOfRecipes = recipeController.getNewRecipeInfo();
+        oos.writeObject(listOfRecipes);
+    }
+
+    public void newConnection(ObjectOutputStream newClientOutputStream, Object dataObject) {
+        try {
+            if (dataObject instanceof User) {
+                sendUserData(newClientOutputStream);
+            } else if (dataObject instanceof Recipe) {
+                sendRecipeData(newClientOutputStream);
+            } else {
+                System.out.println("Unsupported data object provided.");
             }
-
+        } catch (IOException e) {
+            System.err.println("Failed to write object: " + e.getMessage());
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Database error: " + e.getMessage());
+            throw new RuntimeException("Database error", e);
         }
+    }
 
-        /**
-         * Method used for when the client sends an object to the server through
-         * the stream.
-         *
-         * @param object
-         * @author Anton Jansson
-         */
-        private void newRequest(Object object) {
+    public synchronized void revealClientIntention(int intention, ClientConnection clientConnection, Object object) throws IOException, ClassNotFoundException, SQLException {
+        ObjectOutputStream oos = clientConnection.getObjectOutputStream();
+        ObjectInputStream ois = clientConnection.getObjectInputStream();
+
+        if (object != null) {
+            handleObject(object, oos);
+        } else if (intention != OK) {
+            handleIntention(intention, ois, oos);
+        } else {
+            System.out.println("No valid object or intention provided.");
+        }
+    }
+
+    private void handleObject(Object object, ObjectOutputStream oos) throws IOException {
+        try {
             if (object instanceof User) {
-                if (user == null) {
-                    this.user = (User) object;
-                    addClientHandler(this);
-                }
+                sendUserData(oos);  // Antag att denna metod hanterar användarobjektet
+            } else if (object instanceof Recipe) {
+                sendRecipeData(oos);  // Antag att denna metod hanterar receptobjektet
+            } else {
+                System.out.println("The object can´t be identified");
             }
+        } catch (IOException | SQLException e) {
+            System.err.println("Failed to send object: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        /**
-         * Method that returns the handlers client as a User object
-         *
-         * @return User user
-         * @author Anton Jansson
-         */
-        public User getUser() {
-            return this.user;
-        }
-
     }
+
+    private void handleIntention(int intention, ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException, SQLException {
+        switch (intention) {
+            case C_WANTS_TO_DISCONNECT:
+                clientConnection.closeConnection();
+                break;
+            case C_HAVE_A_OBJECT:
+                Object object = ois.readObject();
+                if (object instanceof Recipe) {
+                    sendRecipeData(oos);
+                }
+                break;
+            case C_GET_USER_INFO:
+                User user = userController.getUserFromObject(ois);
+                oos.writeObject(user);
+                break;
+            default:
+                System.out.println("Don't know what intention this: " + intention + " wants to do");
+                break;
+        }
+    }
+
 }
+

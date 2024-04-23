@@ -1,11 +1,16 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * Clas that represents ingredients
  *
  * @author Heidi Wännman
  */
-public class Ingredient {
+public class Ingredient implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 333444555L;
     private int ingredientId;
     private String ingredientName;
     private double price;

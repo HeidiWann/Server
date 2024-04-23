@@ -3,12 +3,13 @@ package controller;
 import model.DatabaseCommunicator;
 import model.Recipe;
 import model.User;
-import view.ClientConnection;
+import model.ClientConnection;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class that starts the whole server. This includes all controllers.
@@ -18,12 +19,12 @@ import java.util.ArrayList;
  */
 public class ServerController {
 
-    private DatabaseCommunicator databaseCommunicator;
-    private ClientConnection clientConnection;
     private DatabaseController databaseController;
     private RecipeController recipeController;
     private UserController userController;
     private ConnectionController connectionController;
+    private DatabaseCommunicator databaseCommunicator;
+    private ClientConnection clientConnection;
 
 
     /**
@@ -33,19 +34,13 @@ public class ServerController {
      * @author Heidi Wännman
      */
     public ServerController() throws SQLException {
-
-
-
-        this.databaseController = new DatabaseController();
-        this.recipeController = new RecipeController(databaseController);
-
-        this.connectionController = new ConnectionController(this);
-
-
-
-    }
-    public void establishConnection() throws SQLException {
+        this.databaseCommunicator = new DatabaseCommunicator();
         databaseCommunicator.getDatabaseconnection();
+        this.databaseController = new DatabaseController();
+        this.userController = new UserController(databaseCommunicator);
+        this.recipeController = new RecipeController(databaseCommunicator);
+        this.connectionController = new ConnectionController(userController, recipeController);
+
     }
 
     /**
@@ -58,16 +53,8 @@ public class ServerController {
     /*TODO flytta oos till att hanteras för den clientens handler istället.. SOLID
     todo Förslagsvis med en metod i hanlder som hanterar skickande av data
      */
-    public void newConnection(ObjectOutputStream newClientOutputStream) {
-        ArrayList<Recipe> listOfRecipes = recipeController.getNewConnectionInfo();
-        ArrayList<User> listOfUsers = userController.getAllUsers();
-        try {
-            newClientOutputStream.writeObject(listOfRecipes);
-            newClientOutputStream.writeObject(listOfUsers);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
+
+
 }
 
 

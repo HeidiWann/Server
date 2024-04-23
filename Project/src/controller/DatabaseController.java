@@ -22,13 +22,11 @@ public class DatabaseController {
      * @author Anton Jansson
      * @author Heidi Wännman
      */
-    public DatabaseController() {
-
-
-
+    public DatabaseController() throws SQLException {
+        this.databaseCommunicator = databaseCommunicator;
     }
 
-    //Usch detta är så komplex och svårt, fattar inte riktigt vad jag håller på med.
+    //Usch detta är så komplex och svårt, fattar inte riktigt vad jag håller på med. Denna ska användas via RecipeController.
     public void addRecipe(String recipeName, byte[] recipeImage, String recipeInstructions, int authorId) throws SQLException {
         String sql = "{ CALL insert_into_recipes(?, ?, ?, ?) }";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
@@ -55,13 +53,10 @@ public class DatabaseController {
                         resultSet.getString("RecipeInstructions")
                 ));
             }
-            statement.close();
-            resultSet.close();
-            databaseCommunicator.closeConnection();
         }
         return recipes;
     }
-
+//Denna ska användas via UserController.
     public void addUser(String userName, String password) throws SQLException {
         String query = "{ CALL users(?, ?) }";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
@@ -82,66 +77,41 @@ public class DatabaseController {
             return statement.getBoolean(1);
         }
     }
-
     /**
-     * Method used for fetching the stored recipes from the database.
-     * The method is used for newly connected clients
+     * Method used for fetching users from the database
      *
-     * @return An Arraylist containing recipes
+     * @return An ArrayList of users
      * @author Anton Jansson
      */
-    /*public ArrayList<Recipe> getRecipesForNewConnection() {
-        String query = "";
-        ArrayList<Recipe> recipes = new ArrayList<>();
-
-        ResultSet resultSet = databaseCommunicator.getResultSet(query);
-
-        try {
-            while (resultSet.next()) {
-                Recipe recipe = new Recipe();
-                recipes.add(recipe);
-            }
-        } catch (SQLException sqle) {
-            throw new RuntimeException(sqle);
-        }
-        return recipes;
-    }*/
-
-    /**
-     * Method used for fetching the stored users from the database.
-     * The method is used for newly connected clients
-     *
-     * @return An Arraylist containing users
-     * @author Anton Jansson
-     */
-   /* public ArrayList<User> getUsersForNewConnection() {
-        String query = "";
+    public ArrayList<User> getAllUsers() throws SQLException {
         ArrayList<User> users = new ArrayList<>();
-
-        ResultSet resultSet = databaseCommunicator.getResultSet(query);
-
-        try {
-            while (resultSet.next()) {
-                User user = new User();
-                users.add(user);
-            }
-        } catch (SQLException sqle) {
-            throw new RuntimeException(sqle);
+        ResultSet resultSet = databaseCommunicator.getResultSet("SELECT user_id, username, role FROM users");
+        while (resultSet.next()) {
+            users.add(new User(resultSet.getInt("user_id"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role")));
         }
+        resultSet.close();
         return users;
     }
-
-
     /**
-     * A generic method for executing querys.
+     * Method used for when a user updates it profile
      *
-     * @param query
-     * @return void
+     * @param user User
      * @author Anton Jansson
      */
-   /* public void executeQueryVoidReturn(String query) {
-        databaseCommunicator.executeQueryVoidReturn(query);
-    }*/
-
-
+    public void updateProfile(User user) throws SQLException {
+        String query = "UPDATE users SET username = ?, password = ? WHERE user_id = ?";
+        Object[] params = new Object[]{user.getUserName(), user.getPassword(), user.getUserID()};
+        databaseCommunicator.executeUpdate(query, params);
+    }
+    /**
+     * Method used for when a client registers to the database
+     *
+     * @param user User
+     * @author Anton Jansson
+     */
+    public void register(User user) throws SQLException {
+        String query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+        Object[] params = {user.getUserName(), user.getPassword(), user.getRole()};
+        databaseCommunicator.executeUpdate(query, params);
+    }
 }

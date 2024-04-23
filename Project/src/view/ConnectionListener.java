@@ -1,7 +1,6 @@
 package view;
 
 import controller.ConnectionController;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,39 +10,34 @@ import java.net.Socket;
  *
  * @author Anton Jansson
  */
-public class ConnectionListerner extends Thread {
-
+public class ConnectionListener extends Thread {
     private ServerSocket serverSocket;
     private ConnectionController connectionController;
-    private final int portNbr = 780;
-
-    public ConnectionListerner(ConnectionController connectionController) {
-        try {
-            serverSocket = new ServerSocket(portNbr);
-        } catch (IOException ioe) {
-            throw new RuntimeException();
-        }
-
+    public ConnectionListener(int port, ConnectionController connectionController) {
         this.connectionController = connectionController;
+        try {
+            serverSocket = new ServerSocket(port);
+            start();
+        } catch (IOException e) {
+            System.out.println("IOExcetion in constructor of ConnectionListener");
+            System.out.println(e.getMessage());
 
-        this.start();
+        }
     }
 
     @Override
-    public void run() {
-        while (!interrupted()) {
+    public synchronized void run() {
+        while (!isInterrupted()) {
             try {
                 Socket socket = serverSocket.accept();
-                sendNewSocket(socket);
+                connectionController.clientConnectionHandler(socket);
+
             } catch (IOException ioe) {
+                System.out.println("Could not accept the clients connection");
                 throw new RuntimeException();
+
             }
         }
     }
-
-    public void sendNewSocket(Socket socket) throws IOException {
-        connectionController.newConnection(socket);
-    }
-
 
 }

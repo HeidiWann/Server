@@ -1,72 +1,52 @@
 package model;
 
-import java.awt.*;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * Clas that represents recipes
  *
  * @author Heidi Wännman
  */
-public class Recipe {
+public class Recipe implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 111222333L;
     private int id;
-    private String title;
-    private Image RecipeImage;
+    private String recipeTitle;
+    private byte[] recipeImage;
+    private String recipeInstructions;
 
-    private Ingredient ingredient;
-    private User user;
-    private int idUser;
-    public Recipe() {
+    public Recipe(int recipeID, String title, byte[] image, String instructions) {
+    this.id = recipeID;
+    this.recipeTitle = title;
+    this.recipeImage = image;
+    this.recipeInstructions = instructions;
     }
 
-
-
-    public Recipe(int recipeID, String recipeName, byte[] recipeImages, String recipeInstructions) { //orkar inte fixa nu men ska sätta mig och fixa till alla mina quick fixes
+    public int getId() {
+        return id;
     }
-
-    public Recipe(int foodID, String foodName) {
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public void addIngredient() {
+    public String getRecipeTitle() {
+        return recipeTitle;
     }
-    public void removeIngredient() {
+    public void setRecipeTitle(String recipeTitle) {
+        this.recipeTitle = recipeTitle;
     }
-    public void editIngredient() {
-    }
-
-    public String getRecipeName() {
-        return getRecipeName();
-    }
-
     public byte[] getRecipeImage() {
-        return recipeImage();
+        return recipeImage;
     }
-
-    private byte[] recipeImage() {
-        return null;
+    public void setRecipeImage(byte[] recipeImage) {
+        this.recipeImage = recipeImage;
     }
-
     public String getRecipeInstructions() {
-        String recipeInstructions = "";
         return recipeInstructions;
     }
 
-    public int getRecipeID() {
-        int recipeID = 0;
-        return recipeID;
-    }
-
-    public String getFoodName() {
-        String foodName = "";
-        return foodName;
-    }
-
-    public int getFoodID() {
-        int foodID = 0;
-        return foodID;
-    }
-
-    public int getUserID() {
-        int userID = 0;
-        return userID;
+    public void setRecipeInstructions(String recipeInstructions) {
+        this.recipeInstructions = recipeInstructions;
     }
 }

@@ -1,9 +1,12 @@
 package controller;
 
+import model.ClientConnection;
 import model.DatabaseCommunicator;
 import model.User;
-
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 /**
  * Clas responsible for handling logic related to users
@@ -12,9 +15,9 @@ import java.util.ArrayList;
  * @author Heidi Wännman
  */
 public class UserController {
-    private User user;
     private DatabaseCommunicator databaseCommunicator;
-
+    private DatabaseController databaseController;
+    private HashMap<User, ClientConnection> userConnected = new HashMap<>();
 
     /**
      * Clas constructor
@@ -25,35 +28,33 @@ public class UserController {
     public UserController(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
-    /**
-     * Method used for when a client registers to the database
-     * @param user User
-     * @author Anton Jansson
-     */
-    public void register(User user) {
-        String query = " ";
-        databaseCommunicator.executeQueryVoidReturn(query);
-    }
-    /**
-     * Method used for when a user updates it profile
-     * @param user User
-     * @author Anton Jansson
-     */
-    public void updateProfile(User user) {
-        String query = " ";
-        databaseCommunicator.executeQueryVoidReturn(query);
-    }
+    public  HashMap<User, ClientConnection> getNewUserInfo() throws SQLException {
 
-    /**
-     * Method used for fetching users from the database
-     * @return An ArrayList of users
-     * @author Anton Jansson
-     */
+        HashMap<User, ClientConnection> users = new HashMap<>();
+        ArrayList<User> userList = databaseController.getAllUsers();
 
-    public ArrayList<User> getAllUsers() {
-        ArrayList<User> users = new ArrayList<>();
+        for (User user : userList) {
+            users.put(user, null);
+        }
         return users;
     }
+    public User getUserFromObject(Object object) {
+        if (object instanceof User) {
+            return (User) object;
+        }
+        System.out.println("Received object is not a user");
+        return null;
+    }
+
+    public void userConnectionHandler(User user, ClientConnection clientConnection) {
+        userConnected.put(user, clientConnection);
+    }
+
+    public void userDisconnecter(User user) {
+        userConnected.remove(user);
+    }
+
 }
+
 
 
