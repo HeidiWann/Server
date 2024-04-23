@@ -19,8 +19,8 @@ public class Main {
 
         //DatabaseConnection dbController = new DatabaseConnection();
         ServerController serverController = new ServerController();
-        WebScraping webScraping = new WebScraping();
-        webScraping.scrapeICAForNameAndPrice("https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7");
+        //WebScraping webScraping = new WebScraping();
+       // webScraping.scrapeICAForNameAndPrice("https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7");
     }
 }
 
