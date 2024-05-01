@@ -24,44 +24,64 @@ public class Ingredient implements Serializable {
 
 
     }
+
+
+    //Todo Behövs denna? @Jansson
     public Ingredient(int measureID, String measure) {
     }
+
     public int getId() {
         return ingredientId;
     }
+
     public void setId(int ingredientId) {
         this.ingredientId = ingredientId;
     }
+
     public String getIngredientName() {
         return ingredientName;
     }
+
     public void setIngredientName(String ingredientName) {
         this.ingredientName = ingredientName;
     }
+
     public double getPrice() {
         return price;
     }
+
     public void setPrice(double price) {
         this.price = price;
     }
+
     public String getMeasure() {
         return measure;
     }
+
     public void setMeasure(String measure) {
         this.measure = measure;
     }
+
     public String getStore() {
         return store;
     }
+
     public double getIngredientCost() {
 
         return price;
     }
+
     public int getIngredientID() {
         return ingredientId;
     }
+
     public int getMeasureID() {
         int measureID = 0;
         return measureID;
+    }
+
+
+    public String toString() {
+        return ingredientName + " " + price;
     }
 }

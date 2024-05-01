@@ -41,8 +41,6 @@ public class WillysWebScraper {
 
           // en länk för Element klassen https://jsoup.org/apidocs/org/jsoup/nodes/Element.html#method-summary
 
-
-
             System.out.println("\nSize is:" + proNames.size());
 
             for (Element name : proNames) {

@@ -3,7 +3,6 @@ package controller;
 
 import model.DatabaseCommunicator;
 import model.DatabaseConnection;
-import model.WebScraping;
 
 import java.sql.SQLException;
 
@@ -15,12 +14,14 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws SQLException {
-        DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+        //DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
 
         //DatabaseConnection dbController = new DatabaseConnection();
-        ServerController serverController = new ServerController();
-        //WebScraping webScraping = new WebScraping();
-       // webScraping.scrapeICAForNameAndPrice("https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7");
+        //ServerController serverController = new ServerController();
+
+    ScrapinController scrapinController=new ScrapinController();
+    scrapinController.scrapeAllStores();
+
     }
 }
 
