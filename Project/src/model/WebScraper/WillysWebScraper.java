@@ -1,5 +1,4 @@
 package model.WebScraper;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -40,8 +39,6 @@ public class WillysWebScraper {
             // vad "page="?
 
           // en länk för Element klassen https://jsoup.org/apidocs/org/jsoup/nodes/Element.html#method-summary
-
-
 
             System.out.println("\nSize is:" + proNames.size());
 

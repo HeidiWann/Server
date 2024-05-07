@@ -1,5 +1,6 @@
-package model;
+package model.WebScraper;
 
+import model.Ingredient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -13,14 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is responsible for scraping data from different stores, right now it is scraping ICA.
- * Mejeri-ost and it takes 300 pruducts at one scrape from this Mejeri-ost category.
+ * This class is responsible for scraping data from the Ica website
  *
  * @author Heidi Wännman
+ * @author Anton Jansson
  */
-public class WebScraping {
-
-    private final List<String> webpageProductList = new ArrayList<>();
+public class IcaWebScraper {
+    private List<Ingredient> scrapedProductsList = new ArrayList<>();
 
 
     /**
@@ -28,13 +28,14 @@ public class WebScraping {
      *
      * @param url The URL of the webpage to scrape.
      * @author Heidi Wännman
+     * @author Anton Jansson
      */
-    public void scrapeICAForNameAndPrice(String url) {
+    public ArrayList scrapeICAForNameAndPrice(String url) {
+        ArrayList<Ingredient> scrapedProducts = new ArrayList<>();
 
         try {
             Document doc = Jsoup.connect(url).get();
             Elements priceElements = doc.select("[data-test=\"initial-state-script\"]");
-            System.out.println(priceElements.size());
             String jsonData = priceElements.first().toString().substring(priceElements.first().toString().lastIndexOf("window.__INITIAL_STATE__=") + 25);
             jsonData = jsonData.substring(0, jsonData.lastIndexOf("</script>"));
             JSONObject productJSONData = new JSONObject(jsonData);
@@ -61,16 +62,14 @@ public class WebScraping {
                 for (String string : strings) {
                     apiString.append(string).append(",");
                 }
-                sendGetRequestAndResolveProductPrices("https://handlaprivatkund.ica.se/stores/1003937/api/v5/products/decorate?productIds=" + apiString);
+                scrapedProducts=sendGetRequestAndResolveProductPrices("https://handlaprivatkund.ica.se/stores/1003937/api/v5/products/decorate?productIds=" + apiString);
+            }
 
-            }
-            System.out.println("product list size: " + webpageProductList.size());
-            for (String s : webpageProductList) {
-                System.out.println("Product: " + s);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return scrapedProducts;
+
     }
 
     /**
@@ -78,8 +77,10 @@ public class WebScraping {
      *
      * @param productName productName The URL with the product id to get the price
      * @author Heidi Wännman
+     * @author Anton Jansson
      */
-    public void sendGetRequestAndResolveProductPrices(String productName) {
+    public ArrayList sendGetRequestAndResolveProductPrices(String productName) {
+        ArrayList <Ingredient> ingredientsScraped=new ArrayList<>();
         try {
             URL url = new URL(productName);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -95,14 +96,19 @@ public class WebScraping {
                 in.close();
                 JSONObject jsonObject = new JSONObject(response.toString());
                 JSONArray products = jsonObject.getJSONArray("products");
+
                 for (int i = 0; i < products.length(); i++) {
                     JSONObject product = products.getJSONObject(i);
-                    webpageProductList.add(product.getString("name") + " costs: " + product.getJSONObject("price").getJSONObject("current").getString("amount"));
+//                    webpageProductList.add(product.getString("name") + " costs: " + product.getJSONObject("price").getJSONObject("unit").getJSONObject("current").getString("amount"));
+                    Ingredient scrapedIngredient=new Ingredient(product.getString("name"), Double.parseDouble(product.getJSONObject("price").getJSONObject("unit").getJSONObject("current").getString("amount")));
+                    ingredientsScraped.add(scrapedIngredient);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return ingredientsScraped;
     }
 
     /**

@@ -1,14 +1,19 @@
 package model;
+
 import view.ClientConnection;
+
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
+
 public class ConnectedClients {
     private ArrayList<ClientConnection> connectedClients;
     private ReentrantLock lock;
+
     public ConnectedClients() {
         this.connectedClients = new ArrayList<>();
         lock = new ReentrantLock(true);
     }
+
     public void addClient(ClientConnection client) {
         try {
             lock.lock();
@@ -21,6 +26,7 @@ public class ConnectedClients {
             lock.unlock();
         }
     }
+
     public void removeClient(ClientConnection client) {
         try {
             lock.lock();
@@ -38,6 +44,7 @@ public class ConnectedClients {
             lock.unlock();
         }
     }
+
     public ArrayList<ClientConnection> getConnectedClients() {
         return connectedClients;
     }

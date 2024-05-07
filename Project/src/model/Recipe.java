@@ -1,4 +1,6 @@
 package model;
+
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -21,6 +23,7 @@ public class Recipe implements Serializable {
         this.recipeImage = image;
         this.recipeInstructions = instructions;
     }
+
     public int getId() {
         return id;
     }
@@ -42,6 +45,7 @@ public class Recipe implements Serializable {
     public String getRecipeInstructions() {
         return recipeInstructions;
     }
+
     public void setRecipeInstructions(String recipeInstructions) {
         this.recipeInstructions = recipeInstructions;
     }

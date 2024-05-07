@@ -1,4 +1,5 @@
 package controller;
+
 import model.Recipe;
 import model.User;
 import view.ClientConnection;
@@ -9,6 +10,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import static controller.Constants.*;
+
 
 /**
  * This class is responsible for handling connected clients.
@@ -23,18 +25,21 @@ public class ConnectionController {
 
     //TODO: The intentions might cause problems since they aren't Thread proof. I will look onto this after we've implemented the communication in the server
 
+
     /**
      * This constructor initiates instance variables
      * @param userController
      * @param recipeController
      * @author Anton Jansson
      */
+
     public ConnectionController(UserController userController, RecipeController recipeController) {
         this.userController = userController;
         this.recipeController = recipeController;
         this.connectedClients = new ConnectedClients();
         new ConnectionListener(2343, this);
     }
+
     /**
      * This method creates a new {@link ClientConnection} and then starts it as a thread. The {@link ClientConnection}
      * is then added to {@link ConnectedClients}. Lastly, the method sends all the recipes and users from the server
@@ -54,6 +59,7 @@ public class ConnectionController {
             e.printStackTrace();
         }
     }
+
     /**
      * This method sends the list of {@link Recipe} from the server to the client in the form of an {@link ArrayList}
      * containing {@link Object}
@@ -67,6 +73,7 @@ public class ConnectionController {
 //        clientConnection.sendIntention(S_SEND_ALL_RECIPES);
 //        clientConnection.sendObject(recipesToSend);
     }
+
     /**
      * This method gets an {@link ArrayList} of {@link User} from the {@link UserController} and converts it into an
      * ArrayList of {@link Object} and later returns it.
@@ -78,6 +85,7 @@ public class ConnectionController {
         ArrayList<Object> listToSend = new ArrayList<>();
         return listToSend;
     }
+
     /**
      * This method creates an {@link ArrayList} of {@link ClientConnection} from the clients in {@link ConnectedClients}.
      * The method then loops through the list and for each {@link ClientConnection}, an intention and {@link Object} is
@@ -93,6 +101,7 @@ public class ConnectionController {
             clientConnection.sendObject(object);
         }
     }
+
     /**
      * This method reveals the intention of a client and then does something based on the intention.
      * @param clientConnection {@link ClientConnection} that the intention came from
@@ -119,6 +128,7 @@ public class ConnectionController {
                 break;
         }
     }
+
     /**
      * This method packs up an {@link Object} from a Client. Based on the intention in the server the Object is unpacked
      * differently.

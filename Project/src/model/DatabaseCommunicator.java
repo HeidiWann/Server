@@ -1,5 +1,4 @@
 package model;
-import view.DatabaseConnection;
 import java.sql.*;
 
 
@@ -11,13 +10,16 @@ import java.sql.*;
 public class DatabaseCommunicator {
     private DatabaseConnection databaseConnection;
 
+
     public DatabaseCommunicator() throws SQLException {
         this.databaseConnection = new DatabaseConnection();
 
     }
+
     public Connection getDatabaseconnection() throws SQLException {
         return databaseConnection.getDatabaseconnection();
     }
+
     /**
      * A generic method for executing querys.
      *
@@ -25,6 +27,7 @@ public class DatabaseCommunicator {
      * @return void
      * @author Anton Jansson
      */
+
     public void executeUpdate(String query, Object[] params) throws SQLException {
         try (Connection connection = databaseConnection.getDatabaseconnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -34,6 +37,7 @@ public class DatabaseCommunicator {
             preparedStatement.executeUpdate();
         }
     }
+
     /**
      * A generic method for retrieving resultsets from the database.
      *

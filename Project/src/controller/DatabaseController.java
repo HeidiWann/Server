@@ -1,7 +1,10 @@
 package controller;
+
 import model.*;
+
 import java.sql.*;
 import java.util.ArrayList;
+
 
 /**
  * Clas that is responsible for handling the logic behind handling the database.
@@ -10,6 +13,7 @@ import java.util.ArrayList;
  * @author Heidi Wännman
  */
 public class DatabaseController {
+
     private DatabaseCommunicator databaseCommunicator;
 
     /**
@@ -20,6 +24,7 @@ public class DatabaseController {
      */
     public DatabaseController()  {
     }
+
     //Usch detta är så komplex och svårt, fattar inte riktigt vad jag håller på med. Denna ska användas via RecipeController.
     public void addRecipe(String recipeName, byte[] recipeImage, String recipeInstructions, int authorId) throws SQLException {
         String sql = "{ CALL insert_into_recipes(?, ?, ?, ?) }";
@@ -32,6 +37,7 @@ public class DatabaseController {
             stmt.execute();
         }
     }
+
     public ArrayList<Recipe> getAllRecipes() throws SQLException {
         ArrayList<Recipe> recipes = new ArrayList<>();
         String query = "SELECT * FROM recipes";
@@ -59,6 +65,7 @@ public class DatabaseController {
             statement.execute();
         }
     }
+
     public boolean checkUserExists(String username) throws SQLException {
         String query = "{ ? = CALL userFound(?) }";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();

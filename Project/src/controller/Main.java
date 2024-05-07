@@ -1,6 +1,7 @@
 package controller;
+
 import model.DatabaseCommunicator;
-import view.DatabaseConnection;
+import model.DatabaseConnection;
 import java.sql.SQLException;
 
 /**
@@ -9,6 +10,7 @@ import java.sql.SQLException;
  * @author Heidi Wännman
  */
 public class Main {
+
     public static void main(String[] args) throws SQLException {
         DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
         DatabaseConnection dbConn = new DatabaseConnection();
