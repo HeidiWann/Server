@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import static controller.Constants.*;
 
-
 /**
  * This class is responsible for handling connected clients.
+ *
  * @author Anton Jansson
  * @author Anton Persson
  */
@@ -25,14 +25,13 @@ public class ConnectionController {
 
     //TODO: The intentions might cause problems since they aren't Thread proof. I will look onto this after we've implemented the communication in the server
 
-
     /**
      * This constructor initiates instance variables
+     *
      * @param userController
      * @param recipeController
      * @author Anton Jansson
      */
-
     public ConnectionController(UserController userController, RecipeController recipeController) {
         this.userController = userController;
         this.recipeController = recipeController;
@@ -44,6 +43,7 @@ public class ConnectionController {
      * This method creates a new {@link ClientConnection} and then starts it as a thread. The {@link ClientConnection}
      * is then added to {@link ConnectedClients}. Lastly, the method sends all the recipes and users from the server
      * to the client.
+     *
      * @param clientSocket A {@link Socket} that is sent to the constructor of {@link ClientConnection}
      * @author Anton Jansson
      * @author Anton Persson
@@ -63,6 +63,7 @@ public class ConnectionController {
     /**
      * This method sends the list of {@link Recipe} from the server to the client in the form of an {@link ArrayList}
      * containing {@link Object}
+     *
      * @param clientConnection The {@link ClientConnection} that is to get the recipes.
      * @author Anton Persson
      */
@@ -77,6 +78,7 @@ public class ConnectionController {
     /**
      * This method gets an {@link ArrayList} of {@link User} from the {@link UserController} and converts it into an
      * ArrayList of {@link Object} and later returns it.
+     *
      * @return A list of users
      * @author Anton Persson
      */
@@ -90,6 +92,7 @@ public class ConnectionController {
      * This method creates an {@link ArrayList} of {@link ClientConnection} from the clients in {@link ConnectedClients}.
      * The method then loops through the list and for each {@link ClientConnection}, an intention and {@link Object} is
      * sent.
+     *
      * @param object
      * @param intention
      * @author Anton Persson
@@ -104,8 +107,9 @@ public class ConnectionController {
 
     /**
      * This method reveals the intention of a client and then does something based on the intention.
+     *
      * @param clientConnection {@link ClientConnection} that the intention came from
-     * @param intention int that decides what happens
+     * @param intention        int that decides what happens
      * @throws IOException
      * @throws ClassNotFoundException
      * @throws SQLException
@@ -132,14 +136,15 @@ public class ConnectionController {
     /**
      * This method packs up an {@link Object} from a Client. Based on the intention in the server the Object is unpacked
      * differently.
+     *
      * @param clientConnection The {@link ClientConnection} that has sent the {@link Object}
-     * @param object The {@link Object} that is to be unpacked
+     * @param object           The {@link Object} that is to be unpacked
      * @author Anton Persson
      * @author Heidi Wänmann
      */
-    public void packUpObject(ClientConnection clientConnection, Object object)  {
+    public void packUpObject(ClientConnection clientConnection, Object object) {
         switch (intention) {
-            case C_WANT_TO_REGISTER :
+            case C_WANT_TO_REGISTER:
                 User user = (User) object;
                 userController.addUser(user);
                 sendObjectToEveryClient(prepareListOfUsers(), S_UPDATE_C_LIST_OF_USERS);

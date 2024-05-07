@@ -10,10 +10,8 @@ import java.sql.*;
 public class DatabaseCommunicator {
     private DatabaseConnection databaseConnection;
 
-
     public DatabaseCommunicator() throws SQLException {
         this.databaseConnection = new DatabaseConnection();
-
     }
 
     public Connection getDatabaseconnection() throws SQLException {
@@ -27,7 +25,6 @@ public class DatabaseCommunicator {
      * @return void
      * @author Anton Jansson
      */
-
     public void executeUpdate(String query, Object[] params) throws SQLException {
         try (Connection connection = databaseConnection.getDatabaseconnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -52,7 +49,6 @@ public class DatabaseCommunicator {
         } finally {
             Statement statement = null;
             statement.close();
-
         }
     }
 }

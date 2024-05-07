@@ -2,7 +2,6 @@ package controller;
 
 import model.DatabaseCommunicator;
 import view.ClientConnection;
-
 import java.sql.SQLException;
 
 /**
@@ -12,7 +11,6 @@ import java.sql.SQLException;
  * @author Heidi Wännman
  */
 public class ServerController {
-
     private DatabaseController databaseController;
     private RecipeController recipeController;
     private UserController userController;

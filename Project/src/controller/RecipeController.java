@@ -24,12 +24,14 @@ public class RecipeController {
 
     /**
      * Clas constructor
+     *
      * @param databaseCommunicator
      * @author Anton Jansson
      */
     public RecipeController(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
+
     public void sendRecipe(ObjectOutputStream oos, Recipe recipe) {
         try {
             if (recipe != null) {
@@ -44,6 +46,7 @@ public class RecipeController {
             e.printStackTrace();
         }
     }
+
     public Recipe getRecipeFromObject(Object object) {
 
         if (object instanceof Recipe) {
@@ -53,11 +56,9 @@ public class RecipeController {
         return null;
     }
 
-    public  HashMap<Recipe, ClientConnection> getNewRecipeInfo() throws SQLException {
-
+    public HashMap<Recipe, ClientConnection> getNewRecipeInfo() throws SQLException {
         HashMap<Recipe, ClientConnection> recipes = new HashMap<>();
         List<Recipe> recipesList = databaseController.getAllRecipes();
-
         for (Recipe recipe : recipesList) {
             recipes.put(recipe, null);
         }
@@ -65,21 +66,18 @@ public class RecipeController {
     }
 
     public void setRecipes(ArrayList<Recipe> recipe) {
-
     }
-    public void handleRecipe(Object object) {
 
+    public void handleRecipe(Object object) {
         Recipe recipe = (Recipe) object;
     }
+
     public void updateRecipe(Recipe recipe) {
-
     }
-    public Recipe getRecipe(Recipe recipe) {
 
+    public Recipe getRecipe(Recipe recipe) {
         return recipe;
     }
-
-
 }
 
 

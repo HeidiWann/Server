@@ -1,13 +1,11 @@
 package view;
 
 import controller.ConnectionController;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
-
 import static controller.Constants.*;
 
 
@@ -17,7 +15,6 @@ import static controller.Constants.*;
  * @author Salma Omar
  * @author Anton Persson
  */
-
 public class ClientConnection implements Runnable {
     private final Socket socket;
     private final ConnectionController connectionController;
@@ -28,7 +25,8 @@ public class ClientConnection implements Runnable {
 
     /**
      * Initiates the instance variables
-     * @param socket {@link Socket} that enables communication between server and client
+     *
+     * @param socket               {@link Socket} that enables communication between server and client
      * @param connectionController {@link ConnectionController} that processes the data gathered from the client
      * @throws IOException
      * @author Salma Omar
@@ -46,6 +44,7 @@ public class ClientConnection implements Runnable {
      * either listen for an intention or an object and send them to the {@link ConnectionController} for processing.
      * If the inputs stream isn't available, the thread sleeps for 100 milliseconds. Finally, the method closes the
      * connection
+     *
      * @author Anton Persson
      * @author Salma Omar
      * @author Heidi Wänmann
@@ -61,8 +60,7 @@ public class ClientConnection implements Runnable {
                         int intention = ois.readInt();
                         connectionController.revealClientIntention(this, intention);
                     }
-
-                    if (listenForObject){
+                    if (listenForObject) {
                         Object objectFromClient = ois.readObject();
                         connectionController.packUpObject(this, objectFromClient);
                     }
@@ -78,7 +76,7 @@ public class ClientConnection implements Runnable {
             System.out.println("Something went wrong in the communication: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }  finally {
+        } finally {
             closeConnection();
         }
     }
@@ -96,6 +94,7 @@ public class ClientConnection implements Runnable {
 
     /**
      * This method sends an intention to the client by using {@link ObjectOutputStream}
+     *
      * @param intention An int that tells the client what to do
      * @author Anton Persson
      */
@@ -111,6 +110,7 @@ public class ClientConnection implements Runnable {
 
     /**
      * This method sends an Object to the client by using {@link ObjectOutputStream}
+     *
      * @param object The {@link Object} to send
      * @author Anton Persson
      */
@@ -125,6 +125,7 @@ public class ClientConnection implements Runnable {
 
     /**
      * This method sets the value of the boolean
+     *
      * @param listenForIntention The value that is to be given to the boolean
      * @author Anton Persson
      */
@@ -134,6 +135,7 @@ public class ClientConnection implements Runnable {
 
     /**
      * This method sets the value of the boolean
+     *
      * @param listenForObject The value that is to be given to the boolean
      * @author Anton Persson
      */

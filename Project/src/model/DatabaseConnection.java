@@ -1,6 +1,4 @@
 package model;
-
-
 import java.sql.*;
 
 /**
@@ -9,9 +7,7 @@ import java.sql.*;
  * @author Anton Jansson
  * @author Heidi Wännman
  */
-
 public class DatabaseConnection {
-
     private Connection connection;
     private DatabaseCommunicator databaseCommunicator;
 
@@ -21,10 +17,7 @@ public class DatabaseConnection {
      */
     public DatabaseConnection() {
         this.databaseCommunicator = databaseCommunicator;
-
-
     }
-
     /**
      * Method used for establishing a connection to the database
      *
@@ -38,12 +31,9 @@ public class DatabaseConnection {
             String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
             this.connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
-
         }
-
         return this.connection;
     }
-
 }
 
 

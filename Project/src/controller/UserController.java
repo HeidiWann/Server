@@ -1,11 +1,11 @@
 package controller;
 
 import model.DatabaseCommunicator;
+import view.ClientConnection;
 import model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 
 /**
  * Clas responsible for handling logic related to users
@@ -32,6 +32,7 @@ public class UserController {
 
     /**
      * This method returns the values in the {@link HashMap} containing {@link User} as {@link ArrayList}
+     *
      * @return A list of users
      * @author Anton Persson
      */
@@ -43,6 +44,7 @@ public class UserController {
      * This method creates an {@link ArrayList} and then stores every {@link User} that is in the database in it.
      * The method then loops through every User in the list and puts the Users userName as key and the Users as value
      * in a {@link HashMap}
+     *
      * @author Anton Persson
      */
     public void setUsers() {
@@ -60,7 +62,8 @@ public class UserController {
 
     /**
      * This method adds a {@link User} to the database by calling a method in {@link DatabaseController}
-     * @param User that is to be added to the database
+     *
+     * @param user that is to be added to the database
      * @author Anton Persson
      */
     public void addUser(User user) {
@@ -75,16 +78,15 @@ public class UserController {
         }
     }
 
-    public  HashMap<User, ClientConnection> getNewUserInfo() throws SQLException {
-
+    public HashMap<User, ClientConnection> getNewUserInfo() throws SQLException {
         HashMap<User, ClientConnection> users = new HashMap<>();
         ArrayList<User> userList = databaseController.getAllUsers();
-
         for (User user : userList) {
             users.put(user, null);
         }
         return users;
     }
+
     public User getUserFromObject(Object object) {
         if (object instanceof User) {
             return (User) object;

@@ -1,7 +1,6 @@
 package controller;
 
 import model.*;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -13,7 +12,6 @@ import java.util.ArrayList;
  * @author Heidi Wännman
  */
 public class DatabaseController {
-
     private DatabaseCommunicator databaseCommunicator;
 
     /**
@@ -22,10 +20,9 @@ public class DatabaseController {
      * @author Anton Jansson
      * @author Heidi Wännman
      */
-    public DatabaseController()  {
+    public DatabaseController() {
     }
 
-    //Usch detta är så komplex och svårt, fattar inte riktigt vad jag håller på med. Denna ska användas via RecipeController.
     public void addRecipe(String recipeName, byte[] recipeImage, String recipeInstructions, int authorId) throws SQLException {
         String sql = "{ CALL insert_into_recipes(?, ?, ?, ?) }";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
@@ -55,6 +52,7 @@ public class DatabaseController {
         }
         return recipes;
     }
+
     //Denna ska användas via UserController.
     public void addUser(String userName, String password) throws SQLException {
         String query = "{ CALL users(?, ?) }";
@@ -76,6 +74,7 @@ public class DatabaseController {
             return statement.getBoolean(1);
         }
     }
+
     /**
      * Method used for fetching users from the database
      *
@@ -91,6 +90,7 @@ public class DatabaseController {
         resultSet.close();
         return users;
     }
+
     /**
      * Method used for when a user updates it profile
      *
@@ -102,6 +102,7 @@ public class DatabaseController {
         Object[] params = new Object[]{user.getUserName(), user.getPassword(), user.getUserID()};
         databaseCommunicator.executeUpdate(query, params);
     }
+
     /**
      * Method used for when a client registers to the database
      *

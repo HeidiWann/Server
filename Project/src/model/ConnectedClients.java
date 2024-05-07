@@ -1,7 +1,6 @@
 package model;
 
 import view.ClientConnection;
-
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
