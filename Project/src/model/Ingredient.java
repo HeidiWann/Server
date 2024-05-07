@@ -1,5 +1,4 @@
 package model;
-
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -15,14 +14,10 @@ public class Ingredient implements Serializable {
     private String ingredientName;
     private double price;
     private String measure;
-    private String store; //Kan vara att det är bättre att skapa en affärklass
-
+    private String store;
     public Ingredient(String ingredientName, double price) {
-
         this.ingredientName = ingredientName;
         this.price = price;
-
-
     }
     public Ingredient(int measureID, String measure) {
     }
@@ -54,7 +49,6 @@ public class Ingredient implements Serializable {
         return store;
     }
     public double getIngredientCost() {
-
         return price;
     }
     public int getIngredientID() {

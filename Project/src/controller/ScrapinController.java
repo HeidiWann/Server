@@ -1,5 +1,4 @@
 package controller;
-
 import model.WebScraping;
 public class ScrapinController {
     private WebScraping webScraping;

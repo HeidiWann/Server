@@ -1,6 +1,4 @@
 package model;
-
-
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -18,12 +16,11 @@ public class Recipe implements Serializable {
     private String recipeInstructions;
 
     public Recipe(int recipeID, String title, byte[] image, String instructions) {
-    this.id = recipeID;
-    this.recipeTitle = title;
-    this.recipeImage = image;
-    this.recipeInstructions = instructions;
+        this.id = recipeID;
+        this.recipeTitle = title;
+        this.recipeImage = image;
+        this.recipeInstructions = instructions;
     }
-
     public int getId() {
         return id;
     }
@@ -45,7 +42,6 @@ public class Recipe implements Serializable {
     public String getRecipeInstructions() {
         return recipeInstructions;
     }
-
     public void setRecipeInstructions(String recipeInstructions) {
         this.recipeInstructions = recipeInstructions;
     }

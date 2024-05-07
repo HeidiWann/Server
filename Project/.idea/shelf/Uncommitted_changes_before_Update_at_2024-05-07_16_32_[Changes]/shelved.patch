@@ -1,0 +1,1392 @@
+Index: src/controller/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport model.ClientConnection;\r\nimport model.DatabaseCommunicator;\r\nimport model.User;\r\nimport java.sql.SQLException;\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\n\r\n\r\n/**\r\n * Clas responsible for handling logic related to users\r\n *\r\n * @author Anton Jansson\r\n * @author Heidi Wännman\r\n */\r\npublic class UserController {\r\n    private DatabaseCommunicator databaseCommunicator;\r\n    private DatabaseController databaseController;\r\n    private HashMap<User, ClientConnection> userConnected = new HashMap<>();\r\n\r\n    /**\r\n     * Clas constructor\r\n     *\r\n     * @param databaseCommunicator\r\n     * @author Anton Jansson\r\n     */\r\n    public UserController(DatabaseCommunicator databaseCommunicator) {\r\n        this.databaseCommunicator = databaseCommunicator;\r\n    }\r\n    public  HashMap<User, ClientConnection> getNewUserInfo() throws SQLException {\r\n\r\n        HashMap<User, ClientConnection> users = new HashMap<>();\r\n        ArrayList<User> userList = databaseController.getAllUsers();\r\n\r\n        for (User user : userList) {\r\n            users.put(user, null);\r\n        }\r\n        return users;\r\n    }\r\n    public User getUserFromObject(Object object) {\r\n        if (object instanceof User) {\r\n            return (User) object;\r\n        }\r\n        System.out.println(\"Received object is not a user\");\r\n        return null;\r\n    }\r\n\r\n    public void userConnectionHandler(User user, ClientConnection clientConnection) {\r\n        userConnected.put(user, clientConnection);\r\n    }\r\n\r\n    public void userDisconnecter(User user) {\r\n        userConnected.remove(user);\r\n    }\r\n\r\n}\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/UserController.java b/src/controller/UserController.java
+--- a/src/controller/UserController.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/UserController.java	(date 1715091822621)
+@@ -1,13 +1,11 @@
+ package controller;
+-
+-import model.ClientConnection;
+ import model.DatabaseCommunicator;
+ import model.User;
++import view.ClientConnection;
+ import java.sql.SQLException;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ 
+-
+ /**
+  * Clas responsible for handling logic related to users
+  *
+@@ -18,6 +16,7 @@
+     private DatabaseCommunicator databaseCommunicator;
+     private DatabaseController databaseController;
+     private HashMap<User, ClientConnection> userConnected = new HashMap<>();
++    private HashMap<String, User> users;
+ 
+     /**
+      * Clas constructor
+@@ -27,12 +26,51 @@
+      */
+     public UserController(DatabaseCommunicator databaseCommunicator) {
+         this.databaseCommunicator = databaseCommunicator;
++        users = new HashMap<>();
++    }
++    /**
++     * This method returns the values in the {@link HashMap} containing {@link User} as {@link ArrayList}
++     * @return A list of users
++     * @author Anton Persson
++     */
++    public ArrayList<User> getAllUsers() {
++        return (ArrayList<User>) users.values();
++    }
++    /**
++     * This method creates an {@link ArrayList} and then stores every {@link User} that is in the database in it.
++     * The method then loops through every User in the list and puts the Users userName as key and the Users as value
++     * in a {@link HashMap}
++     * @author Anton Persson
++     */
++    public void setUsers() {
++        ArrayList<User> listOfUsers = new ArrayList<>();
++        try {
++            listOfUsers = databaseController.getAllUsers();
++        } catch (SQLException e) {
++            e.printStackTrace();
++        }
++        for (User user : listOfUsers) {
++            String userName = user.getUserName();
++            users.put(userName, user);
++        }
++    }
++    /**
++     * This method adds a {@link User} to the database by calling a method in {@link DatabaseController}
++     * @param user that is to be added to the database
++     * @author Anton Persson
++     */
++    public void addUser(User user) {
++        String userName = user.getUserName();
++        String password = user.getPassword();
++        users.put(userName, user);
++        try {
++            databaseController.addUser(userName, password);
++        } catch (Exception e) {
++        }
+     }
+     public  HashMap<User, ClientConnection> getNewUserInfo() throws SQLException {
+-
+         HashMap<User, ClientConnection> users = new HashMap<>();
+         ArrayList<User> userList = databaseController.getAllUsers();
+-
+         for (User user : userList) {
+             users.put(user, null);
+         }
+@@ -45,16 +83,10 @@
+         System.out.println("Received object is not a user");
+         return null;
+     }
+-
+     public void userConnectionHandler(User user, ClientConnection clientConnection) {
+         userConnected.put(user, clientConnection);
+     }
+-
+     public void userDisconnecter(User user) {
+         userConnected.remove(user);
+     }
+-
+-}
+-
+-
+-
++}
+\ No newline at end of file
+Index: src/model/DatabaseCommunicator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\nimport java.sql.*;\r\n\r\n\r\n/**\r\n * Class responsible for communicating with the database\r\n *\r\n * @author Anton Jansson\r\n */\r\npublic class DatabaseCommunicator {\r\n    private DatabaseConnection databaseConnection;\r\n\r\n\r\n    public DatabaseCommunicator() throws SQLException {\r\n        this.databaseConnection = new DatabaseConnection();\r\n\r\n    }\r\n\r\n    public Connection getDatabaseconnection() throws SQLException {\r\n        return databaseConnection.getDatabaseconnection();\r\n    }\r\n\r\n    /**\r\n     * A generic method for executing querys.\r\n     *\r\n     * @param query String\r\n     * @return void\r\n     * @author Anton Jansson\r\n     */\r\n\r\n    public void executeUpdate(String query, Object[] params) throws SQLException {\r\n        try (Connection connection = databaseConnection.getDatabaseconnection();\r\n             PreparedStatement preparedStatement = connection.prepareStatement(query)) {\r\n            for (int i = 0; i < params.length; i++) {\r\n                preparedStatement.setObject(i + 1, params[i]);\r\n            }\r\n            preparedStatement.executeUpdate();\r\n        }\r\n    }\r\n\r\n    /**\r\n     * A generic method for retrieving resultsets from the database.\r\n     *\r\n     * @param query String\r\n     * @return ResultSet\r\n     * @author Anton Jansson\r\n     */\r\n    public ResultSet getResultSet(String query) throws SQLException {\r\n        try (Connection connection = databaseConnection.getDatabaseconnection();\r\n             Statement statement = connection.createStatement()) {\r\n            return statement.executeQuery(query);\r\n        } finally {\r\n            Statement statement = null;\r\n            statement.close();\r\n\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/DatabaseCommunicator.java b/src/model/DatabaseCommunicator.java
+--- a/src/model/DatabaseCommunicator.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/DatabaseCommunicator.java	(date 1715092325323)
+@@ -1,5 +1,4 @@
+ package model;
+-
+ import java.sql.*;
+ 
+ 
+@@ -11,16 +10,13 @@
+ public class DatabaseCommunicator {
+     private DatabaseConnection databaseConnection;
+ 
+-
+     public DatabaseCommunicator() throws SQLException {
+         this.databaseConnection = new DatabaseConnection();
+ 
+     }
+-
+     public Connection getDatabaseconnection() throws SQLException {
+         return databaseConnection.getDatabaseconnection();
+     }
+-
+     /**
+      * A generic method for executing querys.
+      *
+@@ -28,7 +24,6 @@
+      * @return void
+      * @author Anton Jansson
+      */
+-
+     public void executeUpdate(String query, Object[] params) throws SQLException {
+         try (Connection connection = databaseConnection.getDatabaseconnection();
+              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+@@ -38,7 +33,6 @@
+             preparedStatement.executeUpdate();
+         }
+     }
+-
+     /**
+      * A generic method for retrieving resultsets from the database.
+      *
+@@ -53,7 +47,6 @@
+         } finally {
+             Statement statement = null;
+             statement.close();
+-
+         }
+     }
+ }
+Index: src/view/ConnectionListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package view;\r\n\r\nimport controller.ConnectionController;\r\nimport java.io.IOException;\r\nimport java.net.ServerSocket;\r\nimport java.net.Socket;\r\n\r\n/**\r\n * Class that listens for new connections and sends connections forward to the ConnectionController\r\n *\r\n * @author Anton Jansson\r\n */\r\npublic class ConnectionListener extends Thread {\r\n    private ServerSocket serverSocket;\r\n    private ConnectionController connectionController;\r\n    public ConnectionListener(int port, ConnectionController connectionController) {\r\n        this.connectionController = connectionController;\r\n        try {\r\n            serverSocket = new ServerSocket(port);\r\n            start();\r\n        } catch (IOException e) {\r\n            System.out.println(\"IOExcetion in constructor of ConnectionListener\");\r\n            System.out.println(e.getMessage());\r\n\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public synchronized void run() {\r\n        while (!isInterrupted()) {\r\n            try {\r\n                Socket socket = serverSocket.accept();\r\n                connectionController.clientConnectionHandler(socket);\r\n\r\n            } catch (IOException ioe) {\r\n                System.out.println(\"Could not accept the clients connection\");\r\n                throw new RuntimeException();\r\n\r\n            }\r\n        }\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/view/ConnectionListener.java b/src/view/ConnectionListener.java
+--- a/src/view/ConnectionListener.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/view/ConnectionListener.java	(date 1715092325338)
+@@ -1,5 +1,4 @@
+ package view;
+-
+ import controller.ConnectionController;
+ import java.io.IOException;
+ import java.net.ServerSocket;
+@@ -13,6 +12,7 @@
+ public class ConnectionListener extends Thread {
+     private ServerSocket serverSocket;
+     private ConnectionController connectionController;
++
+     public ConnectionListener(int port, ConnectionController connectionController) {
+         this.connectionController = connectionController;
+         try {
+@@ -21,23 +21,18 @@
+         } catch (IOException e) {
+             System.out.println("IOExcetion in constructor of ConnectionListener");
+             System.out.println(e.getMessage());
+-
+         }
+     }
+-
+     @Override
+     public synchronized void run() {
+         while (!isInterrupted()) {
+             try {
+                 Socket socket = serverSocket.accept();
+-                connectionController.clientConnectionHandler(socket);
+-
++                connectionController.establishClientsConnection(socket);
+             } catch (IOException ioe) {
+                 System.out.println("Could not accept the clients connection");
+                 throw new RuntimeException();
+-
+             }
+         }
+     }
+-
+ }
+Index: src/model/DatabaseConnection.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\n\r\nimport java.sql.*;\r\n\r\n/**\r\n * Clas that starts the connection to the database\r\n *\r\n * @author Anton Jansson\r\n * @author Heidi Wännman\r\n */\r\n\r\npublic class DatabaseConnection {\r\n\r\n    private Connection connection;\r\n    private DatabaseCommunicator databaseCommunicator;\r\n\r\n\r\n    /**\r\n     * @author Heidi Wännman\r\n     */\r\n    public DatabaseConnection() {\r\n        this.databaseCommunicator = databaseCommunicator;\r\n\r\n\r\n    }\r\n\r\n    /**\r\n     * Method used for establishing a connection to the database\r\n     *\r\n     * @return Connection\r\n     * @author Heidi Wännman\r\n     */\r\n    public Connection getDatabaseconnection() throws SQLException {\r\n        if (this.connection == null || this.connection.isClosed()) {\r\n            String user = System.getenv(\"DBUSER\");\r\n            String password = System.getenv(\"DBPASSWORD\");\r\n            String url = \"jdbc:postgresql://pgserver.mau.se:5432/cheapeat\";\r\n            this.connection = DriverManager.getConnection(url, user, password);\r\n            System.out.println(\"Connection Established\");\r\n\r\n        }\r\n\r\n        return this.connection;\r\n    }\r\n\r\n}\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/DatabaseConnection.java b/src/model/DatabaseConnection.java
+--- a/src/model/DatabaseConnection.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/DatabaseConnection.java	(date 1715092325309)
+@@ -1,6 +1,4 @@
+ package model;
+-
+-
+ import java.sql.*;
+ 
+ /**
+@@ -9,22 +7,16 @@
+  * @author Anton Jansson
+  * @author Heidi Wännman
+  */
+-
+ public class DatabaseConnection {
+-
+     private Connection connection;
+     private DatabaseCommunicator databaseCommunicator;
+ 
+-
+     /**
+      * @author Heidi Wännman
+      */
+     public DatabaseConnection() {
+         this.databaseCommunicator = databaseCommunicator;
+-
+-
+     }
+-
+     /**
+      * Method used for establishing a connection to the database
+      *
+@@ -38,12 +30,9 @@
+             String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
+             this.connection = DriverManager.getConnection(url, user, password);
+             System.out.println("Connection Established");
+-
+         }
+-
+         return this.connection;
+     }
+-
+ }
+ 
+ 
+Index: src/model/Ingredient.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\nimport java.io.Serial;\r\nimport java.io.Serializable;\r\n\r\n/**\r\n * Clas that represents ingredients\r\n *\r\n * @author Heidi Wännman\r\n */\r\npublic class Ingredient implements Serializable {\r\n    @Serial\r\n    private static final long serialVersionUID = 333444555L;\r\n    private int ingredientId;\r\n    private String ingredientName;\r\n    private double price;\r\n    private String measure;\r\n    private String store; //Kan vara att det är bättre att skapa en affärklass\r\n\r\n    public Ingredient(String ingredientName, double price) {\r\n\r\n        this.ingredientName = ingredientName;\r\n        this.price = price;\r\n\r\n\r\n    }\r\n    public Ingredient(int measureID, String measure) {\r\n    }\r\n    public int getId() {\r\n        return ingredientId;\r\n    }\r\n    public void setId(int ingredientId) {\r\n        this.ingredientId = ingredientId;\r\n    }\r\n    public String getIngredientName() {\r\n        return ingredientName;\r\n    }\r\n    public void setIngredientName(String ingredientName) {\r\n        this.ingredientName = ingredientName;\r\n    }\r\n    public double getPrice() {\r\n        return price;\r\n    }\r\n    public void setPrice(double price) {\r\n        this.price = price;\r\n    }\r\n    public String getMeasure() {\r\n        return measure;\r\n    }\r\n    public void setMeasure(String measure) {\r\n        this.measure = measure;\r\n    }\r\n    public String getStore() {\r\n        return store;\r\n    }\r\n    public double getIngredientCost() {\r\n\r\n        return price;\r\n    }\r\n    public int getIngredientID() {\r\n        return ingredientId;\r\n    }\r\n    public int getMeasureID() {\r\n        int measureID = 0;\r\n        return measureID;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/Ingredient.java b/src/model/Ingredient.java
+--- a/src/model/Ingredient.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/Ingredient.java	(date 1715092325328)
+@@ -1,5 +1,4 @@
+ package model;
+-
+ import java.io.Serial;
+ import java.io.Serializable;
+ 
+@@ -18,11 +17,8 @@
+     private String store; //Kan vara att det är bättre att skapa en affärklass
+ 
+     public Ingredient(String ingredientName, double price) {
+-
+         this.ingredientName = ingredientName;
+         this.price = price;
+-
+-
+     }
+     public Ingredient(int measureID, String measure) {
+     }
+@@ -54,7 +50,6 @@
+         return store;
+     }
+     public double getIngredientCost() {
+-
+         return price;
+     }
+     public int getIngredientID() {
+Index: src/model/WebScraping.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONObject;\r\nimport org.jsoup.Jsoup;\r\nimport org.jsoup.nodes.Document;\r\nimport org.jsoup.select.Elements;\r\nimport java.io.BufferedReader;\r\nimport java.io.InputStreamReader;\r\nimport java.net.HttpURLConnection;\r\nimport java.net.URL;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\n/**\r\n * This class is responsible for scraping data from different stores, right now it is scraping ICA.\r\n * Mejeri-ost and it takes 300 pruducts at one scrape from this Mejeri-ost category.\r\n *\r\n * @author Heidi Wännman\r\n */\r\npublic class WebScraping {\r\n\r\n    private final List<String> webpageProductList = new ArrayList<>();\r\n\r\n\r\n    /**\r\n     * This method is used to scrape a given webpage for the name and the price of the products.\r\n     *\r\n     * @param url The URL of the webpage to scrape.\r\n     * @author Heidi Wännman\r\n     */\r\n    public void scrapeICAForNameAndPrice(String url) {\r\n\r\n        try {\r\n            Document doc = Jsoup.connect(url).get();\r\n            Elements priceElements = doc.select(\"[data-test=\\\"initial-state-script\\\"]\");\r\n            System.out.println(priceElements.size());\r\n            String jsonData = priceElements.first().toString().substring(priceElements.first().toString().lastIndexOf(\"window.__INITIAL_STATE__=\") + 25);\r\n            jsonData = jsonData.substring(0, jsonData.lastIndexOf(\"</script>\"));\r\n            JSONObject productJSONData = new JSONObject(jsonData);\r\n            JSONArray productJSONArray = new JSONArray();\r\n\r\n            for (int i = 0; i < productJSONData.getJSONObject(\"data\").getJSONObject(\"products\").getJSONObject(\"catalogue\").getJSONObject(\"data\").getJSONArray(\"productGroups\").length(); i++) {\r\n                JSONArray productGroups = new JSONArray();\r\n                productGroups.put(productJSONData.getJSONObject(\"data\").getJSONObject(\"products\").getJSONObject(\"catalogue\").getJSONObject(\"data\").getJSONArray(\"productGroups\").get(i));\r\n                productJSONArray.put(productGroups.getJSONObject(0).getJSONArray(\"products\"));\r\n            }\r\n\r\n            List<String> productList = new ArrayList<>();\r\n\r\n            for (int i = 0; i < productJSONArray.length(); i++) {\r\n                for (int j = 0; j < productJSONArray.getJSONArray(i).length(); j++) {\r\n                    productList.add(productJSONArray.getJSONArray(i).get(j).toString());\r\n                }\r\n            }\r\n\r\n            List<List<String>> productsSplit = splitArray(productList, 100);\r\n\r\n            for (List<String> strings : productsSplit) {\r\n                StringBuilder apiString = new StringBuilder();\r\n                for (String string : strings) {\r\n                    apiString.append(string).append(\",\");\r\n                }\r\n                sendGetRequestAndResolveProductPrices(\"https://handlaprivatkund.ica.se/stores/1003937/api/v5/products/decorate?productIds=\" + apiString);\r\n\r\n            }\r\n            System.out.println(\"product list size: \" + webpageProductList.size());\r\n            for (String s : webpageProductList) {\r\n                System.out.println(\"Product: \" + s);\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    /**\r\n     * This method asks the specified URL for the details and we process the extracted data\r\n     *\r\n     * @param productName productName The URL with the product id to get the price\r\n     * @author Heidi Wännman\r\n     */\r\n    public void sendGetRequestAndResolveProductPrices(String productName) {\r\n        try {\r\n            URL url = new URL(productName);\r\n            HttpURLConnection connection = (HttpURLConnection) url.openConnection();\r\n            connection.setRequestMethod(\"GET\");\r\n            int responseCode = connection.getResponseCode();\r\n            if (responseCode == HttpURLConnection.HTTP_OK) {\r\n                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));\r\n                String inputLine;\r\n                StringBuilder response = new StringBuilder();\r\n                while ((inputLine = in.readLine()) != null) {\r\n                    response.append(inputLine);\r\n                }\r\n                in.close();\r\n                JSONObject jsonObject = new JSONObject(response.toString());\r\n                JSONArray products = jsonObject.getJSONArray(\"products\");\r\n                for (int i = 0; i < products.length(); i++) {\r\n                    JSONObject product = products.getJSONObject(i);\r\n                    webpageProductList.add(product.getString(\"name\") + \" costs: \" + product.getJSONObject(\"price\").getJSONObject(\"current\").getString(\"amount\"));\r\n                }\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    /**\r\n     * This method is used to split a list into smaller lists with a given size\r\n     *\r\n     * @param arr  arr The list to split\r\n     * @param size Is the maximum size of each list\r\n     * @return A list of lists, each list containing the size that the original list(up to the size of elements)\r\n     * @author Heidi Wännman\r\n     */\r\n    public List<List<String>> splitArray(List<String> arr, int size) {\r\n        List<List<String>> result = new ArrayList<>();\r\n        for (int i = 0; i < arr.size(); i += size) {\r\n            result.add(arr.subList(i, Math.min(i + size, arr.size())));\r\n        }\r\n        return result;\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/WebScraping.java b/src/model/WebScraping.java
+--- a/src/model/WebScraping.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/WebScraping.java	(date 1715092325313)
+@@ -1,5 +1,4 @@
+ package model;
+-
+ import org.json.JSONArray;
+ import org.json.JSONObject;
+ import org.jsoup.Jsoup;
+@@ -19,10 +18,8 @@
+  * @author Heidi Wännman
+  */
+ public class WebScraping {
+-
+     private final List<String> webpageProductList = new ArrayList<>();
+ 
+-
+     /**
+      * This method is used to scrape a given webpage for the name and the price of the products.
+      *
+@@ -30,7 +27,6 @@
+      * @author Heidi Wännman
+      */
+     public void scrapeICAForNameAndPrice(String url) {
+-
+         try {
+             Document doc = Jsoup.connect(url).get();
+             Elements priceElements = doc.select("[data-test=\"initial-state-script\"]");
+@@ -39,30 +35,24 @@
+             jsonData = jsonData.substring(0, jsonData.lastIndexOf("</script>"));
+             JSONObject productJSONData = new JSONObject(jsonData);
+             JSONArray productJSONArray = new JSONArray();
+-
+             for (int i = 0; i < productJSONData.getJSONObject("data").getJSONObject("products").getJSONObject("catalogue").getJSONObject("data").getJSONArray("productGroups").length(); i++) {
+                 JSONArray productGroups = new JSONArray();
+                 productGroups.put(productJSONData.getJSONObject("data").getJSONObject("products").getJSONObject("catalogue").getJSONObject("data").getJSONArray("productGroups").get(i));
+                 productJSONArray.put(productGroups.getJSONObject(0).getJSONArray("products"));
+             }
+-
+             List<String> productList = new ArrayList<>();
+-
+             for (int i = 0; i < productJSONArray.length(); i++) {
+                 for (int j = 0; j < productJSONArray.getJSONArray(i).length(); j++) {
+                     productList.add(productJSONArray.getJSONArray(i).get(j).toString());
+                 }
+             }
+-
+             List<List<String>> productsSplit = splitArray(productList, 100);
+-
+             for (List<String> strings : productsSplit) {
+                 StringBuilder apiString = new StringBuilder();
+                 for (String string : strings) {
+                     apiString.append(string).append(",");
+                 }
+                 sendGetRequestAndResolveProductPrices("https://handlaprivatkund.ica.se/stores/1003937/api/v5/products/decorate?productIds=" + apiString);
+-
+             }
+             System.out.println("product list size: " + webpageProductList.size());
+             for (String s : webpageProductList) {
+@@ -72,7 +62,6 @@
+             e.printStackTrace();
+         }
+     }
+-
+     /**
+      * This method asks the specified URL for the details and we process the extracted data
+      *
+@@ -104,7 +93,6 @@
+             e.printStackTrace();
+         }
+     }
+-
+     /**
+      * This method is used to split a list into smaller lists with a given size
+      *
+Index: src/model/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\nimport java.io.Serial;\r\nimport java.io.Serializable;\r\n\r\n/**\r\n * Clas that represents users\r\n *\r\n * @author Heidi Wännman\r\n */\r\npublic class User implements Serializable {\r\n    @Serial\r\n    private static final long serialVersionUID = 222333444L;\r\n    private int userID;\r\n    private String userName;\r\n\r\n    private String password;\r\n    private String role;\r\n\r\n    public User(int userID, String userName, String password, String role) {\r\n        this.userID = userID;\r\n        this.userName = userName;\r\n        this.password = password;\r\n        this.role = role;\r\n    }\r\n\r\n\r\n    public int getUserID() {\r\n        return userID;\r\n    }\r\n\r\n    public void setUserID(int userID) {\r\n        this.userID = userID;\r\n    }\r\n\r\n    public String getUserName() {\r\n        return userName;\r\n    }\r\n\r\n    public void setUserName(String userName) {\r\n        this.userName = userName;\r\n    }\r\n\r\n    public String getPassword() {\r\n        return password;\r\n    }\r\n\r\n    public void setPassword(String password) {\r\n        this.password = password;\r\n    }\r\n\r\n    public String getRole() {\r\n        return role;\r\n    }\r\n\r\n    public void setRole(String role) {\r\n        this.role = role;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/User.java b/src/model/User.java
+--- a/src/model/User.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/User.java	(date 1715092325334)
+@@ -1,5 +1,4 @@
+ package model;
+-
+ import java.io.Serial;
+ import java.io.Serializable;
+ 
+@@ -13,7 +12,6 @@
+     private static final long serialVersionUID = 222333444L;
+     private int userID;
+     private String userName;
+-
+     private String password;
+     private String role;
+ 
+@@ -23,36 +21,31 @@
+         this.password = password;
+         this.role = role;
+     }
+-
+-
++    public User(String userName, String password) {
++        this.userName = userName;
++        this.password = password;
++    }
+     public int getUserID() {
+         return userID;
+     }
+-
+     public void setUserID(int userID) {
+         this.userID = userID;
+     }
+-
+     public String getUserName() {
+         return userName;
+     }
+-
+     public void setUserName(String userName) {
+         this.userName = userName;
+     }
+-
+     public String getPassword() {
+         return password;
+     }
+-
+     public void setPassword(String password) {
+         this.password = password;
+     }
+-
+     public String getRole() {
+         return role;
+     }
+-
+     public void setRole(String role) {
+         this.role = role;
+     }
+Index: src/model/Recipe.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\n\r\nimport java.io.Serial;\r\nimport java.io.Serializable;\r\n\r\n/**\r\n * Clas that represents recipes\r\n *\r\n * @author Heidi Wännman\r\n */\r\npublic class Recipe implements Serializable {\r\n    @Serial\r\n    private static final long serialVersionUID = 111222333L;\r\n    private int id;\r\n    private String recipeTitle;\r\n    private byte[] recipeImage;\r\n    private String recipeInstructions;\r\n\r\n    public Recipe(int recipeID, String title, byte[] image, String instructions) {\r\n    this.id = recipeID;\r\n    this.recipeTitle = title;\r\n    this.recipeImage = image;\r\n    this.recipeInstructions = instructions;\r\n    }\r\n\r\n    public int getId() {\r\n        return id;\r\n    }\r\n    public void setId(int id) {\r\n        this.id = id;\r\n    }\r\n    public String getRecipeTitle() {\r\n        return recipeTitle;\r\n    }\r\n    public void setRecipeTitle(String recipeTitle) {\r\n        this.recipeTitle = recipeTitle;\r\n    }\r\n    public byte[] getRecipeImage() {\r\n        return recipeImage;\r\n    }\r\n    public void setRecipeImage(byte[] recipeImage) {\r\n        this.recipeImage = recipeImage;\r\n    }\r\n    public String getRecipeInstructions() {\r\n        return recipeInstructions;\r\n    }\r\n\r\n    public void setRecipeInstructions(String recipeInstructions) {\r\n        this.recipeInstructions = recipeInstructions;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/Recipe.java b/src/model/Recipe.java
+--- a/src/model/Recipe.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/Recipe.java	(date 1715092325343)
+@@ -18,12 +18,11 @@
+     private String recipeInstructions;
+ 
+     public Recipe(int recipeID, String title, byte[] image, String instructions) {
+-    this.id = recipeID;
+-    this.recipeTitle = title;
+-    this.recipeImage = image;
+-    this.recipeInstructions = instructions;
++        this.id = recipeID;
++        this.recipeTitle = title;
++        this.recipeImage = image;
++        this.recipeInstructions = instructions;
+     }
+-
+     public int getId() {
+         return id;
+     }
+@@ -45,7 +44,6 @@
+     public String getRecipeInstructions() {
+         return recipeInstructions;
+     }
+-
+     public void setRecipeInstructions(String recipeInstructions) {
+         this.recipeInstructions = recipeInstructions;
+     }
+Index: src/model/ClientConnection.java
+===================================================================
+diff --git a/src/model/ClientConnection.java b/src/model/ClientConnection.java
+deleted file mode 100644
+--- a/src/model/ClientConnection.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ /dev/null	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
+@@ -1,111 +0,0 @@
+-package model;
+-
+-import controller.ConnectionController;
+-import controller.DatabaseController;
+-import controller.RecipeController;
+-import controller.UserController;
+-import java.io.IOException;
+-import java.io.ObjectInputStream;
+-import java.io.ObjectOutputStream;
+-import java.net.Socket;
+-import java.sql.SQLException;
+-
+-import static controller.Constans.OK;
+-
+-
+-/**
+- * This class manages connections form clients by setting up a listener.
+- * It lets the ConnectionController deal with handling these connections.
+- *
+- * @author Salma Omar
+- */
+-
+-public class ClientConnection implements Runnable {
+-
+-    private Socket socket;
+-    private ConnectionController connectionController;
+-    private DatabaseController databaseController;
+-    private ObjectOutputStream oos;
+-    private ObjectInputStream ois;
+-    private UserController userController;
+-    private RecipeController recipeController;
+-
+-    /**
+-     * Creates a new ClientConnection, passing in the ConnectionsController to handle incoming connections.
+-     *
+-     * @param connectionController the ConnectionController responsible for managing incoming client connections.
+-     */
+-    public ClientConnection(Socket socket, ConnectionController connectionController) throws IOException {
+-        this.socket = socket;
+-        this.connectionController = connectionController;
+-        oos = new ObjectOutputStream(socket.getOutputStream());
+-        ois = new ObjectInputStream(socket.getInputStream());
+-
+-    }
+-    @Override
+-    public void run() {
+-        try {
+-            while (!Thread.currentThread().isInterrupted()) {
+-                if (ois.available() > 0) {
+-                    int intention = ois.readInt();
+-                    Object object = ois.readObject();
+-                    if (object instanceof User) {
+-                        databaseController.checkUserExists("userName");
+-                        databaseController.register((User) object);
+-                    } else if (object instanceof Recipe) {
+-                        handleTheRecipes();
+-                    }
+-                    connectionController.revealClientIntention(intention, this, object);
+-                } else {
+-
+-                    Thread.sleep(100);
+-                }
+-            }
+-        } catch (IOException | SQLException e) {
+-            System.out.println("Something went wrong in the communication: " + e.getMessage());
+-            e.printStackTrace();
+-        } catch (ClassNotFoundException e) {
+-            throw new RuntimeException(e);
+-        } catch (InterruptedException e) {
+-            Thread.currentThread().interrupt();
+-            System.out.println("Thread was interrupted");
+-        } finally {
+-            closeConnection();
+-        }
+-    }
+-    public void closeConnection() {
+-        try {
+-            oos.close();
+-            ois.close();
+-            socket.close();
+-        } catch (IOException e) {
+-            throw new RuntimeException(e);
+-        }
+-    }
+-    public void sendIntention(int intention) {
+-        try {
+-            oos.writeInt(intention);
+-            oos.flush();
+-        } catch (IOException e) {
+-            System.out.println("Could not send the intention");
+-            throw new RuntimeException(e);
+-        }
+-    }
+-    public ObjectInputStream getObjectInputStream() {
+-        return ois;
+-    }
+-    public ObjectOutputStream getObjectOutputStream() {
+-        return oos;
+-    }
+-    private void handleReceivingUser() throws IOException, ClassNotFoundException, SQLException {
+-        User user = (User) ois.readObject();
+-        userController.getNewUserInfo();
+-    }
+-    private void handleTheRecipes() throws IOException, ClassNotFoundException {
+-        Recipe recipe = (Recipe) ois.readObject();
+-        recipeController.sendRecipe(oos, recipe);
+-    }
+-
+-
+-}
+-
+Index: src/controller/Constans.java
+===================================================================
+diff --git a/src/controller/Constans.java b/src/controller/Constans.java
+deleted file mode 100644
+--- a/src/controller/Constans.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ /dev/null	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
+@@ -1,12 +0,0 @@
+-package controller;
+-
+-public interface Constans {
+-    public static final int OK = 0;
+-    public static final int S_WANTUSER = 11;
+-    public static final int S_User = 12;
+-    public static final int S_WANTRECIPE = 13;
+-    public static final int S_Recipe = 14;
+-    public static final int C_WANTS_TO_DISCONNECT = 21;
+-    public static final int C_HAVE_A_OBJECT = 22;
+-    public static final int C_GET_USER_INFO = 23;
+-}
+Index: src/model/WebScraper/CoopWebScraper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model.WebScraper;\r\n\r\nimport org.jsoup.Jsoup;\r\nimport org.jsoup.nodes.Document;\r\nimport org.jsoup.nodes.Element;\r\nimport org.jsoup.select.Elements;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class CoopWebScraper {\r\n\r\n    private List<String> webpageProductList = new ArrayList<>();\r\n\r\n\r\n\r\n\r\n    public void scrapeCoop(String url) {\r\n        try {\r\n          /* Detta är kod baserad på vad Heidi skrev för ica scraping, dock flyger detta mig över huvet @Jansson\r\n\r\n          Document doc = Jsoup.connect(url).get();\r\n            Elements script = doc.select(\"[id=\\\"__NEXT_DATA__\\\"]\");\r\n            String jsonData = script.first().toString().substring(script.first().toString().lastIndexOf(\"<script id=\\\"__NEXT_DATA__\\\" type=\\\"application/json\\\">\") + 51);\r\n            jsonData = jsonData.substring(0, jsonData.lastIndexOf(\"</script>\"));\r\n            JSONObject productJSONData = new JSONObject(jsonData);\r\n            JSONArray productJSONArray = new JSONArray();\r\n*/\r\n            Document doc = Jsoup.connect(url).get();\r\n            //Elements proNames=doc.getElementsByClass(\"ProductTeaser-link u-outlineSolidBase2\");\r\n            // Elements proPrices=doc\r\n\r\n          //  Elements proNames = doc.getElementsByClass(\"Grid Grid-items Grid--gutterAxsm\");\r\n            Elements proNames = doc.getElementsByClass(\"Main Main--fullHeight\");\r\n\r\n            /*TODO har samma problem här som med willys, där man inte kommer vidare förbi en <div> (i detta fall\r\n               klassen \"Main Main--fullHeight\"). Den <div> där datan vi letar efter ligger under denna div som vi inte\r\n               kommer förbi.\r\n               På ett liknande sätt som willys borde man kunna hämta ny data (paginton) genom att kalla på länken\r\n               o ändra\"page=?\".\r\n\r\n             */\r\n\r\n            System.out.println(\"\\nSize is:\" +proNames.size());\r\n\r\n            for(Element name:proNames){\r\n                System.out.println(name.text());\r\n                System.out.println(name+\"\\n ||------------------------------------------||\");\r\n            }\r\n            System.out.println(\"All done\");\r\n\r\n\r\n\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/WebScraper/CoopWebScraper.java b/src/model/WebScraper/CoopWebScraper.java
+--- a/src/model/WebScraper/CoopWebScraper.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/WebScraper/CoopWebScraper.java	(date 1715088857961)
+@@ -9,12 +9,7 @@
+ import java.util.List;
+ 
+ public class CoopWebScraper {
+-
+     private List<String> webpageProductList = new ArrayList<>();
+-
+-
+-
+-
+     public void scrapeCoop(String url) {
+         try {
+           /* Detta är kod baserad på vad Heidi skrev för ica scraping, dock flyger detta mig över huvet @Jansson
+@@ -30,7 +25,7 @@
+             //Elements proNames=doc.getElementsByClass("ProductTeaser-link u-outlineSolidBase2");
+             // Elements proPrices=doc
+ 
+-          //  Elements proNames = doc.getElementsByClass("Grid Grid-items Grid--gutterAxsm");
++            //  Elements proNames = doc.getElementsByClass("Grid Grid-items Grid--gutterAxsm");
+             Elements proNames = doc.getElementsByClass("Main Main--fullHeight");
+ 
+             /*TODO har samma problem här som med willys, där man inte kommer vidare förbi en <div> (i detta fall
+@@ -41,16 +36,15 @@
+ 
+              */
+ 
+-            System.out.println("\nSize is:" +proNames.size());
++            System.out.println("\nSize is:" + proNames.size());
+ 
+-            for(Element name:proNames){
++            for (Element name : proNames) {
+                 System.out.println(name.text());
+-                System.out.println(name+"\n ||------------------------------------------||");
++                System.out.println(name + "\n ||------------------------------------------||");
+             }
+             System.out.println("All done");
+ 
+ 
+-
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+Index: src/controller/DatabaseController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport model.*;\r\n\r\nimport java.sql.*;\r\nimport java.util.ArrayList;\r\n\r\n\r\n/**\r\n * Clas that is responsible for handling the logic behind handling the database.\r\n *\r\n * @author Anton Jansson\r\n * @author Heidi Wännman\r\n */\r\npublic class DatabaseController {\r\n\r\n    private DatabaseCommunicator databaseCommunicator;\r\n\r\n    /**\r\n     * Clas constructor\r\n     *\r\n     * @author Anton Jansson\r\n     * @author Heidi Wännman\r\n     */\r\n    public DatabaseController() throws SQLException {\r\n        this.databaseCommunicator = databaseCommunicator;\r\n    }\r\n\r\n    //Usch detta är så komplex och svårt, fattar inte riktigt vad jag håller på med. Denna ska användas via RecipeController.\r\n    public void addRecipe(String recipeName, byte[] recipeImage, String recipeInstructions, int authorId) throws SQLException {\r\n        String sql = \"{ CALL insert_into_recipes(?, ?, ?, ?) }\";\r\n        try (Connection connection = databaseCommunicator.getDatabaseconnection();\r\n             CallableStatement stmt = connection.prepareCall(sql)) {\r\n            stmt.setString(1, recipeName);\r\n            stmt.setBytes(2, recipeImage);\r\n            stmt.setString(3, recipeInstructions);\r\n            stmt.setInt(4, authorId);\r\n            stmt.execute();\r\n        }\r\n    }\r\n\r\n    public ArrayList<Recipe> getAllRecipes() throws SQLException {\r\n        ArrayList<Recipe> recipes = new ArrayList<>();\r\n        String query = \"SELECT * FROM recipes\";\r\n        try (Connection connection = databaseCommunicator.getDatabaseconnection();\r\n             Statement statement = connection.createStatement();\r\n             ResultSet resultSet = statement.executeQuery(query)) {\r\n            while (resultSet.next()) {\r\n                recipes.add(new Recipe(\r\n                        resultSet.getInt(\"RecipeID\"),\r\n                        resultSet.getString(\"RecipeName\"),\r\n                        resultSet.getBytes(\"RecipeImage\"),\r\n                        resultSet.getString(\"RecipeInstructions\")\r\n                ));\r\n            }\r\n        }\r\n        return recipes;\r\n    }\r\n//Denna ska användas via UserController.\r\n    public void addUser(String userName, String password) throws SQLException {\r\n        String query = \"{ CALL users(?, ?) }\";\r\n        try (Connection connection = databaseCommunicator.getDatabaseconnection();\r\n             CallableStatement statement = connection.prepareCall(query)) {\r\n            statement.setString(1, userName);\r\n            statement.setString(2, password);\r\n            statement.execute();\r\n        }\r\n    }\r\n\r\n    public boolean checkUserExists(String username) throws SQLException {\r\n        String query = \"{ ? = CALL userFound(?) }\";\r\n        try (Connection connection = databaseCommunicator.getDatabaseconnection();\r\n             CallableStatement statement = connection.prepareCall(query)) {\r\n            statement.registerOutParameter(1, Types.BOOLEAN);\r\n            statement.setString(2, username);\r\n            statement.execute();\r\n            return statement.getBoolean(1);\r\n        }\r\n    }\r\n    /**\r\n     * Method used for fetching users from the database\r\n     *\r\n     * @return An ArrayList of users\r\n     * @author Anton Jansson\r\n     */\r\n    public ArrayList<User> getAllUsers() throws SQLException {\r\n        ArrayList<User> users = new ArrayList<>();\r\n        ResultSet resultSet = databaseCommunicator.getResultSet(\"SELECT user_id, username, role FROM users\");\r\n        while (resultSet.next()) {\r\n            users.add(new User(resultSet.getInt(\"user_id\"), resultSet.getString(\"username\"), resultSet.getString(\"password\"), resultSet.getString(\"role\")));\r\n        }\r\n        resultSet.close();\r\n        return users;\r\n    }\r\n    /**\r\n     * Method used for when a user updates it profile\r\n     *\r\n     * @param user User\r\n     * @author Anton Jansson\r\n     */\r\n    public void updateProfile(User user) throws SQLException {\r\n        String query = \"UPDATE users SET username = ?, password = ? WHERE user_id = ?\";\r\n        Object[] params = new Object[]{user.getUserName(), user.getPassword(), user.getUserID()};\r\n        databaseCommunicator.executeUpdate(query, params);\r\n    }\r\n    /**\r\n     * Method used for when a client registers to the database\r\n     *\r\n     * @param user User\r\n     * @author Anton Jansson\r\n     */\r\n    public void register(User user) throws SQLException {\r\n        String query = \"INSERT INTO users (username, password, role) VALUES (?, ?, ?)\";\r\n        Object[] params = {user.getUserName(), user.getPassword(), user.getRole()};\r\n        databaseCommunicator.executeUpdate(query, params);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/DatabaseController.java b/src/controller/DatabaseController.java
+--- a/src/controller/DatabaseController.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/DatabaseController.java	(date 1715091822607)
+@@ -1,11 +1,8 @@
+ package controller;
+-
+ import model.*;
+-
+ import java.sql.*;
+ import java.util.ArrayList;
+ 
+-
+ /**
+  * Clas that is responsible for handling the logic behind handling the database.
+  *
+@@ -13,7 +10,6 @@
+  * @author Heidi Wännman
+  */
+ public class DatabaseController {
+-
+     private DatabaseCommunicator databaseCommunicator;
+ 
+     /**
+@@ -22,11 +18,8 @@
+      * @author Anton Jansson
+      * @author Heidi Wännman
+      */
+-    public DatabaseController() throws SQLException {
+-        this.databaseCommunicator = databaseCommunicator;
++    public DatabaseController() {
+     }
+-
+-    //Usch detta är så komplex och svårt, fattar inte riktigt vad jag håller på med. Denna ska användas via RecipeController.
+     public void addRecipe(String recipeName, byte[] recipeImage, String recipeInstructions, int authorId) throws SQLException {
+         String sql = "{ CALL insert_into_recipes(?, ?, ?, ?) }";
+         try (Connection connection = databaseCommunicator.getDatabaseconnection();
+@@ -38,7 +31,6 @@
+             stmt.execute();
+         }
+     }
+-
+     public ArrayList<Recipe> getAllRecipes() throws SQLException {
+         ArrayList<Recipe> recipes = new ArrayList<>();
+         String query = "SELECT * FROM recipes";
+@@ -56,7 +48,7 @@
+         }
+         return recipes;
+     }
+-//Denna ska användas via UserController.
++    //Denna ska användas via UserController.
+     public void addUser(String userName, String password) throws SQLException {
+         String query = "{ CALL users(?, ?) }";
+         try (Connection connection = databaseCommunicator.getDatabaseconnection();
+@@ -66,7 +58,6 @@
+             statement.execute();
+         }
+     }
+-
+     public boolean checkUserExists(String username) throws SQLException {
+         String query = "{ ? = CALL userFound(?) }";
+         try (Connection connection = databaseCommunicator.getDatabaseconnection();
+Index: src/model/WebScraper/HemköpWebScraper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model.WebScraper;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONObject;\r\nimport org.jsoup.Jsoup;\r\nimport org.jsoup.nodes.Document;\r\nimport org.jsoup.select.Elements;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class HemköpWebScraper {\r\n    private List<String> webpageProductList = new ArrayList<>();\r\n\r\n\r\n\r\n    public void scrapeHemköp(String url) {\r\n        try {\r\n          /*  Document doc = Jsoup.connect(url).get();\r\n            Elements script = doc.select(\"[id=\\\"__NEXT_DATA__\\\"]\");\r\n            String jsonData = script.first().toString().substring(script.first().toString().lastIndexOf(\"<script id=\\\"__NEXT_DATA__\\\" type=\\\"application/json\\\">\") + 51);\r\n            jsonData = jsonData.substring(0, jsonData.lastIndexOf(\"</script>\"));\r\n            JSONObject productJSONData = new JSONObject(jsonData);\r\n            JSONArray productJSONArray = new JSONArray();\r\n*/\r\n            Document doc = Jsoup.connect(url).get();\r\n            //Elements proNames=doc.getElementsByClass(\"sc-fbb8bf8b-2 kZfUIt\");//30 st för namn\r\n            Elements proNames=doc.getElementsByClass(\"sc-39e3fbc8-0 fCbxkY\");//30 st\r\n            Elements proPrices=doc.getElementsByClass(\"sc-480ead59-0 eKvrKl\");\r\n\r\n            System.out.println(\"Size is:\" +proNames.size());\r\n            System.out.println(proNames.get(0));\r\n\r\n\r\n\r\n\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/WebScraper/HemköpWebScraper.java b/src/model/WebScraper/HemköpWebScraper.java
+--- a/src/model/WebScraper/HemköpWebScraper.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/WebScraper/HemköpWebScraper.java	(date 1715088857968)
+@@ -12,28 +12,24 @@
+ public class HemköpWebScraper {
+     private List<String> webpageProductList = new ArrayList<>();
+ 
+-
+-
+     public void scrapeHemköp(String url) {
+         try {
+           /*  Document doc = Jsoup.connect(url).get();
+             Elements script = doc.select("[id=\"__NEXT_DATA__\"]");
+             String jsonData = script.first().toString().substring(script.first().toString().lastIndexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">") + 51);
+-            jsonData = jsonData.substring(0, jsonData.lastIndexOf("</script>"));
++        jsonData = jsonData.substring(0, jsonData.lastIndexOf("</script>"));
+             JSONObject productJSONData = new JSONObject(jsonData);
+             JSONArray productJSONArray = new JSONArray();
+ */
+             Document doc = Jsoup.connect(url).get();
+             //Elements proNames=doc.getElementsByClass("sc-fbb8bf8b-2 kZfUIt");//30 st för namn
+-            Elements proNames=doc.getElementsByClass("sc-39e3fbc8-0 fCbxkY");//30 st
+-            Elements proPrices=doc.getElementsByClass("sc-480ead59-0 eKvrKl");
++            Elements proNames = doc.getElementsByClass("sc-39e3fbc8-0 fCbxkY");//30 st
++            Elements proPrices = doc.getElementsByClass("sc-480ead59-0 eKvrKl");
+ 
+-            System.out.println("Size is:" +proNames.size());
++            System.out.println("Size is:" + proNames.size());
+             System.out.println(proNames.get(0));
+ 
+ 
+-
+-
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+Index: src/controller/ServerController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport model.DatabaseCommunicator;\r\nimport model.Recipe;\r\nimport model.User;\r\nimport model.ClientConnection;\r\n\r\nimport java.io.IOException;\r\nimport java.io.ObjectOutputStream;\r\nimport java.sql.SQLException;\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\n\r\n/**\r\n * Class that starts the whole server. This includes all controllers.\r\n *\r\n * @author Anton Jansson\r\n * @author Heidi Wännman\r\n */\r\npublic class ServerController {\r\n\r\n    private DatabaseController databaseController;\r\n    private RecipeController recipeController;\r\n    private UserController userController;\r\n    private ConnectionController connectionController;\r\n    private DatabaseCommunicator databaseCommunicator;\r\n    private ClientConnection clientConnection;\r\n\r\n\r\n    /**\r\n     * Clas constructor. It starts a few controllers\r\n     *\r\n     * @author Anton Jansson\r\n     * @author Heidi Wännman\r\n     */\r\n    public ServerController() throws SQLException {\r\n        this.databaseCommunicator = new DatabaseCommunicator();\r\n        databaseCommunicator.getDatabaseconnection();\r\n        this.databaseController = new DatabaseController();\r\n        this.userController = new UserController(databaseCommunicator);\r\n        this.recipeController = new RecipeController(databaseCommunicator);\r\n        this.connectionController = new ConnectionController(userController, recipeController);\r\n\r\n    }\r\n\r\n    /**\r\n     * Method used for when a client connects to the server\r\n     *\r\n     * @param newClientOutputStream\r\n     * @author Anton Jansson\r\n     */\r\n\r\n    /*TODO flytta oos till att hanteras för den clientens handler istället.. SOLID\r\n    todo Förslagsvis med en metod i hanlder som hanterar skickande av data\r\n     */\r\n\r\n\r\n}\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ServerController.java b/src/controller/ServerController.java
+--- a/src/controller/ServerController.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/ServerController.java	(date 1715091822599)
+@@ -1,15 +1,7 @@
+ package controller;
+-
+ import model.DatabaseCommunicator;
+-import model.Recipe;
+-import model.User;
+-import model.ClientConnection;
+-
+-import java.io.IOException;
+-import java.io.ObjectOutputStream;
++import view.ClientConnection;
+ import java.sql.SQLException;
+-import java.util.ArrayList;
+-import java.util.HashMap;
+ 
+ /**
+  * Class that starts the whole server. This includes all controllers.
+@@ -18,7 +10,6 @@
+  * @author Heidi Wännman
+  */
+ public class ServerController {
+-
+     private DatabaseController databaseController;
+     private RecipeController recipeController;
+     private UserController userController;
+@@ -26,7 +17,6 @@
+     private DatabaseCommunicator databaseCommunicator;
+     private ClientConnection clientConnection;
+ 
+-
+     /**
+      * Clas constructor. It starts a few controllers
+      *
+@@ -40,21 +30,7 @@
+         this.userController = new UserController(databaseCommunicator);
+         this.recipeController = new RecipeController(databaseCommunicator);
+         this.connectionController = new ConnectionController(userController, recipeController);
+-
+     }
+-
+-    /**
+-     * Method used for when a client connects to the server
+-     *
+-     * @param newClientOutputStream
+-     * @author Anton Jansson
+-     */
+-
+-    /*TODO flytta oos till att hanteras för den clientens handler istället.. SOLID
+-    todo Förslagsvis med en metod i hanlder som hanterar skickande av data
+-     */
+-
+-
+ }
+ 
+ 
+Index: src/model/WebScraper/WillysWebScraper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model.WebScraper;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONObject;\r\nimport org.jsoup.Jsoup;\r\nimport org.jsoup.nodes.Document;\r\nimport org.jsoup.nodes.Element;\r\nimport org.jsoup.select.Elements;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class WillysWebScraper {\r\n\r\n    private List<String> webpageProductList = new ArrayList<>();\r\n\r\n\r\n    public void scrapeWillys(String url) {\r\n        try {\r\n         /*   Detta är kod baserad på vad Heidi skrev för ica scraping, dock flyger detta mig över huvet @Jansson\r\n\r\n          Document doc = Jsoup.connect(url).get();\r\n            Elements script = doc.select(\"[id=\\\"__NEXT_DATA__\\\"]\");\r\n            String jsonData = script.first().toString().substring(script.first().toString().lastIndexOf(\"<script id=\\\"__NEXT_DATA__\\\" type=\\\"application/json\\\">\") + 51);\r\n            jsonData = jsonData.substring(0, jsonData.lastIndexOf(\"</script>\"));\r\n            JSONObject productJSONData = new JSONObject(jsonData);\r\n            JSONArray productJSONArray = new JSONArray();\r\n*/\r\n            Document doc = Jsoup.connect(url).get();\r\n            //Elements proNames = doc.getElementsByClass(\"sc-504002c3-3 ePiOKs\").first().getElementsByClass(\"sc-504002c3-1 drRqMi\").first().getElementsByClass(\"sc-504002c3-2 bgZdnn\").first().getElementsByClass(\"sc-73e54f8d-0 fEdLuP\").first().getElementsByClass(\"sc-fd4a2085-0 dJCjFh\").first().getElementsByClass(\"sc-fd4a2085-1 ilIqBT\");\r\n            Elements proNames = doc.getElementsByClass(\"sc-504002c3-3 ePiOKs\").first().getElementsByClass(\"sc-504002c3-1 drRqMi\").first().getElementsByClass(\"sc-504002c3-2 bgZdnn\").first().getElementsByClass(\"sc-73e54f8d-0 fEdLuP\").first().getElementsByClass(\"sc-fd4a2085-0 dJCjFh\").first().getElementsByClass(\"sc-fd4a2085-1 ilIqBT\").first().select(\"sc-fd4a2085-1 ilIqBT\");//.first().getElementsByClass(\"sc-7906aaa8-0 jZaUcY\");\r\n            //Elements proNames = doc.getElementsByClass(\"sc-504002c3-3 ePiOKs\").first().getAllElements();//.getElementsByClass(\"sc-504002c3-1 drRqMi\").first().getElementsByClass(\"sc-504002c3-2 bgZdnn\").first().getElementsByClass(\"sc-73e54f8d-0 fEdLuP\").first().getElementsByClass(\"sc-fd4a2085-0 dJCjFh\").first().getElementsByClass(\"sc-fd4a2085-1 ilIqBT\").first().select(\"div\");//.first().getElementsByClass(\"sc-7906aaa8-0 jZaUcY\");\r\n\r\n            //Elements proNames=doc.getAllElements();\r\n\r\n            //TODO kommer inte vidare från \"sc-fd4a2085-1 ilIqBT\" <div>:en. inne i den <div>en ligger en \"tom\" div innan\r\n            // \"sc-7906aaa8-0 jZaUcY\" <div>:en (och det är den diven/klassen där datan för namn och pris ligger\r\n            // Borde inte vara något problem att hämta \"mer\" data (pagington) för det borde bara vara att kalla på\r\n            // \"https://www.willys.se/c/kott-chark-och-fagel?size=30&page=7&sort=topRated\" länken och ändra på\r\n            // vad \"page=\"?\r\n\r\n          // en länk för Element klassen https://jsoup.org/apidocs/org/jsoup/nodes/Element.html#method-summary\r\n\r\n\r\n\r\n            System.out.println(\"\\nSize is:\" + proNames.size());\r\n\r\n            for (Element name : proNames) {\r\n                System.out.println(name+\"\\n ||------------------------------------------||\");\r\n            }\r\n            System.out.println(\"All done\");\r\n\r\n\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/WebScraper/WillysWebScraper.java b/src/model/WebScraper/WillysWebScraper.java
+--- a/src/model/WebScraper/WillysWebScraper.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/model/WebScraper/WillysWebScraper.java	(date 1715086744885)
+@@ -39,7 +39,7 @@
+             // "https://www.willys.se/c/kott-chark-och-fagel?size=30&page=7&sort=topRated" länken och ändra på
+             // vad "page="?
+ 
+-          // en länk för Element klassen https://jsoup.org/apidocs/org/jsoup/nodes/Element.html#method-summary
++            // en länk för Element klassen https://jsoup.org/apidocs/org/jsoup/nodes/Element.html#method-summary
+ 
+ 
+ 
+Index: src/controller/ConnectionController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport model.ClientConnection;\r\nimport model.Recipe;\r\nimport model.User;\r\nimport view.ConnectionListener;\r\n\r\nimport java.io.IOException;\r\nimport java.io.ObjectInputStream;\r\nimport java.io.ObjectOutputStream;\r\nimport java.net.Socket;\r\nimport java.sql.SQLException;\r\nimport java.util.HashMap;\r\n\r\nimport static controller.Constans.*;\r\n\r\n\r\n/**\r\n * This class is responsible for handling connected clients. The class contains an inner class, \"ClientHandler\"\r\n * and it extends thread. Each connected client is given its own Clienthandler.\r\n */\r\npublic class ConnectionController {\r\n    public UserController userController;\r\n    private ConnectionListener connectionListener;\r\n    private RecipeController recipeController;\r\n    private ClientConnection clientConnection;\r\n\r\n    /**\r\n     * Class constructor.\r\n     *\r\n     * @param\r\n     * @author Anton Jansson\r\n     */\r\n\r\n    public ConnectionController(UserController userController, RecipeController recipeController) {\r\n        this.userController = userController;\r\n        this.recipeController = recipeController;\r\n        this.connectionListener = new ConnectionListener(2343, this);\r\n\r\n    }\r\n\r\n    public void clientConnectionHandler(Socket clientSocket) {\r\n        try {\r\n            ClientConnection clientConnection = new ClientConnection(clientSocket, this);\r\n            new Thread(clientConnection).start();\r\n        } catch (IOException e) {\r\n            System.out.println(\"IOExcetion in clientConnectionHandler\");\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    private void sendUserData(ObjectOutputStream oos) throws SQLException, IOException {\r\n        HashMap<User, ClientConnection> listOfUsers = userController.getNewUserInfo();\r\n        oos.writeObject(listOfUsers);\r\n    }\r\n\r\n    private void sendRecipeData(ObjectOutputStream oos) throws SQLException, IOException {\r\n        HashMap<Recipe, ClientConnection> listOfRecipes = recipeController.getNewRecipeInfo();\r\n        oos.writeObject(listOfRecipes);\r\n    }\r\n\r\n    public void newConnection(ObjectOutputStream newClientOutputStream, Object dataObject) {\r\n        try {\r\n            if (dataObject instanceof User) {\r\n                sendUserData(newClientOutputStream);\r\n            } else if (dataObject instanceof Recipe) {\r\n                sendRecipeData(newClientOutputStream);\r\n            } else {\r\n                System.out.println(\"Unsupported data object provided.\");\r\n            }\r\n        } catch (IOException e) {\r\n            System.err.println(\"Failed to write object: \" + e.getMessage());\r\n            e.printStackTrace();\r\n        } catch (SQLException e) {\r\n            System.err.println(\"Database error: \" + e.getMessage());\r\n            throw new RuntimeException(\"Database error\", e);\r\n        }\r\n    }\r\n\r\n    public synchronized void revealClientIntention(int intention, ClientConnection clientConnection, Object object) throws IOException, ClassNotFoundException, SQLException {\r\n        ObjectOutputStream oos = clientConnection.getObjectOutputStream();\r\n        ObjectInputStream ois = clientConnection.getObjectInputStream();\r\n\r\n        if (object != null) {\r\n            handleObject(object, oos);\r\n        } else if (intention != OK) {\r\n            handleIntention(intention, ois, oos);\r\n        } else {\r\n            System.out.println(\"No valid object or intention provided.\");\r\n        }\r\n    }\r\n\r\n    private void handleObject(Object object, ObjectOutputStream oos) throws IOException {\r\n        try {\r\n            if (object instanceof User) {\r\n                sendUserData(oos);  // Antag att denna metod hanterar användarobjektet\r\n            } else if (object instanceof Recipe) {\r\n                sendRecipeData(oos);  // Antag att denna metod hanterar receptobjektet\r\n            } else {\r\n                System.out.println(\"The object can´t be identified\");\r\n            }\r\n        } catch (IOException | SQLException e) {\r\n            System.err.println(\"Failed to send object: \" + e.getMessage());\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    private void handleIntention(int intention, ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException, SQLException {\r\n        switch (intention) {\r\n            case C_WANTS_TO_DISCONNECT:\r\n                clientConnection.closeConnection();\r\n                break;\r\n            case C_HAVE_A_OBJECT:\r\n                Object object = ois.readObject();\r\n                if (object instanceof Recipe) {\r\n                    sendRecipeData(oos);\r\n                }\r\n                break;\r\n            case C_GET_USER_INFO:\r\n                User user = userController.getUserFromObject(ois);\r\n                oos.writeObject(user);\r\n                break;\r\n            default:\r\n                System.out.println(\"Don't know what intention this: \" + intention + \" wants to do\");\r\n                break;\r\n        }\r\n    }\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ConnectionController.java b/src/controller/ConnectionController.java
+--- a/src/controller/ConnectionController.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/ConnectionController.java	(date 1715091822614)
+@@ -1,130 +1,147 @@
+ package controller;
+-
+-import model.ClientConnection;
+ import model.Recipe;
+ import model.User;
++import view.ClientConnection;
++import model.ConnectedClients;
+ import view.ConnectionListener;
+-
+ import java.io.IOException;
+-import java.io.ObjectInputStream;
+-import java.io.ObjectOutputStream;
+ import java.net.Socket;
+ import java.sql.SQLException;
+-import java.util.HashMap;
+-
+-import static controller.Constans.*;
+-
++import java.util.ArrayList;
++import static controller.Constants.*;
+ 
+ /**
+- * This class is responsible for handling connected clients. The class contains an inner class, "ClientHandler"
+- * and it extends thread. Each connected client is given its own Clienthandler.
++ * This class is responsible for handling connected clients.
++ *
++ * @author Anton Jansson
++ * @author Anton Persson
+  */
+ public class ConnectionController {
+     public UserController userController;
+-    private ConnectionListener connectionListener;
+-    private RecipeController recipeController;
+-    private ClientConnection clientConnection;
+-
++    private final RecipeController recipeController;
++    private final ConnectedClients connectedClients;
++    private int intention;
++    //TODO: The intentions might cause problems since they aren't Thread proof. I will look onto this after we've implemented the communication in the server
+     /**
+-     * Class constructor.
++     * This constructor initiates instance variables
+      *
+-     * @param
++     * @param userController
++     * @param recipeController
+      * @author Anton Jansson
+      */
+-
+     public ConnectionController(UserController userController, RecipeController recipeController) {
+         this.userController = userController;
+         this.recipeController = recipeController;
+-        this.connectionListener = new ConnectionListener(2343, this);
+-
++        this.connectedClients = new ConnectedClients();
++        new ConnectionListener(2343, this);
+     }
+-
+-    public void clientConnectionHandler(Socket clientSocket) {
++    /**
++     * This method creates a new {@link ClientConnection} and then starts it as a thread. The {@link ClientConnection}
++     * is then added to {@link ConnectedClients}. Lastly, the method sends all the recipes and users from the server
++     * to the client.
++     *
++     * @param clientSocket A {@link Socket} that is sent to the constructor of {@link ClientConnection}
++     * @author Anton Jansson
++     * @author Anton Persson
++     */
++    public void establishClientsConnection(Socket clientSocket) {
+         try {
+             ClientConnection clientConnection = new ClientConnection(clientSocket, this);
+             new Thread(clientConnection).start();
++            connectedClients.addClient(clientConnection);
++            //sendRecipesOnStartUp(clientConnection); // This method sends the recipes to the client that has connected
++            //sendObjectToEveryClient(prepareListOfUsers(), S_SEND_ALL_USERS); // This method sends the users to the client that has connected
+         } catch (IOException e) {
+-            System.out.println("IOExcetion in clientConnectionHandler");
+             e.printStackTrace();
+         }
+     }
+-
+-    private void sendUserData(ObjectOutputStream oos) throws SQLException, IOException {
+-        HashMap<User, ClientConnection> listOfUsers = userController.getNewUserInfo();
+-        oos.writeObject(listOfUsers);
+-    }
+-
+-    private void sendRecipeData(ObjectOutputStream oos) throws SQLException, IOException {
+-        HashMap<Recipe, ClientConnection> listOfRecipes = recipeController.getNewRecipeInfo();
+-        oos.writeObject(listOfRecipes);
+-    }
+-
+-    public void newConnection(ObjectOutputStream newClientOutputStream, Object dataObject) {
+-        try {
+-            if (dataObject instanceof User) {
+-                sendUserData(newClientOutputStream);
+-            } else if (dataObject instanceof Recipe) {
+-                sendRecipeData(newClientOutputStream);
+-            } else {
+-                System.out.println("Unsupported data object provided.");
+-            }
+-        } catch (IOException e) {
+-            System.err.println("Failed to write object: " + e.getMessage());
+-            e.printStackTrace();
+-        } catch (SQLException e) {
+-            System.err.println("Database error: " + e.getMessage());
+-            throw new RuntimeException("Database error", e);
+-        }
+-    }
+-
+-    public synchronized void revealClientIntention(int intention, ClientConnection clientConnection, Object object) throws IOException, ClassNotFoundException, SQLException {
+-        ObjectOutputStream oos = clientConnection.getObjectOutputStream();
+-        ObjectInputStream ois = clientConnection.getObjectInputStream();
++    /**
++     * This method sends the list of {@link Recipe} from the server to the client in the form of an {@link ArrayList}
++     * containing {@link Object}
++     *
++     * @param clientConnection The {@link ClientConnection} that is to get the recipes.
++     * @author Anton Persson
++     */
++    public void sendRecipesOnStartUp(ClientConnection clientConnection) {
++//        ArrayList<Recipe> recipes = recipeController.getAllRecipes(); // Collect the recipes
++//        ArrayList<Object> recipesToSend = new ArrayList<>(recipes); // Convert to object list
+ 
+-        if (object != null) {
+-            handleObject(object, oos);
+-        } else if (intention != OK) {
+-            handleIntention(intention, ois, oos);
+-        } else {
+-            System.out.println("No valid object or intention provided.");
+-        }
++//        clientConnection.sendIntention(S_SEND_ALL_RECIPES);
++//        clientConnection.sendObject(recipesToSend);
+     }
+-
+-    private void handleObject(Object object, ObjectOutputStream oos) throws IOException {
+-        try {
+-            if (object instanceof User) {
+-                sendUserData(oos);  // Antag att denna metod hanterar användarobjektet
+-            } else if (object instanceof Recipe) {
+-                sendRecipeData(oos);  // Antag att denna metod hanterar receptobjektet
+-            } else {
+-                System.out.println("The object can´t be identified");
+-            }
+-        } catch (IOException | SQLException e) {
+-            System.err.println("Failed to send object: " + e.getMessage());
+-            e.printStackTrace();
++    /**
++     * This method gets an {@link ArrayList} of {@link User} from the {@link UserController} and converts it into an
++     * ArrayList of {@link Object} and later returns it.
++     *
++     * @return A list of users
++     * @author Anton Persson
++     */
++    public ArrayList<Object> prepareListOfUsers() {
++        ArrayList<User> users = userController.getAllUsers();
++        ArrayList<Object> listToSend = new ArrayList<>();
++        return listToSend;
++    }
++    /**
++     * This method creates an {@link ArrayList} of {@link ClientConnection} from the clients in {@link ConnectedClients}.
++     * The method then loops through the list and for each {@link ClientConnection}, an intention and {@link Object} is
++     * sent.
++     *
++     * @param object
++     * @param intention
++     * @author Anton Persson
++     */
++    public void sendObjectToEveryClient(Object object, int intention) {
++        ArrayList<ClientConnection> client = connectedClients.getConnectedClients();
++        for (ClientConnection clientConnection : client) {
++            clientConnection.sendIntention(intention);
++            clientConnection.sendObject(object);
+         }
+     }
+-
+-    private void handleIntention(int intention, ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException, SQLException {
++    /**
++     * This method reveals the intention of a client and then does something based on the intention.
++     *
++     * @param clientConnection {@link ClientConnection} that the intention came from
++     * @param intention        int that decides what happens
++     * @throws IOException
++     * @throws ClassNotFoundException
++     * @throws SQLException
++     * @author Anton Persson
++     * @author Heidi Wännmann
++     */
++    public synchronized void revealClientIntention(ClientConnection clientConnection, int intention) throws IOException, ClassNotFoundException, SQLException {
++        this.intention = intention;
+         switch (intention) {
+             case C_WANTS_TO_DISCONNECT:
++                clientConnection.setListenForObject(false);
++                clientConnection.setListenForObject(false);
++                System.out.println("Reached the switch case");
+                 clientConnection.closeConnection();
+-                break;
+-            case C_HAVE_A_OBJECT:
+-                Object object = ois.readObject();
+-                if (object instanceof Recipe) {
+-                    sendRecipeData(oos);
+-                }
++                connectedClients.removeClient(clientConnection);
+                 break;
+-            case C_GET_USER_INFO:
+-                User user = userController.getUserFromObject(ois);
+-                oos.writeObject(user);
++            case C_WANT_TO_REGISTER:
++                clientConnection.setListenForIntention(false);
++                clientConnection.setListenForObject(true);
+                 break;
+-            default:
+-                System.out.println("Don't know what intention this: " + intention + " wants to do");
++        }
++    }
++    /**
++     * This method packs up an {@link Object} from a Client. Based on the intention in the server the Object is unpacked
++     * differently.
++     *
++     * @param clientConnection The {@link ClientConnection} that has sent the {@link Object}
++     * @param object           The {@link Object} that is to be unpacked
++     * @author Anton Persson
++     * @author Heidi Wänmann
++     */
++    public void packUpObject(ClientConnection clientConnection, Object object) {
++        switch (intention) {
++            case C_WANT_TO_REGISTER:
++                User user = (User) object;
++                userController.addUser(user);
++                sendObjectToEveryClient(prepareListOfUsers(), S_UPDATE_C_LIST_OF_USERS);
+                 break;
+         }
++        clientConnection.setListenForObject(false);
++        clientConnection.setListenForIntention(true);
+     }
+-
+-}
+-
++}
+\ No newline at end of file
+Index: src/controller/ScrapinController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport model.WebScraping;\r\npublic class ScrapinController {\r\n    private WebScraping webScraping;\r\n    private ServerController serverController;\r\n\r\n    public ScrapinController(){\r\n        this.webScraping = new WebScraping();\r\n        webScraping.scrapeICAForNameAndPrice(\"https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7\");\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ScrapinController.java b/src/controller/ScrapinController.java
+--- a/src/controller/ScrapinController.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/ScrapinController.java	(date 1715091822583)
+@@ -4,7 +4,6 @@
+ public class ScrapinController {
+     private WebScraping webScraping;
+     private ServerController serverController;
+-
+     public ScrapinController(){
+         this.webScraping = new WebScraping();
+         webScraping.scrapeICAForNameAndPrice("https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7");
+Index: src/controller/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\n\r\nimport model.DatabaseCommunicator;\r\nimport model.DatabaseConnection;\r\nimport model.WebScraping;\r\n\r\nimport java.sql.SQLException;\r\n\r\n/**\r\n * Main class for the server. It starts the server.\r\n * @author Anton Jansson\r\n * @author Heidi Wännman\r\n */\r\npublic class Main {\r\n\r\n    public static void main(String[] args) throws SQLException {\r\n        DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();\r\n\r\n        //DatabaseConnection dbController = new DatabaseConnection();\r\n        ServerController serverController = new ServerController();\r\n        //WebScraping webScraping = new WebScraping();\r\n       // webScraping.scrapeICAForNameAndPrice(\"https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7\");\r\n    }\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/Main.java b/src/controller/Main.java
+--- a/src/controller/Main.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/Main.java	(date 1715091822592)
+@@ -1,10 +1,6 @@
+ package controller;
+-
+-
+ import model.DatabaseCommunicator;
+ import model.DatabaseConnection;
+-import model.WebScraping;
+-
+ import java.sql.SQLException;
+ 
+ /**
+@@ -13,14 +9,13 @@
+  * @author Heidi Wännman
+  */
+ public class Main {
+-
+     public static void main(String[] args) throws SQLException {
+         DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+-
+-        //DatabaseConnection dbController = new DatabaseConnection();
++        DatabaseConnection dbConn = new DatabaseConnection();
++        DatabaseController dbController = new DatabaseController();
+         ServerController serverController = new ServerController();
+         //WebScraping webScraping = new WebScraping();
+-       // webScraping.scrapeICAForNameAndPrice("https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7");
++        // webScraping.scrapeICAForNameAndPrice("https://handlaprivatkund.ica.se/stores/1003937/categories/mejeri-ost/7719dd17-9048-4055-ac32-56b5533a4ca7");
+     }
+ }
+ 
+Index: src/controller/RecipeController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport model.ClientConnection;\r\nimport model.DatabaseCommunicator;\r\nimport model.Recipe;\r\nimport java.io.IOException;\r\nimport java.io.ObjectOutputStream;\r\nimport java.sql.SQLException;\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\n\r\n/**\r\n * Clas responsible for handling logic related to recipes\r\n *\r\n * @author Anton Jansson\r\n * @author Heidi Wännman\r\n */\r\npublic class RecipeController {\r\n    private DatabaseController databaseController;\r\n    private DatabaseCommunicator databaseCommunicator;\r\n    private HashMap<Recipe, ClientConnection> recipeReceved = new HashMap<>();\r\n\r\n\r\n    /**\r\n     * Clas constructor\r\n     * @param databaseCommunicator\r\n     * @author Anton Jansson\r\n     */\r\n    public RecipeController(DatabaseCommunicator databaseCommunicator) {\r\n        this.databaseCommunicator = databaseCommunicator;\r\n    }\r\n    public void sendRecipe(ObjectOutputStream oos, Recipe recipe) {\r\n        try {\r\n            if (recipe != null) {\r\n                oos.writeObject(recipe);\r\n                oos.flush();\r\n                System.out.println(\"The recipe has been sent successfully\");\r\n            } else {\r\n                System.out.println(\"There was no recipe to send\");\r\n            }\r\n        } catch (IOException e) {\r\n            System.out.println(\"Could not send recipe \" + e.getMessage());\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n    public Recipe getRecipeFromObject(Object object) {\r\n\r\n        if (object instanceof Recipe) {\r\n            return (Recipe) object;\r\n        }\r\n        System.out.println(\"Received object is not a user\");\r\n        return null;\r\n    }\r\n\r\n    public  HashMap<Recipe, ClientConnection> getNewRecipeInfo() throws SQLException {\r\n\r\n       HashMap<Recipe, ClientConnection> recipes = new HashMap<>();\r\n        List<Recipe> recipesList = databaseController.getAllRecipes();\r\n\r\n        for (Recipe recipe : recipesList) {\r\n            recipes.put(recipe, null);\r\n        }\r\n        return recipes;\r\n    }\r\n\r\n    public void setRecipes(ArrayList<Recipe> recipe) {\r\n\r\n    }\r\n    public void handleRecipe(Object object) {\r\n\r\n        Recipe recipe = (Recipe) object;\r\n    }\r\n    public void updateRecipe(Recipe recipe) {\r\n\r\n    }\r\n    public Recipe getRecipe(Recipe recipe) {\r\n\r\n        return recipe;\r\n    }\r\n\r\n\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/RecipeController.java b/src/controller/RecipeController.java
+--- a/src/controller/RecipeController.java	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/src/controller/RecipeController.java	(date 1715091822627)
+@@ -1,8 +1,7 @@
+ package controller;
+-
+-import model.ClientConnection;
+ import model.DatabaseCommunicator;
+ import model.Recipe;
++import view.ClientConnection;
+ import java.io.IOException;
+ import java.io.ObjectOutputStream;
+ import java.sql.SQLException;
+@@ -21,7 +20,6 @@
+     private DatabaseCommunicator databaseCommunicator;
+     private HashMap<Recipe, ClientConnection> recipeReceved = new HashMap<>();
+ 
+-
+     /**
+      * Clas constructor
+      * @param databaseCommunicator
+@@ -45,41 +43,30 @@
+         }
+     }
+     public Recipe getRecipeFromObject(Object object) {
+-
+         if (object instanceof Recipe) {
+             return (Recipe) object;
+         }
+         System.out.println("Received object is not a user");
+         return null;
+     }
+-
+     public  HashMap<Recipe, ClientConnection> getNewRecipeInfo() throws SQLException {
+-
+-       HashMap<Recipe, ClientConnection> recipes = new HashMap<>();
++        HashMap<Recipe, ClientConnection> recipes = new HashMap<>();
+         List<Recipe> recipesList = databaseController.getAllRecipes();
+-
+         for (Recipe recipe : recipesList) {
+             recipes.put(recipe, null);
+         }
+         return recipes;
+     }
+-
+     public void setRecipes(ArrayList<Recipe> recipe) {
+-
+     }
+     public void handleRecipe(Object object) {
+-
+         Recipe recipe = (Recipe) object;
+     }
+     public void updateRecipe(Recipe recipe) {
+-
+     }
+     public Recipe getRecipe(Recipe recipe) {
+-
+         return recipe;
+     }
+-
+-
+ }
+ 
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"8cd324ab-e4cb-4756-9217-3c30e9293540\" name=\"Changes\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/model/ClientConnection.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/view/ConnectionListener.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/Project.iml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/Project.iml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/ConnectionController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/ConnectionController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/DatabaseController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/DatabaseController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/Main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/Main.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/RecipeController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/RecipeController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/ScrapinController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/ScrapinController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/ServerController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/ServerController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controller/UserController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controller/UserController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/DatabaseCommunicator.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/DatabaseCommunicator.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/DatabaseConnection.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/DatabaseConnection.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/Ingredient.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/Ingredient.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/Recipe.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/Recipe.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/User.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/User.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/WebScraping.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/WebScraping.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/view/ClientConnection.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/view/ConnectionListerner.java\" beforeDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n        <option value=\"Interface\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;HeidiWann&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/HeidiWann/Server.git&quot;,\r\n    &quot;accountId&quot;: &quot;bcd63a58-2fe7-48b5-bc47-41ae6b721913&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2eESi7jZh3ZLZ9Fd7DHdqkxtRQX\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.DatabaseConnection.executor\": \"Run\",\r\n    \"Application.Main.executor\": \"Run\",\r\n    \"Downloaded.Files.Path.Enabled\": \"false\",\r\n    \"JAR Application.postgresql-42.7.3.jar (1).executor\": \"Run\",\r\n    \"JAR Application.postgresql-42.7.3.jar (2).executor\": \"Run\",\r\n    \"JAR Application.postgresql-42.7.3.jar.executor\": \"Run\",\r\n    \"Repository.Attach.Annotations\": \"false\",\r\n    \"Repository.Attach.JavaDocs\": \"false\",\r\n    \"Repository.Attach.Sources\": \"false\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowPanel.toolwindow.highlight.mappings\": \"true\",\r\n    \"WebServerToolWindowPanel.toolwindow.highlight.symlinks\": \"true\",\r\n    \"WebServerToolWindowPanel.toolwindow.show.date\": \"false\",\r\n    \"WebServerToolWindowPanel.toolwindow.show.permissions\": \"false\",\r\n    \"WebServerToolWindowPanel.toolwindow.show.size\": \"false\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/Heidi/OneDrive/Dokument/GitHub/GitHubSchool/Client/Project\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"project.structure.last.edited\": \"Project\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\",\r\n    \"settings.editor.selected.configurable\": \"preferences.pluginManager\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"DatabaseDriversLRU\": [\r\n      \"postgresql\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CreateClassDialog.RecentsKey\">\r\n      <recent name=\"model\" />\r\n    </key>\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Heidi\\OneDrive\\Dokument\\GitHub\\GitHubSchool\\Server\\Project\\src\\view\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Heidi\\OneDrive\\Dokument\\GitHub\\GitHubSchool\\Server\\Project\\src\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\">\r\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"20\" />\r\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\r\n      <option name=\"envFilePaths\">\r\n        <option value=\"$PROJECT_DIR$/.env\" />\r\n      </option>\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"controller.Main\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"net.ashald.envfile\">\r\n        <option name=\"IS_ENABLED\" value=\"true\" />\r\n        <option name=\"IS_SUBST\" value=\"false\" />\r\n        <option name=\"IS_PATH_MACRO_SUPPORTED\" value=\"false\" />\r\n        <option name=\"IS_IGNORE_MISSING_FILES\" value=\"false\" />\r\n        <option name=\"IS_ENABLE_EXPERIMENTAL_INTEGRATIONS\" value=\"false\" />\r\n        <ENTRIES>\r\n          <ENTRY IS_ENABLED=\"true\" PARSER=\"runconfig\" IS_EXECUTABLE=\"false\" />\r\n          <ENTRY IS_ENABLED=\"true\" PARSER=\"env\" IS_EXECUTABLE=\"false\" PATH=\".env\" />\r\n        </ENTRIES>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"jdk-20.0.2-corretto-20.0.2.1-4caba194b151-5bc9ecd2\" />\r\n        <option value=\"jdk-22-openjdk-22-4caba194b151-f504ca98\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"8cd324ab-e4cb-4756-9217-3c30e9293540\" name=\"Changes\" comment=\"\" />\r\n      <created>1711533141577</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1711533141577</updated>\r\n      <workItem from=\"1711533142656\" duration=\"16381000\" />\r\n      <workItem from=\"1711585165024\" duration=\"599000\" />\r\n      <workItem from=\"1711610077736\" duration=\"1065000\" />\r\n      <workItem from=\"1711617216620\" duration=\"53000\" />\r\n      <workItem from=\"1711617733414\" duration=\"1892000\" />\r\n      <workItem from=\"1711669995803\" duration=\"503000\" />\r\n      <workItem from=\"1711701985225\" duration=\"3786000\" />\r\n      <workItem from=\"1711706308284\" duration=\"605000\" />\r\n      <workItem from=\"1711728782635\" duration=\"12718000\" />\r\n      <workItem from=\"1711756553806\" duration=\"1312000\" />\r\n      <workItem from=\"1711787742696\" duration=\"8692000\" />\r\n      <workItem from=\"1711920928903\" duration=\"6510000\" />\r\n      <workItem from=\"1711977306821\" duration=\"193000\" />\r\n      <workItem from=\"1711977892149\" duration=\"2246000\" />\r\n      <workItem from=\"1712045120203\" duration=\"628000\" />\r\n      <workItem from=\"1712064524166\" duration=\"1529000\" />\r\n      <workItem from=\"1712127740937\" duration=\"672000\" />\r\n      <workItem from=\"1712142752091\" duration=\"45000\" />\r\n      <workItem from=\"1712655667444\" duration=\"437000\" />\r\n      <workItem from=\"1712656109182\" duration=\"25000\" />\r\n      <workItem from=\"1712660632279\" duration=\"945000\" />\r\n      <workItem from=\"1712757355511\" duration=\"660000\" />\r\n      <workItem from=\"1712764489112\" duration=\"2260000\" />\r\n      <workItem from=\"1712780553715\" duration=\"274000\" />\r\n      <workItem from=\"1712924580286\" duration=\"2870000\" />\r\n      <workItem from=\"1713017305867\" duration=\"2308000\" />\r\n      <workItem from=\"1713021550761\" duration=\"292000\" />\r\n      <workItem from=\"1713084947752\" duration=\"3833000\" />\r\n      <workItem from=\"1713093350609\" duration=\"260000\" />\r\n      <workItem from=\"1713120730162\" duration=\"12487000\" />\r\n      <workItem from=\"1713166682080\" duration=\"3669000\" />\r\n      <workItem from=\"1713184279398\" duration=\"760000\" />\r\n      <workItem from=\"1713358137255\" duration=\"1843000\" />\r\n      <workItem from=\"1713369455299\" duration=\"13975000\" />\r\n      <workItem from=\"1713430071208\" duration=\"3763000\" />\r\n      <workItem from=\"1713554113499\" duration=\"6000\" />\r\n      <workItem from=\"1713613228216\" duration=\"453000\" />\r\n      <workItem from=\"1713613695664\" duration=\"599000\" />\r\n      <workItem from=\"1713622559796\" duration=\"652000\" />\r\n      <workItem from=\"1713623412631\" duration=\"414000\" />\r\n      <workItem from=\"1713623836169\" duration=\"19095000\" />\r\n      <workItem from=\"1713680908959\" duration=\"35582000\" />\r\n      <workItem from=\"1713720148605\" duration=\"964000\" />\r\n      <workItem from=\"1713721117184\" duration=\"64000\" />\r\n      <workItem from=\"1713721188355\" duration=\"7082000\" />\r\n      <workItem from=\"1713764439879\" duration=\"299000\" />\r\n      <workItem from=\"1713764759605\" duration=\"1204000\" />\r\n      <workItem from=\"1713785242071\" duration=\"2752000\" />\r\n      <workItem from=\"1713799756363\" duration=\"6410000\" />\r\n      <workItem from=\"1713819344985\" duration=\"670000\" />\r\n      <workItem from=\"1713820726065\" duration=\"1238000\" />\r\n      <workItem from=\"1713851657049\" duration=\"3402000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnknownFeatures\">\r\n    <option featureType=\"com.intellij.fileTypeFactory\" implementationName=\".env\" />\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 9d8a627ccee4c161b27f2947d1a39b74b0ae7055)
++++ b/.idea/workspace.xml	(date 1715092325397)
+@@ -5,26 +5,26 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/src/model/ClientConnection.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/view/ConnectionListener.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project.iml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConnectionController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/controller/Constans.java" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/RecipeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/RecipeController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/ScrapinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ScrapinController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ServerController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/UserController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/model/ClientConnection.java" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/model/DatabaseCommunicator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseCommunicator.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/model/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Ingredient.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Recipe.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/User.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/model/WebScraper/CoopWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraper/CoopWebScraper.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/model/WebScraper/WillysWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraper/WillysWebScraper.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/model/WebScraping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraping.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/view/ClientConnection.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/view/ConnectionListerner.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/view/ConnectionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/ConnectionListener.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -66,43 +66,43 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.DatabaseConnection.executor": "Run",
+-    "Application.Main.executor": "Run",
+-    "Downloaded.Files.Path.Enabled": "false",
+-    "JAR Application.postgresql-42.7.3.jar (1).executor": "Run",
+-    "JAR Application.postgresql-42.7.3.jar (2).executor": "Run",
+-    "JAR Application.postgresql-42.7.3.jar.executor": "Run",
+-    "Repository.Attach.Annotations": "false",
+-    "Repository.Attach.JavaDocs": "false",
+-    "Repository.Attach.Sources": "false",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+-    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+-    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+-    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+-    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+-    "git-widget-placeholder": "main",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "C:/Users/Heidi/OneDrive/Dokument/GitHub/GitHubSchool/Client/Project",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "project.structure.last.edited": "Project",
+-    "project.structure.proportion": "0.15",
+-    "project.structure.side.proportion": "0.2",
+-    "settings.editor.selected.configurable": "preferences.pluginManager",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.DatabaseConnection.executor&quot;: &quot;Run&quot;,
++    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
++    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
++    &quot;JAR Application.postgresql-42.7.3.jar (1).executor&quot;: &quot;Run&quot;,
++    &quot;JAR Application.postgresql-42.7.3.jar (2).executor&quot;: &quot;Run&quot;,
++    &quot;JAR Application.postgresql-42.7.3.jar.executor&quot;: &quot;Run&quot;,
++    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
++    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
++    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/Heidi/OneDrive/Dokument/GitHub/GitHubSchool/Client/Project&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   },
+-  "keyToStringList": {
+-    "DatabaseDriversLRU": [
+-      "postgresql"
++  &quot;keyToStringList&quot;: {
++    &quot;DatabaseDriversLRU&quot;: [
++      &quot;postgresql&quot;
+     ]
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CreateClassDialog.RecentsKey">
+       <recent name="model" />
+@@ -113,6 +113,11 @@
+     <key name="MoveFile.RECENT_KEYS">
+       <recent name="C:\Users\Heidi\OneDrive\Dokument\GitHub\GitHubSchool\Server\Project\src" />
+     </key>
++    <key name="CopyClassDialog.RECENTS_KEY">
++      <recent name="controller" />
++      <recent name="view" />
++      <recent name="model" />
++    </key>
+   </component>
+   <component name="RunManager">
+     <configuration name="Main" type="Application" factoryName="Application">
+@@ -206,7 +211,12 @@
+       <workItem from="1713799756363" duration="6410000" />
+       <workItem from="1713819344985" duration="670000" />
+       <workItem from="1713820726065" duration="1238000" />
+-      <workItem from="1713851657049" duration="3402000" />
++      <workItem from="1713851657049" duration="6774000" />
++      <workItem from="1713951736199" duration="1869000" />
++      <workItem from="1713986206368" duration="2630000" />
++      <workItem from="1715082109239" duration="618000" />
++      <workItem from="1715083073465" duration="3216000" />
++      <workItem from="1715088865807" duration="3457000" />
+     </task>
+     <servers />
+   </component>

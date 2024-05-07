@@ -1,6 +1,5 @@
 package controller;
-
-import model.ClientConnection;
+import view.ClientConnection;
 import model.DatabaseCommunicator;
 import model.Recipe;
 import java.io.IOException;
@@ -20,7 +19,6 @@ public class RecipeController {
     private DatabaseController databaseController;
     private DatabaseCommunicator databaseCommunicator;
     private HashMap<Recipe, ClientConnection> recipeReceved = new HashMap<>();
-
 
     /**
      * Clas constructor
@@ -45,41 +43,30 @@ public class RecipeController {
         }
     }
     public Recipe getRecipeFromObject(Object object) {
-
         if (object instanceof Recipe) {
             return (Recipe) object;
         }
         System.out.println("Received object is not a user");
         return null;
     }
-
     public  HashMap<Recipe, ClientConnection> getNewRecipeInfo() throws SQLException {
-
-       HashMap<Recipe, ClientConnection> recipes = new HashMap<>();
+        HashMap<Recipe, ClientConnection> recipes = new HashMap<>();
         List<Recipe> recipesList = databaseController.getAllRecipes();
-
         for (Recipe recipe : recipesList) {
             recipes.put(recipe, null);
         }
         return recipes;
     }
-
     public void setRecipes(ArrayList<Recipe> recipe) {
-
     }
     public void handleRecipe(Object object) {
-
         Recipe recipe = (Recipe) object;
     }
     public void updateRecipe(Recipe recipe) {
-
     }
     public Recipe getRecipe(Recipe recipe) {
-
         return recipe;
     }
-
-
 }
 
 

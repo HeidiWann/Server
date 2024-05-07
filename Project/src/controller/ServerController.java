@@ -1,15 +1,7 @@
 package controller;
-
 import model.DatabaseCommunicator;
-import model.Recipe;
-import model.User;
-import model.ClientConnection;
-
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import view.ClientConnection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Class that starts the whole server. This includes all controllers.
@@ -18,7 +10,6 @@ import java.util.HashMap;
  * @author Heidi Wännman
  */
 public class ServerController {
-
     private DatabaseController databaseController;
     private RecipeController recipeController;
     private UserController userController;
@@ -40,21 +31,7 @@ public class ServerController {
         this.userController = new UserController(databaseCommunicator);
         this.recipeController = new RecipeController(databaseCommunicator);
         this.connectionController = new ConnectionController(userController, recipeController);
-
     }
-
-    /**
-     * Method used for when a client connects to the server
-     *
-     * @param newClientOutputStream
-     * @author Anton Jansson
-     */
-
-    /*TODO flytta oos till att hanteras för den clientens handler istället.. SOLID
-    todo Förslagsvis med en metod i hanlder som hanterar skickande av data
-     */
-
-
 }
 
 
