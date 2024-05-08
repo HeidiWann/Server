@@ -4,28 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/model/ClientConnection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/ConnectionListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConnectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/RecipeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/RecipeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ScrapinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ScrapinController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/DatabaseCommunicator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseCommunicator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Ingredient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Recipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/WebScraping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraping.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/ClientConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/ConnectionListerner.java" beforeDir="false" />
-    </list>
+    <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="Databaskontroll ändringar" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,7 +65,7 @@
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Heidi/OneDrive/Dokument/GitHub/GitHubSchool/Client/Project",
+    "last_opened_file_path": "C:/Users/chris/IdeaProjects/Client/Project",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -142,8 +121,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-20.0.2-corretto-20.0.2.1-4caba194b151-5bc9ecd2" />
-        <option value="jdk-22-openjdk-22-4caba194b151-f504ca98" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
   </component>
@@ -207,7 +185,17 @@
       <workItem from="1713819344985" duration="670000" />
       <workItem from="1713820726065" duration="1238000" />
       <workItem from="1713851657049" duration="3402000" />
+      <workItem from="1714132855765" duration="27547000" />
+      <workItem from="1715161027691" duration="7431000" />
     </task>
+    <task id="LOCAL−00001" summary="Databaskontroll ändringar">
+      <option name="closed" value="true" />
+      <created>1715171049226</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1715171049226</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -215,6 +203,10 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Databaskontroll ändringar" />
+    <option name="LAST_COMMIT_MESSAGE" value="Databaskontroll ändringar" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
