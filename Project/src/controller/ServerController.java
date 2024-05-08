@@ -28,13 +28,9 @@ public class ServerController {
     public ServerController() throws SQLException {
         this.databaseCommunicator = new DatabaseCommunicator();
         databaseCommunicator.getDatabaseconnection();
-        this.databaseController = new DatabaseController();
+        this.databaseController = new DatabaseController(databaseCommunicator);
         this.userController = new UserController(databaseCommunicator);
-        this.recipeController = new RecipeController(databaseCommunicator);
+        this.recipeController = new RecipeController(databaseController);
         this.connectionController = new ConnectionController(userController, recipeController);
     }
 }
-
-
-
-

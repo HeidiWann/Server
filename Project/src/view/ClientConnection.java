@@ -18,6 +18,7 @@ import static controller.Constants.*;
 public class ClientConnection implements Runnable {
     private final Socket socket;
     private final ConnectionController connectionController;
+    private int intention;
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
     private boolean listenForIntention;
@@ -58,11 +59,12 @@ public class ClientConnection implements Runnable {
                 if (ois.available() > OK) {
                     if (listenForIntention) {
                         int intention = ois.readInt();
+                        this.intention = intention;
                         connectionController.revealClientIntention(this, intention);
                     }
                     if (listenForObject) {
                         Object objectFromClient = ois.readObject();
-                        connectionController.packUpObject(this, objectFromClient);
+                        connectionController.packUpObject(this, intention, objectFromClient);
                     }
                 } else {
                     try {

@@ -1,57 +1,67 @@
 package model;
 
+
+import javafx.scene.image.ImageView;
+
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 
-/**
- * Clas that represents recipes
- *
- * @author Heidi Wännman
- */
-public class Recipe implements Serializable {
+public class Recipe implements Serializable { // --------------------------------------------------------------------------------Klassen har ingen author
     @Serial
     private static final long serialVersionUID = 111222333L;
-    private int id;
-    private String recipeTitle;
-    private byte[] recipeImage;
-    private String recipeInstructions;
+    private int recipeID;
+    private String author;
+    private String instructions;
+    private ImageView imageOfRecipe;
+    private Food dish;
+    private String recipeName;
 
-    public Recipe(int recipeID, String title, byte[] image, String instructions) {
-        this.id = recipeID;
-        this.recipeTitle = title;
-        this.recipeImage = image;
-        this.recipeInstructions = instructions;
+    public Recipe(String author, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
+        Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
+        this.author = author;
+        this.dish = newDish;
+        this.instructions = instructions;
+        this.imageOfRecipe = imageOfRecipe;
+        this.recipeName = nameOfFood;
     }
 
-    public int getId() {
-        return id;
+    public Recipe(int recipeID, String author, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
+        Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
+        this.recipeID = recipeID;
+        this.author = author;
+        this.dish = newDish;
+        this.instructions = instructions;
+        this.imageOfRecipe = imageOfRecipe;
+        this.recipeName = nameOfFood;
     }
 
-    public void setId(int id) {
-        this.id = id;
+
+    public String getInstructions() {
+        return instructions;
     }
 
-    public String getRecipeTitle() {
-        return recipeTitle;
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
-    public void setRecipeTitle(String recipeTitle) {
-        this.recipeTitle = recipeTitle;
+    public ImageView getImageOfRecipe() {
+        return imageOfRecipe;
     }
 
-    public byte[] getRecipeImage() {
-        return recipeImage;
+    public void setImageOfRecipe(ImageView imageOfRecipe) {
+        this.imageOfRecipe = imageOfRecipe;
     }
 
-    public void setRecipeImage(byte[] recipeImage) {
-        this.recipeImage = recipeImage;
+    public Food getDish() {
+        return dish;
     }
 
-    public String getRecipeInstructions() {
-        return recipeInstructions;
+    public String getRecipeName() {
+        return recipeName;
     }
 
-    public void setRecipeInstructions(String recipeInstructions) {
-        this.recipeInstructions = recipeInstructions;
+    public void setRecipeName(String recipeName) {
+        this.recipeName = recipeName;
     }
 }

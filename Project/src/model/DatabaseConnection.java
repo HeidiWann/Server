@@ -15,7 +15,7 @@ public class DatabaseConnection {
     /**
      * @author Heidi Wännman
      */
-    public DatabaseConnection() {
+    public DatabaseConnection(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
     /**

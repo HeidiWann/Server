@@ -16,12 +16,10 @@ import java.util.HashMap;
 public class UserController {
     private DatabaseCommunicator databaseCommunicator;
     private DatabaseController databaseController;
-    private HashMap<User, ClientConnection> userConnected = new HashMap<>();
     private HashMap<String, User> users;
 
     /**
      * Clas constructor
-     *
      * @param databaseCommunicator
      * @author Anton Jansson
      */
@@ -32,7 +30,6 @@ public class UserController {
 
     /**
      * This method returns the values in the {@link HashMap} containing {@link User} as {@link ArrayList}
-     *
      * @return A list of users
      * @author Anton Persson
      */
@@ -62,7 +59,6 @@ public class UserController {
 
     /**
      * This method adds a {@link User} to the database by calling a method in {@link DatabaseController}
-     *
      * @param user that is to be added to the database
      * @author Anton Persson
      */
@@ -76,30 +72,5 @@ public class UserController {
         } catch (Exception e) {
 
         }
-    }
-
-    public HashMap<User, ClientConnection> getNewUserInfo() throws SQLException {
-        HashMap<User, ClientConnection> users = new HashMap<>();
-        ArrayList<User> userList = databaseController.getAllUsers();
-        for (User user : userList) {
-            users.put(user, null);
-        }
-        return users;
-    }
-
-    public User getUserFromObject(Object object) {
-        if (object instanceof User) {
-            return (User) object;
-        }
-        System.out.println("Received object is not a user");
-        return null;
-    }
-
-    public void userConnectionHandler(User user, ClientConnection clientConnection) {
-        userConnected.put(user, clientConnection);
-    }
-
-    public void userDisconnecter(User user) {
-        userConnected.remove(user);
     }
 }

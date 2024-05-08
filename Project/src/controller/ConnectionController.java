@@ -2,6 +2,7 @@ package controller;
 
 import model.Recipe;
 import model.User;
+
 import view.ClientConnection;
 import model.ConnectedClients;
 import view.ConnectionListener;
@@ -21,8 +22,6 @@ public class ConnectionController {
     public UserController userController;
     private final RecipeController recipeController;
     private final ConnectedClients connectedClients;
-    private int intention;
-
     //TODO: The intentions might cause problems since they aren't Thread proof. I will look onto this after we've implemented the communication in the server
 
     /**
@@ -117,12 +116,10 @@ public class ConnectionController {
      * @author Heidi Wännmann
      */
     public synchronized void revealClientIntention(ClientConnection clientConnection, int intention) throws IOException, ClassNotFoundException, SQLException {
-        this.intention = intention;
         switch (intention) {
             case C_WANTS_TO_DISCONNECT:
                 clientConnection.setListenForObject(false);
                 clientConnection.setListenForObject(false);
-                System.out.println("Reached the switch case");
                 clientConnection.closeConnection();
                 connectedClients.removeClient(clientConnection);
                 break;
@@ -142,7 +139,7 @@ public class ConnectionController {
      * @author Anton Persson
      * @author Heidi Wänmann
      */
-    public void packUpObject(ClientConnection clientConnection, Object object) {
+    public void packUpObject(ClientConnection clientConnection, int intention, Object object) {
         switch (intention) {
             case C_WANT_TO_REGISTER:
                 User user = (User) object;

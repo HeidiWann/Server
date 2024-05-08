@@ -20,7 +20,8 @@ public class DatabaseController {
      * @author Anton Jansson
      * @author Heidi Wännman
      */
-    public DatabaseController() {
+    public DatabaseController(DatabaseCommunicator databaseCommunicator) {
+        this.databaseCommunicator = databaseCommunicator;
     }
 
     public void addRecipe(String recipeName, byte[] recipeImage, String recipeInstructions, int authorId) throws SQLException {
@@ -41,14 +42,14 @@ public class DatabaseController {
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) {
-                recipes.add(new Recipe(
-                        resultSet.getInt("RecipeID"),
-                        resultSet.getString("RecipeName"),
-                        resultSet.getBytes("RecipeImage"),
-                        resultSet.getString("RecipeInstructions")
-                ));
-            }
+//            while (resultSet.next()) {
+//                recipes.add(new Recipe(
+//                        resultSet.getInt("RecipeID"),
+//                        resultSet.getString("RecipeName"),
+//                        resultSet.getBytes("RecipeImage"),
+//                        resultSet.getString("RecipeInstructions")
+//                ));
+//            }
         }
         return recipes;
     }
@@ -84,9 +85,9 @@ public class DatabaseController {
     public ArrayList<User> getAllUsers() throws SQLException {
         ArrayList<User> users = new ArrayList<>();
         ResultSet resultSet = databaseCommunicator.getResultSet("SELECT user_id, username, role FROM users");
-        while (resultSet.next()) {
-            users.add(new User(resultSet.getInt("user_id"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role")));
-        }
+//        while (resultSet.next()) {
+//            users.add(new User(resultSet.getInt("user_id"), resultSet.getString("username"), resultSet.getString("password")));
+//        }
         resultSet.close();
         return users;
     }
@@ -111,7 +112,7 @@ public class DatabaseController {
      */
     public void register(User user) throws SQLException {
         String query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
-        Object[] params = {user.getUserName(), user.getPassword(), user.getRole()};
-        databaseCommunicator.executeUpdate(query, params);
+//        Object[] params = {user.getUserName(), user.getPassword(), user.getRole()};
+//        databaseCommunicator.executeUpdate(query, params);
     }
 }

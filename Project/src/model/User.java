@@ -1,31 +1,45 @@
 package model;
 
+import javafx.scene.image.ImageView;
+
 import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * Clas that represents users
- *
- * @author Heidi Wännman
- */
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 222333444L;
     private int userID;
     private String userName;
-    private String password;
-    private String role;
+    private String passWord;
+    private ImageView profilePicture;
 
-    public User(int userID, String userName, String password, String role) {
-        this.userID = userID;
+    public User(String userName, String passWord) {
         this.userName = userName;
-        this.password = password;
-        this.role = role;
+        this.passWord = passWord;
     }
 
-    public User(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    public void setProfilePicture(ImageView profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getPassword() {
+        return passWord;
+    }
+
+    public ImageView getProfilePicture() {
+        return profilePicture;
     }
 
     public int getUserID() {
@@ -34,29 +48,5 @@ public class User implements Serializable {
 
     public void setUserID(int userID) {
         this.userID = userID;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }
