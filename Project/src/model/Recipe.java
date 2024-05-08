@@ -15,12 +15,19 @@ public class Recipe implements Serializable {
     private String recipeTitle;
     private byte[] recipeImage;
     private String recipeInstructions;
+    private int authorId;
 
     public Recipe(int recipeID, String title, byte[] image, String instructions) {
         this.id = recipeID;
         this.recipeTitle = title;
         this.recipeImage = image;
         this.recipeInstructions = instructions;
+    }
+    public Recipe(String title, byte[] image, String instructions, int authorId){
+        this.recipeTitle = title;
+        this.recipeImage = image;
+        this.recipeInstructions = instructions;
+        this.authorId = authorId;
     }
 
     public int getId() {
@@ -53,5 +60,13 @@ public class Recipe implements Serializable {
 
     public void setRecipeInstructions(String recipeInstructions) {
         this.recipeInstructions = recipeInstructions;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 }

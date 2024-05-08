@@ -11,7 +11,7 @@ public class DatabaseCommunicator {
     private DatabaseConnection databaseConnection;
 
     public DatabaseCommunicator() throws SQLException {
-        this.databaseConnection = new DatabaseConnection();
+        this.databaseConnection = new DatabaseConnection(this);
     }
 
     public Connection getDatabaseconnection() throws SQLException {

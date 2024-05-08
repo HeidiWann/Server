@@ -15,7 +15,7 @@ public class DatabaseConnection {
     /**
      * @author Heidi Wännman
      */
-    public DatabaseConnection() {
+    public DatabaseConnection(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
     /**
@@ -26,8 +26,8 @@ public class DatabaseConnection {
      */
     public Connection getDatabaseconnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
-            String user = System.getenv("DBUSER");
-            String password = System.getenv("DBPASSWORD");
+            String user = "am6351";
+            String password = "o7wbakx2";
             String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
             this.connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
