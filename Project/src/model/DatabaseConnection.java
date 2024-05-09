@@ -1,8 +1,9 @@
 package model;
 import java.sql.*;
 
+
 /**
- * Clas that starts the connection to the database
+ * Class that starts the connection to the database
  *
  * @author Anton Jansson
  * @author Heidi Wännman
@@ -26,8 +27,10 @@ public class DatabaseConnection {
      */
     public Connection getDatabaseconnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
+            String user = System.getenv("DBUSER");
+            String password = System.getenv("DBPASSWORD");
             String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
-            this.connection = DriverManager.getConnection(url, "", "");
+            this.connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
         }
         return this.connection;
