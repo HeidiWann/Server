@@ -34,5 +34,18 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" scope="RUNTIME" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="lib1" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://C:/JavaFX/javafx-sdk-21.0.2/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://C:/JavaFX/javafx-sdk-21.0.2/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" exported="" name="lib3" level="project" />
   </component>
 </module>

@@ -38,6 +38,16 @@ public class Ingredient implements Serializable {
         this.store = store;
         this.amountOfIngredient = amountOfIngredient;
     }
+    public Ingredient(String ingredientName, Measurement measure, double amountOfIngredient) {
+        this.ingredientName = ingredientName;
+        this.measure = measure;
+        this.amountOfIngredient = amountOfIngredient;
+    }
+    public Ingredient(String ingredientName, Store store, double price){
+        this.ingredientName = ingredientName;
+        this.store = store;
+        this.price = price;
+    }
 
     public Ingredient(int measureID, String measure) {
     }
@@ -89,6 +99,9 @@ public class Ingredient implements Serializable {
     public int getMeasureID() {
         int measureID = 0;
         return measureID;
+    }
+    public double getAmountOfIngredient(){
+        return amountOfIngredient;
     }
 
     public String toString() {

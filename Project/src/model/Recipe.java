@@ -13,13 +13,13 @@ public class Recipe implements Serializable { // -------------------------------
     @Serial
     private static final long serialVersionUID = 111222333L;
     private int recipeID;
-    private String author;
+    private int author;
     private String instructions;
-    private ImageView imageOfRecipe;
+    private byte[] imageOfRecipe;
     private Food dish;
     private String recipeName;
 
-    public Recipe(String author, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
+    public Recipe(int author, String recipeName, String instructions, byte[] imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
         Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
         this.author = author;
         this.dish = newDish;
@@ -28,7 +28,20 @@ public class Recipe implements Serializable { // -------------------------------
         this.recipeName = nameOfFood;
     }
 
-    public Recipe(int recipeID, String author, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
+    public Recipe(int recipeid, String recipename, ImageView imageView, String recipeinstructions, int authorid) {
+    }
+    /*public Recipe(int author, String recipeName, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
+        Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
+        this.author = author;
+        this.dish = newDish;
+        this.instructions = instructions;
+        this.imageOfRecipe = imageOfRecipe;
+        this.recipeName = nameOfFood;
+    }
+
+     */
+
+    /*public Recipe(int recipeID, int author, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
         Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
         this.recipeID = recipeID;
         this.author = author;
@@ -37,6 +50,16 @@ public class Recipe implements Serializable { // -------------------------------
         this.imageOfRecipe = imageOfRecipe;
         this.recipeName = nameOfFood;
     }
+
+    public Recipe(int recipeid, String recipename, ImageView recipeimages, String recipeinstructions, int authorid) {
+        this.recipeID = recipeid;
+        this.recipeName = recipename;
+        this.imageOfRecipe = recipeimages;
+        this.instructions = recipeinstructions;
+        this.author = authorid;
+    }
+
+     */
 
 
     public String getInstructions() {
@@ -47,13 +70,13 @@ public class Recipe implements Serializable { // -------------------------------
         this.instructions = instructions;
     }
 
-    public ImageView getImageOfRecipe() {
+    public byte[] getImageOfRecipe() {
         return imageOfRecipe;
     }
 
-    public void setImageOfRecipe(ImageView imageOfRecipe) {
-        this.imageOfRecipe = imageOfRecipe;
-    }
+    //public void setImageOfRecipe(ImageView imageOfRecipe) {
+      //  this.imageOfRecipe = imageOfRecipe;
+   // }
 
     public Food getDish() {
         return dish;
@@ -65,5 +88,9 @@ public class Recipe implements Serializable { // -------------------------------
 
     public void setRecipeName(String recipeName) {
         this.recipeName = recipeName;
+    }
+
+    public int getAuthor() {
+        return author;
     }
 }

@@ -68,7 +68,7 @@ public class UserController {
 
         users.put(userName, user);
         try {
-            databaseController.addUser(userName, password);
+            databaseController.addUser(user);
         } catch (Exception e) {
 
         }

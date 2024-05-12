@@ -19,6 +19,12 @@ public class User implements Serializable {
         this.passWord = passWord;
     }
 
+    public User(int userId, String username, String password) {
+        this.userID = userId;
+        this.userName = username;
+        this.passWord = password;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -49,5 +55,8 @@ public class User implements Serializable {
 
     public void setUserID(int userID) {
         this.userID = userID;
+    }
+    public String toString(){
+        return "UserId: " + userID + ", Username: " + userName + ", Userpassword: " + passWord;
     }
 }
