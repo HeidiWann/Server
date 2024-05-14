@@ -27,8 +27,8 @@ public class DatabaseConnection {
      */
     public Connection getDatabaseconnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
-            String user = "";
-            String password = "";
+            String user = System.getenv("DBUSER");
+            String password = System.getenv("DBPASSWORD");
             String url = "jdbc:postgresql://pgserver.mau.se:5432/cheapeat";
             this.connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Established");
