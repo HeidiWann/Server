@@ -18,9 +18,10 @@ public class Ingredient implements Serializable {
     private Store store;
     private double amountOfIngredient;
 
-    public Ingredient(String ingredientName, double price) {
+    public Ingredient(String ingredientName, double price, Store store) {
         this.ingredientName = ingredientName;
         this.price = price;
+        this.store=store;
     }
 
     public Ingredient(String nameOfIngredient, double costOfIngredient, double amountOfIngredient, Measurement measurement) {

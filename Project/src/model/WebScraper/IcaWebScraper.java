@@ -1,6 +1,7 @@
 package model.WebScraper;
 
 import model.Ingredient;
+import model.Store;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -100,7 +101,7 @@ public class IcaWebScraper {
                 for (int i = 0; i < products.length(); i++) {
                     JSONObject product = products.getJSONObject(i);
 //                    webpageProductList.add(product.getString("name") + " costs: " + product.getJSONObject("price").getJSONObject("unit").getJSONObject("current").getString("amount"));
-                    Ingredient scrapedIngredient=new Ingredient(product.getString("name"), Double.parseDouble(product.getJSONObject("price").getJSONObject("unit").getJSONObject("current").getString("amount")));
+                    Ingredient scrapedIngredient=new Ingredient(product.getString("name"), Double.parseDouble(product.getJSONObject("price").getJSONObject("unit").getJSONObject("current").getString("amount")), Store.ICA);
                     ingredientsScraped.add(scrapedIngredient);
                 }
             }
