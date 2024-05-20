@@ -18,6 +18,9 @@ public class Ingredient implements Serializable {
     private Store store;
     private double amountOfIngredient;
 
+    public Ingredient(String ingredientName){
+        this.ingredientName = ingredientName;
+    }
     public Ingredient(String ingredientName, double price, Store store) {
         this.ingredientName = ingredientName;
         this.price = price;
@@ -51,6 +54,14 @@ public class Ingredient implements Serializable {
     }
 
     public Ingredient(int measureID, String measure) {
+    }
+
+    public Ingredient(String ingredientName, Store store, double price, double amount, Measurement measure) {
+        this.ingredientName = ingredientName;
+        this.store = store;
+        this.price = price;
+        this.amountOfIngredient = amount;
+        this.measure = measure;
     }
 
     public int getId() {

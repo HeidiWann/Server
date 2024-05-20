@@ -1,8 +1,12 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Food {
+public class Food implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 444555666L;
     private String nameOfFood;
     private int foodID;
 

@@ -4,7 +4,6 @@ package model;
 
 
 
-import javafx.scene.image.ImageView;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,13 +12,14 @@ public class Recipe implements Serializable { // -------------------------------
     @Serial
     private static final long serialVersionUID = 111222333L;
     private int recipeID;
-    private int author;
+    private String author;
     private String instructions;
     private byte[] imageOfRecipe;
     private Food dish;
     private String recipeName;
 
-    public Recipe(int author, String recipeName, String instructions, byte[] imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
+
+    public Recipe(String author, String instructions, byte[] imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
         Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
         this.author = author;
         this.dish = newDish;
@@ -28,7 +28,8 @@ public class Recipe implements Serializable { // -------------------------------
         this.recipeName = nameOfFood;
     }
 
-    public Recipe(int recipeid, String recipename, ImageView imageView, String recipeinstructions, int authorid) {
+    public Recipe(int recipeid, String recipename, byte[] imageView, String recipeinstructions, int authorid) {
+
     }
     /*public Recipe(int author, String recipeName, String instructions, ImageView imageOfRecipe, ArrayList<Ingredient> ingredients, String nameOfFood, ArrayList<FoodCategory> typeOfFood) {
         Food newDish = new Food(nameOfFood, typeOfFood, ingredients);
@@ -74,9 +75,10 @@ public class Recipe implements Serializable { // -------------------------------
         return imageOfRecipe;
     }
 
-    //public void setImageOfRecipe(ImageView imageOfRecipe) {
-      //  this.imageOfRecipe = imageOfRecipe;
-   // }
+    public void setImageOfRecipe(byte[] imageOfRecipe) {
+        this.imageOfRecipe = imageOfRecipe;
+    }
+
 
     public Food getDish() {
         return dish;
@@ -90,7 +92,7 @@ public class Recipe implements Serializable { // -------------------------------
         this.recipeName = recipeName;
     }
 
-    public int getAuthor() {
+    public String getAuthor() {
         return author;
     }
 }

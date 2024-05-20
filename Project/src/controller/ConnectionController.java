@@ -52,9 +52,10 @@ public class ConnectionController {
             ClientConnection clientConnection = new ClientConnection(clientSocket, this);
             new Thread(clientConnection).start();
             connectedClients.addClient(clientConnection);
-            //sendRecipesOnStartUp(clientConnection); // This method sends the recipes to the client that has connected
-            //sendObjectToEveryClient(prepareListOfUsers(), S_SEND_ALL_USERS); // This method sends the users to the client that has connected
-        } catch (IOException e) {
+            sendRecipesOnStartUp(clientConnection); // This method sends the recipes to the client that has connected
+            sendObjectToEveryClient(prepareListOfUsers(), S_SEND_ALL_USERS);
+            sendIngredientsAtStartup(clientConnection);// This method sends the users to the client that has connected
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -66,12 +67,13 @@ public class ConnectionController {
      * @param clientConnection The {@link ClientConnection} that is to get the recipes.
      * @author Anton Persson
      */
-    public void sendRecipesOnStartUp(ClientConnection clientConnection) {
-//        ArrayList<Recipe> recipes = recipeController.getAllRecipes(); // Collect the recipes
-//        ArrayList<Object> recipesToSend = new ArrayList<>(recipes); // Convert to object list
+    public void sendRecipesOnStartUp(ClientConnection clientConnection) throws SQLException {
+        recipeController.updateAllRecipes();
+        ArrayList<Recipe> recipes = recipeController.getRecipes(); // Collect the recipes
+        ArrayList<Object> recipesToSend = new ArrayList<>(recipes); // Convert to object list
 
-//        clientConnection.sendIntention(S_SEND_ALL_RECIPES);
-//        clientConnection.sendObject(recipesToSend);
+        clientConnection.sendIntention(S_SEND_ALL_RECIPES);
+        clientConnection.sendObject(recipesToSend);
     }
 
     /**
@@ -83,7 +85,7 @@ public class ConnectionController {
      */
     public ArrayList<Object> prepareListOfUsers() {
         ArrayList<User> users = userController.getAllUsers();
-        ArrayList<Object> listToSend = new ArrayList<>();
+        ArrayList<Object> listToSend = new ArrayList<>(users);
         return listToSend;
     }
 
@@ -102,6 +104,11 @@ public class ConnectionController {
             clientConnection.sendIntention(intention);
             clientConnection.sendObject(object);
         }
+    }
+    public void sendIngredientsAtStartup(ClientConnection clientConnection) throws SQLException {
+        ArrayList<Object> ingredientsToSend = recipeController.getIngredientsStartup();
+        clientConnection.sendIntention(S_SEND_ALL_INGREDIENTS);
+        clientConnection.sendObject(ingredientsToSend);
     }
 
     /**
@@ -127,6 +134,10 @@ public class ConnectionController {
                 clientConnection.setListenForIntention(false);
                 clientConnection.setListenForObject(true);
                 break;
+            case C_CREATE_RECIPE:
+                clientConnection.setListenForIntention(false);
+                clientConnection.setListenForObject(true);
+                break;
         }
     }
 
@@ -139,13 +150,22 @@ public class ConnectionController {
      * @author Anton Persson
      * @author Heidi Wänmann
      */
-    public void packUpObject(ClientConnection clientConnection, int intention, Object object) {
+    public void packUpObject(ClientConnection clientConnection, int intention, Object object) throws SQLException {
         switch (intention) {
             case C_WANT_TO_REGISTER:
                 User user = (User) object;
                 userController.addUser(user);
                 sendObjectToEveryClient(prepareListOfUsers(), S_UPDATE_C_LIST_OF_USERS);
                 break;
+            case C_CREATE_RECIPE:
+                Recipe recipe = (Recipe) object;
+                System.out.println(recipe.getRecipeName() + recipe.getInstructions() + recipe.getAuthor() + recipe.getImageOfRecipe());
+                if(recipe.getImageOfRecipe() == null){
+                    System.out.println("Bilden följde inte med");
+                }
+                recipeController.createRecipe(recipe);
+                break;
+
         }
         clientConnection.setListenForObject(false);
         clientConnection.setListenForIntention(true);

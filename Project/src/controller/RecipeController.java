@@ -31,13 +31,23 @@ public class RecipeController {
         this.databaseController = databaseController;
     }
 
+    public void createRecipe(Recipe recipe) throws SQLException {
+        databaseController.userAddRecipe(recipe);
+    }
     public void setRecipes(ArrayList<Recipe> recipe) {
         this.recipes = recipe;
     }
 
-    public ArrayList<Recipe> getRecipe() {
+    public ArrayList<Recipe> getRecipes() {
         return recipes;
     }
+    public void updateAllRecipes() throws SQLException {
+        this.recipes = databaseController.getRecipes();
+    }
+    public ArrayList<Object> getIngredientsStartup() throws SQLException {
+        return databaseController.getAllIngredient();
+    }
+
 }
 
 

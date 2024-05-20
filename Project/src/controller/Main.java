@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,20 +21,16 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) throws SQLException {
         DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
-        //DatabaseConnection dbconn = new DatabaseConnection(databaseCommunicator);
+        DatabaseConnection dbconn = new DatabaseConnection(databaseCommunicator);
         DatabaseController dbController = new DatabaseController(databaseCommunicator);
-       // ServerController serverController = new ServerController();
+        ServerController serverController = new ServerController();
 
-        ArrayList<Recipe> recipes = dbController.getRecipes();
-        for(Recipe recipe : recipes){
-            System.out.println(recipe.toString());
-        }
 
 
         //TODO endast för testing .. behövöer ett bättre sätt att starta scraping @jansson
-        ScrapinController scrapinController=new ScrapinController();
+        /*ScrapinController scrapinController=new ScrapinController();
         scrapinController.scrapeAllStores();
-
+        */
     }
 
 }

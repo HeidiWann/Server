@@ -29,7 +29,7 @@ public class ServerController {
         this.databaseCommunicator = new DatabaseCommunicator();
         databaseCommunicator.getDatabaseconnection();
         this.databaseController = new DatabaseController(databaseCommunicator);
-        this.userController = new UserController(databaseCommunicator);
+        this.userController = new UserController(databaseCommunicator, databaseController);
         this.recipeController = new RecipeController(databaseController);
         this.connectionController = new ConnectionController(userController, recipeController);
     }

@@ -1,17 +1,7 @@
 package controller;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import model.*;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.xml.transform.Result;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -37,18 +27,17 @@ public class DatabaseController {
     }
 
     /**
-     *
      * @param recipe
-     * @param ingredients
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public void userAddRecipe(Recipe recipe, ArrayList<Ingredient> ingredients){
+    public void userAddRecipe(Recipe recipe) {
         try {
             addFood(recipe.getRecipeName());
             addRecipe(recipe);
+            ArrayList<Ingredient> ingredients = recipe.getDish().getIngredients();
             int foodId = getFoodId(recipe.getRecipeName());
-            for( Ingredient ingredient: ingredients){
+            for (Ingredient ingredient : ingredients) {
                 addIngredientToRecipe(ingredient, foodId);
             }
         } catch (SQLException e) {
@@ -68,13 +57,12 @@ public class DatabaseController {
             stmt.setBytes(2, recipeImage);
             stmt.setString(3, recipeInstructions);
             stmt.setInt(4, authorId);
-            stmt.setInt(5,foodId);
+            stmt.setInt(5, foodId);
             stmt.execute();
         }
     }
 
     /**
-     *
      * @param recipe
      * @throws SQLException
      * @author Christoffer Salomonsson
@@ -86,7 +74,7 @@ public class DatabaseController {
         byte[] recipeImage = recipe.getImageOfRecipe();
 
         String recipeInstructions = recipe.getInstructions();
-        int authorId = recipe.getAuthor();
+        int authorId = getUserID(recipe.getAuthor());
         int foodId = getFoodId(recipe.getRecipeName());
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
              CallableStatement stmt = connection.prepareCall(sql)) {
@@ -94,44 +82,45 @@ public class DatabaseController {
             stmt.setBytes(2, recipeImage);
             stmt.setString(3, recipeInstructions);
             stmt.setInt(4, authorId);
-            stmt.setInt(5,foodId);
+            stmt.setInt(5, foodId);
             stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
     /**
-     *
      * @param foodName
      * @throws SQLException
      * @author Anton Persson
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public void addFood(String foodName) throws SQLException{
+    public void addFood(String foodName) throws SQLException {
         String sql = "CALL insertnewfood(?)";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
-             CallableStatement stmt = connection.prepareCall(sql)){
-            stmt.setString(1,foodName);
+             CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setString(1, foodName);
             stmt.execute();
         }
     }
 
     /**
-     *
      * @param foodName
      * @return
      * @throws SQLException
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public int getFoodId(String foodName) throws SQLException{
+    public int getFoodId(String foodName) throws SQLException {
         String sql = "SELECT foodid FROM food where foodname = ?";
         int foodId = -1;
-        try(Connection connection = databaseCommunicator.getDatabaseconnection();
-            PreparedStatement stmt = connection.prepareCall(sql)){
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             PreparedStatement stmt = connection.prepareCall(sql)) {
             stmt.setString(1, foodName);
-            try(ResultSet resultSet = stmt.executeQuery()){
-                if(resultSet.next()){
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
                     foodId = resultSet.getInt("foodid");
                 }
             }
@@ -140,42 +129,40 @@ public class DatabaseController {
     }
 
     /**
-     *
      * @param ingredient
      * @throws SQLException
      * @author Anton Persson
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public void addIngredient(Ingredient ingredient) throws SQLException{
+    public void addIngredient(Ingredient ingredient) throws SQLException {
         String sql = "CALL insertingredient(?,?,?)";
         String nameOfIngredient = ingredient.getIngredientName();
         Store nameOfStore = ingredient.getStore();
         Double costOfIngredient = ingredient.getIngredientCost();
-        try(Connection connection = databaseCommunicator.getDatabaseconnection();
-            CallableStatement stmt = connection.prepareCall(sql)){
-            stmt.setString(1,nameOfIngredient);
-            stmt.setString(2,nameOfStore.toString());
-            stmt.setDouble(3,costOfIngredient);
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setString(1, nameOfIngredient);
+            stmt.setString(2, nameOfStore.toString());
+            stmt.setDouble(3, costOfIngredient);
             stmt.execute();
         }
     }
 
     /**
-     *
      * @param ingredientName
      * @return
      * @throws SQLException
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public int getIngredientId(String ingredientName) throws SQLException{
+    public int getIngredientId(String ingredientName) throws SQLException {
         String sql = "Select ingredientid FROM ingredients where ingredientname=?";
         int ingredientId = -1;
-        try(Connection connection = databaseCommunicator.getDatabaseconnection();
-            PreparedStatement stmt = connection.prepareCall(sql)){
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             PreparedStatement stmt = connection.prepareCall(sql)) {
             stmt.setString(1, ingredientName);
-            try(ResultSet resultSet = stmt.executeQuery()) {
+            try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
                     ingredientId = resultSet.getInt("ingredientid");
                 }
@@ -185,21 +172,20 @@ public class DatabaseController {
     }
 
     /**
-     *
      * @param ingredient
      * @param foodId
      * @throws SQLException
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public void addIngredientToRecipe(Ingredient ingredient, int foodId) throws SQLException{
+    public void addIngredientToRecipe(Ingredient ingredient, int foodId) throws SQLException {
         String sql = "CALL addingredienttofood(?,?,?,?)";
         int ingredientId = getIngredientId(ingredient.getIngredientName());
         double amountOfIngredient = ingredient.getAmountOfIngredient();
         int measurementid = getMeasureId(ingredient.getMeasure());
-        try(Connection connection = databaseCommunicator.getDatabaseconnection();
-            CallableStatement stmt = connection.prepareCall(sql)){
-            stmt.setDouble(1,amountOfIngredient);
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setDouble(1, amountOfIngredient);
             stmt.setInt(2, measurementid);//Måste ändras
             stmt.setInt(3, ingredientId);
             stmt.setInt(4, foodId);
@@ -208,7 +194,6 @@ public class DatabaseController {
     }
 
     /**
-     *
      * @return
      * @throws SQLException
      * @author Anton Persson
@@ -217,26 +202,40 @@ public class DatabaseController {
      */
     public ArrayList<Recipe> getRecipes() throws SQLException {
         ArrayList<Recipe> recipes = new ArrayList<>();
-        String query = "SELECT * FROM recipes";
+        String query = "SELECT recipename, recipeimage, recipeinstructions, username, foodname, ingredientname, store, ingredientcost, amountofingredient, measure FROM getalltherecipes()";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                ImageView imageView = byteArrayToImageView(resultSet.getBytes("recipeimage"));
-                recipes.add(new Recipe(
-                        resultSet.getInt("recipeid"),
-                        resultSet.getString("recipename"),
-                        imageView,
-                        resultSet.getString("recipeinstructions"),
-                        resultSet.getInt("authorid")
-                ));
+                String recipeName = resultSet.getString("recipename");
+                byte[] recipeImage = resultSet.getBytes("recipeimage");
+                String instructions = resultSet.getString("recipeinstructions");
+                String author = resultSet.getString("username");
+                String foodName = resultSet.getString("foodname");
+
+                ArrayList<Ingredient> ingredients = new ArrayList<>();
+                do {
+                    String ingredientName = resultSet.getString("ingredientname");
+                    Store store = Store.valueOf(resultSet.getString("store"));
+                    double price = resultSet.getDouble("ingredientcost");
+                    double amount = resultSet.getDouble("amountofingredient");
+                    Measurement measure = Measurement.valueOf(resultSet.getString("measure"));
+                    Ingredient ingredient = new Ingredient(ingredientName, store, price, amount, measure);
+                    ingredients.add(ingredient);
+                } while (resultSet.next() && recipeName.equals(resultSet.getString("recipename")));
+
+                if(!resultSet.isBeforeFirst()){
+                    resultSet.previous();
+                }
+                Recipe recipe = new Recipe(author, instructions, recipeImage, ingredients, foodName, null);
+                recipes.add(recipe);
+
             }
         }
         return recipes;
     }
 
     /**
-     *
      * @param user
      * @throws SQLException
      * @author Anton Persson
@@ -253,11 +252,15 @@ public class DatabaseController {
             statement.setString(1, userName);
             statement.setString(2, password);
             statement.execute();
+        } catch (SQLException e) {
+            System.err.println("SQLException vid körning av addUser: " + e.getMessage());
+            e.printStackTrace();
+            throw e;  // Kasta vidare exception så det syns på högre nivå
+
         }
     }
 
     /**
-     *
      * @param username
      * @return
      * @throws SQLException
@@ -275,6 +278,7 @@ public class DatabaseController {
             return statement.getBoolean(1);
         }
     }
+
     /**
      * Method used for fetching users from the database
      *
@@ -301,6 +305,7 @@ public class DatabaseController {
         }
         return users;
     }
+
     /**
      * Method used for when a user updates it profile
      *
@@ -314,21 +319,20 @@ public class DatabaseController {
     }
 
     /**
-     *
      * @param measurement
      * @return
      * @throws SQLException
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public int getMeasureId(Measurement measurement) throws SQLException{
+    public int getMeasureId(Measurement measurement) throws SQLException {
         String sql = "select measureid from measures where measure = ?";
         String measure = measurement.toString();
         int measureId = -1;
-        try(Connection connection = databaseCommunicator.getDatabaseconnection();
-            PreparedStatement stmt = connection.prepareCall(sql)){
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             PreparedStatement stmt = connection.prepareCall(sql)) {
             stmt.setString(1, measure);
-            try(ResultSet resultSet = stmt.executeQuery()) {
+            try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
                     measureId = resultSet.getInt("measureid");
                 }
@@ -338,25 +342,40 @@ public class DatabaseController {
 
     }
 
-    /*
-    Dessa två sista metoder är till för att konvertera mellan byte och imageview
-     */
-    public static byte[] imageViewToByteArray(ImageView imageView) {
-        Image image = imageView.getImage();
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(bufferedImage, "png", byteOutput);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Fel vid konvertering till byte[]");
+    public int getUserID(String userName) throws SQLException {
+        String sql = "select userid from users where username = ?";
+        int userID = -1;
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             PreparedStatement stmt = connection.prepareCall(sql)) {
+            stmt.setString(1, userName);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    userID = resultSet.getInt("userid");
+                }
+            }
         }
-        return byteOutput.toByteArray();
+        return userID;
     }
-    public static ImageView byteArrayToImageView(byte[] byteArray) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
-        Image image = new Image(inputStream);
-        ImageView imageView = new ImageView(image);
-        return imageView;
+    public ArrayList<Object> getAllIngredient() throws SQLException{
+        String sql = "select ingredientname from ingredients";
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
+        try(Connection connection = databaseCommunicator.getDatabaseconnection();
+            PreparedStatement stmt = connection.prepareCall(sql)){
+            try(ResultSet resultSet = stmt.executeQuery()){
+                while (resultSet.next()) {
+                    String ingredientName = resultSet.getString("ingredientname");
+                    Ingredient ingredient = new Ingredient(ingredientName);
+                    ingredients.add(ingredient);
+                }
+
+            }
+
+
+        }
+        ArrayList<Object> ingredientsToSend = new ArrayList<>(ingredients);
+        System.out.println(ingredientsToSend.toString());
+        return ingredientsToSend;
     }
+
+
 }

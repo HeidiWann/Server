@@ -5,6 +5,7 @@ import view.ClientConnection;
 import model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -23,7 +24,8 @@ public class UserController {
      * @param databaseCommunicator
      * @author Anton Jansson
      */
-    public UserController(DatabaseCommunicator databaseCommunicator) {
+    public UserController(DatabaseCommunicator databaseCommunicator, DatabaseController databaseController) {
+        this.databaseController = databaseController;
         this.databaseCommunicator = databaseCommunicator;
         users = new HashMap<>();
     }
@@ -34,7 +36,9 @@ public class UserController {
      * @author Anton Persson
      */
     public ArrayList<User> getAllUsers() {
-        return (ArrayList<User>) users.values();
+        setUsers();
+        Collection<User> userCollection = users.values();
+        return new ArrayList<>(userCollection);
     }
 
     /**
@@ -70,7 +74,9 @@ public class UserController {
         try {
             databaseController.addUser(user);
         } catch (Exception e) {
-
+            System.out.println("addUser fel");
         }
+        System.out.println("Hit fungerar det");
     }
+
 }
