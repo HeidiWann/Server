@@ -40,6 +40,10 @@ public class DatabaseController {
             for (Ingredient ingredient : ingredients) {
                 addIngredientToRecipe(ingredient, foodId);
             }
+            ArrayList<FoodCategory> categories = recipe.getDish().getTypeOfFood();
+            for(FoodCategory foodCategory : categories) {
+                addCategoryForRecipe(foodCategory,recipe.getRecipeName());
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -88,6 +92,50 @@ public class DatabaseController {
             e.printStackTrace();
             throw e;
         }
+    }
+    public void addCategoryForRecipe(FoodCategory foodCategory, String recipeName){
+        String sql = "insert into recipescategories (recipeid, categoryid) values (?,?)";
+        int categoryid = getCategoryId(foodCategory.toString());
+        int recipeID = getRecipeId(recipeName);
+        try(Connection connection = databaseCommunicator.getDatabaseconnection();
+            PreparedStatement stmt = connection.prepareStatement(sql)){
+                stmt.setInt(1, recipeID);
+                stmt.setInt(2, categoryid);
+                stmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getRecipeId(String recipeName) {
+        String sql = "Select recipeid from recipes where recipename = ?";
+        int recipeID = 0;
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, recipeName);
+            ResultSet resultSet = stmt.executeQuery();
+            while(resultSet.next()) {
+                recipeID = resultSet.getInt("recipeid");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return recipeID;
+    }
+    public int getCategoryId(String categoryName) {
+        String sql = "select categoryid from categories where categoryname = ?";
+        int categoryID = 0;
+        try (Connection connection = databaseCommunicator.getDatabaseconnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, categoryName);
+            ResultSet resultSet = stmt.executeQuery();
+            while(resultSet.next()) {
+                categoryID = resultSet.getInt("categoryid");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return categoryID;
     }
 
     /**
@@ -202,7 +250,7 @@ public class DatabaseController {
      */
     public ArrayList<Recipe> getRecipes() throws SQLException {
         ArrayList<Recipe> recipes = new ArrayList<>();
-        String query = "SELECT recipename, recipeimage, recipeinstructions, username, foodname, ingredientname, store, ingredientcost, amountofingredient, measure FROM getalltherecipes()";
+        String query = "SELECT recipename, recipeimage, recipeinstructions, username, foodname, ingredientname, store, ingredientcost, amountofingredient, measure, categoryname FROM getrecipealldetails()";
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
              PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
              ResultSet resultSet = statement.executeQuery()) {
@@ -212,7 +260,9 @@ public class DatabaseController {
                 String instructions = resultSet.getString("recipeinstructions");
                 String author = resultSet.getString("username");
                 String foodName = resultSet.getString("foodname");
-
+                String category = resultSet.getString("categoryname");
+                ArrayList<FoodCategory> categories = new ArrayList<>();
+                categories.add(FoodCategory.valueOf(category));
                 ArrayList<Ingredient> ingredients = new ArrayList<>();
                 do {
                     String ingredientName = resultSet.getString("ingredientname");
@@ -227,7 +277,7 @@ public class DatabaseController {
                 if(!resultSet.isBeforeFirst()){
                     resultSet.previous();
                 }
-                Recipe recipe = new Recipe(author, instructions, recipeImage, ingredients, foodName, null);
+                Recipe recipe = new Recipe(author, instructions, recipeImage, ingredients, foodName, categories);
                 recipes.add(recipe);
 
             }
@@ -357,14 +407,16 @@ public class DatabaseController {
         return userID;
     }
     public ArrayList<Object> getAllIngredient() throws SQLException{
-        String sql = "select ingredientname from ingredients";
+        String sql = "select ingredientname, ingredientcost, store from ingredients";
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         try(Connection connection = databaseCommunicator.getDatabaseconnection();
             PreparedStatement stmt = connection.prepareCall(sql)){
             try(ResultSet resultSet = stmt.executeQuery()){
                 while (resultSet.next()) {
                     String ingredientName = resultSet.getString("ingredientname");
-                    Ingredient ingredient = new Ingredient(ingredientName);
+                    double cost = resultSet.getDouble("ingredientcost");
+                    Store store = Store.valueOf(resultSet.getString("store"));
+                    Ingredient ingredient = new Ingredient(ingredientName, cost, store);
                     ingredients.add(ingredient);
                 }
 

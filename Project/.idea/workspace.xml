@@ -7,17 +7,10 @@
     <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="Ändringar för att få databas att fungera">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConnectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/RecipeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/RecipeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/ScrapinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ScrapinController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Food.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Food.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Ingredient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Recipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,6 +28,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -45,7 +39,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/HeidiWann/Server.git&quot;,
-    &quot;accountId&quot;: &quot;bcd63a58-2fe7-48b5-bc47-41ae6b721913&quot;
+    &quot;accountId&quot;: &quot;86daad51-69d7-4281-83c9-3ecbb2517c40&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -84,7 +78,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
@@ -131,6 +125,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17011.79" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17011.79" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -195,6 +197,11 @@
       <workItem from="1714132855765" duration="27547000" />
       <workItem from="1715161027691" duration="7431000" />
       <workItem from="1715701320606" duration="364000" />
+      <workItem from="1716317489793" duration="2150000" />
+      <workItem from="1716898753429" duration="211000" />
+      <workItem from="1716899084538" duration="998000" />
+      <workItem from="1716900303572" duration="17000" />
+      <workItem from="1716900667701" duration="20484000" />
     </task>
     <task id="LOCAL−00001" summary="Databaskontroll ändringar">
       <option name="closed" value="true" />
@@ -210,7 +217,14 @@
       <option name="presentableId" value="LOCAL−00002" />
       <updated>1715506725195</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL−00003" summary="Ändringar för att få databas att fungera">
+      <option name="closed" value="true" />
+      <created>1716189802651</created>
+      <option name="number" value="LOCAL−00003" />
+      <option name="presentableId" value="LOCAL−00003" />
+      <updated>1716189802651</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -76,6 +76,8 @@ public class ConnectionController {
         clientConnection.sendObject(recipesToSend);
     }
 
+
+
     /**
      * This method gets an {@link ArrayList} of {@link User} from the {@link UserController} and converts it into an
      * ArrayList of {@link Object} and later returns it.
@@ -159,7 +161,7 @@ public class ConnectionController {
                 break;
             case C_CREATE_RECIPE:
                 Recipe recipe = (Recipe) object;
-                System.out.println(recipe.getRecipeName() + recipe.getInstructions() + recipe.getAuthor() + recipe.getImageOfRecipe());
+                System.out.println(recipe.getRecipeName() + recipe.getInstructions() + recipe.getAuthor() + recipe.getImageOfRecipe() + recipe.getDish().getTypeOfFood());
                 if(recipe.getImageOfRecipe() == null){
                     System.out.println("Bilden följde inte med");
                 }

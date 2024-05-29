@@ -1,4 +1,5 @@
-package model.WebScraper;
+/*package model.WebScraper;
+
 
 import model.Ingredient;
 import model.Store;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  * This class is responsible for scraping Hemköp webpages
  * @author Anton Jansson
  */
-public class HemköpWebScraper {
+/*public class HemköpWebScraper {
 
     private WebDriver driver;
 
@@ -26,7 +27,7 @@ public class HemköpWebScraper {
      * @param url The link to the webpage as a String
      * @author Anton Jansson
      */
-    public ArrayList<Ingredient> scrapeHemköp(String url) {
+   /* public ArrayList<Ingredient> scrapeHemköp(String url) {
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000)); //Allows some time to pass so the page can load
         driver.get(url);
@@ -87,3 +88,4 @@ public class HemköpWebScraper {
         return webpageProductList;
     }
 }
+*/

@@ -1,4 +1,4 @@
-package controller;
+/*package controller;
 
 import model.Ingredient;
 import model.WebScraper.HemköpWebScraper;
@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Anton Jansson
  */
-public class ScrapinController {
+/*/*public class ScrapinController {
     private IcaWebScraper icaWebScraping;
     private HemköpWebScraper hemköpWebScraper;
 
@@ -26,7 +26,7 @@ public class ScrapinController {
      *
      * @author Anton Jansson
      */
-    public ScrapinController() {
+   /* public ScrapinController() {
         this.icaWebScraping = new IcaWebScraper();
         this.hemköpWebScraper = new HemköpWebScraper();
     }
@@ -36,7 +36,7 @@ public class ScrapinController {
      *
      * @author Anton Jansson
      */
-    public ArrayList<Ingredient> scrapeAllStores() {
+   /* public ArrayList<Ingredient> scrapeAllStores() {
         //TODo skapa en tråd för varje butik?
         ArrayList<Ingredient> allScrapedProducts = new ArrayList<>();
         allScrapedProducts.addAll(scrapeIca());
@@ -112,5 +112,4 @@ public class ScrapinController {
     }
 
 
-}
-
+}*/
