@@ -17,9 +17,18 @@ public class Ingredient implements Serializable {
     private Measurement measure;
     private Store store;
     private double amountOfIngredient;
+    private ProductCategory category;
+    private ProductSubCategory subCategory;
 
     public Ingredient(String ingredientName){
         this.ingredientName = ingredientName;
+    }
+    public Ingredient(String ingredientName, double price, Store store, ProductCategory category, ProductSubCategory subCategory) {
+        this.ingredientName = ingredientName;
+        this.price = price;
+        this.store = store;
+        this.category = category;
+        this.subCategory = subCategory;
     }
     public Ingredient(String ingredientName, double price, Store store) {
         this.ingredientName = ingredientName;

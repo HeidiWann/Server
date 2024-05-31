@@ -22,7 +22,7 @@ public class DatabaseController {
      * @author Anton Jansson
      * @author Heidi Wännman
      */
-    public DatabaseController(DatabaseCommunicator databaseCommunicator) throws SQLException {
+    public DatabaseController(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
 
@@ -183,7 +183,7 @@ public class DatabaseController {
      * @author Christoffer Salomonsson
      * KLAR
      */
-    public void addIngredient(Ingredient ingredient) throws SQLException {
+    public void addIngredient(Ingredient ingredient)  {
         String sql = "CALL insertingredient(?,?,?)";
         String nameOfIngredient = ingredient.getIngredientName();
         Store nameOfStore = ingredient.getStore();
@@ -194,6 +194,8 @@ public class DatabaseController {
             stmt.setString(2, nameOfStore.toString());
             stmt.setDouble(3, costOfIngredient);
             stmt.execute();
+        }catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
         }
     }
 

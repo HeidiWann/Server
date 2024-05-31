@@ -1,17 +1,16 @@
 package model.WebScraper;
 
-import model.Ingredient;
-import model.Store;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import model.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -21,9 +20,6 @@ import java.util.List;
  * @author Anton Jansson
  */
 public class IcaWebScraper {
-    private List<Ingredient> scrapedProductsList = new ArrayList<>();
-
-
     /**
      * This method is used to scrape a given webpage for the name and the price of the products.
      *
@@ -31,6 +27,47 @@ public class IcaWebScraper {
      * @author Heidi Wännman
      * @author Anton Jansson
      */
+    public List<Ingredient> scrapeICAForNameAndPrice(String url, ChromeDriver driver) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        try {
+            driver.get(url);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            // Hantera cookie-banner
+            try {
+                WebElement acceptCookiesButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
+                acceptCookiesButton.click();
+            } catch (TimeoutException e) {
+                System.out.println("No cookie banner found or unable to click, continuing...");
+            }
+
+            List<WebElement> allProductsBoxes = driver.findElements(By.xpath("//div[starts-with(@data-test,'fop-wrapper')]"));
+            for (WebElement productBox : allProductsBoxes) {
+                WebElement pricePer = productBox.findElement(By.xpath(".//span[contains(@class,'fop__PricePerText')]"));
+                String priceString = pricePer.getText().replace("(", "").replace("Erbj jmf", "").replace(",", ".").replace("Ord jmf ", "").split(" ")[0];
+                try {
+                    Double.parseDouble(priceString);
+                } catch (NumberFormatException nfe) {
+                    priceString = pricePer.getText().replace("Erbj jmf ", "").replace("(", "").replace(",", ".").replace("Ord jmf ", "").split(" ")[1];
+                }
+                double price = Double.parseDouble(priceString);
+
+                WebElement title = productBox.findElement(By.xpath(
+                        ".//a[@data-test='fop-product-link']"));
+                ProductCategory category = ProductCategorizer.categorizeProduct(title.getText());
+                ProductSubCategory subCategory = ProductCategorizer.getSubCategory(title.getText());
+                Ingredient ingredient = new Ingredient(title.getText(), price, Store.ICA, category, subCategory);
+                ingredients.add(ingredient);
+                System.out.println(price + " " + title.getText() + " " + category + " " + subCategory);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Sortera ingredienser
+        Collections.sort(ingredients, Comparator.comparing(Ingredient::getIngredientName).thenComparing(Ingredient::getPrice).thenComparing(Ingredient::getStore));
+        return ingredients;
+    }
+}
+    /*
     public ArrayList scrapeICAForNameAndPrice(String url) {
         ArrayList<Ingredient> scrapedProducts = new ArrayList<>();
 
@@ -79,7 +116,7 @@ public class IcaWebScraper {
      * @param productName productName The URL with the product id to get the price
      * @author Heidi Wännman
      * @author Anton Jansson
-     */
+     *//*
     public ArrayList sendGetRequestAndResolveProductPrices(String productName) {
         ArrayList <Ingredient> ingredientsScraped=new ArrayList<>();
         try {
@@ -119,7 +156,7 @@ public class IcaWebScraper {
      * @param size Is the maximum size of each list
      * @return A list of lists, each list containing the size that the original list(up to the size of elements)
      * @author Heidi Wännman
-     */
+     *//*
     public List<List<String>> splitArray(List<String> arr, int size) {
         List<List<String>> result = new ArrayList<>();
         for (int i = 0; i < arr.size(); i += size) {
@@ -127,5 +164,6 @@ public class IcaWebScraper {
         }
         return result;
     }
-}
+
+}*/
 

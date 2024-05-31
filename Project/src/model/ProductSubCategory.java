@@ -1,0 +1,41 @@
+package model;
+
+public enum ProductSubCategory {
+    ost, färskost, mjölk, yoghurt, karré, ryggbiff, kycklingfilé, färsk, oxfilé, biff, kotlett, hel, böstfilé, kycklinglårfil, klubba, frysta, ben, vingar,
+    kycklingkebab, köttbullar, nuggets, marinerade, minutenfilé, innerfilé, kalkon, buffalo, drumsticks, kycklinggyros, kycklingspett,
+    hönskött, rings, burgare, tacokyckling, kycklingmage, kycklingsteak, strimlad, kycklinglever, kycklinghjärta, minutenstrimlor,
+    crispy, delifresh, kycklingpinnar, kycklingpanna, minikalkon, kalkonbröstfilé, soya, fried, pulled, nötfärs, hot, hamburgare, tex,
+    mex, flintastek, fläskytterfilé, kycklingfärs, högrevsburgare, big, pack, gyros, chorizo, texas, bbq, chirizokorv, salsicciakorv, nötkorv,
+    persilja, kassler, kebabstavar, ribs, beef, fläskkotlett, flankstek, högrev, fransyska, picanha, blandfärs, högrevsfärs, hamburgarefärs,
+    salsicciafärs, lammfärs, flapsteak, entrecote, iron, fläskkarré, grytbitar, spareribs, skivad, sidfläsk, grillspett, kabanosskorv, rökig, chili,
+    grillkotlett, rapsgris, grillspjut, grillskiva, pluma, mörad, putsad, ramslök, örter, stek, pepparbiff, löv, rostasfilé, rostbiff, lövbiff,
+    nötspett, kalvbiff, benfri, skinkstek, porchetta, knäckta, lammstek, lammracks, lammrostbiff, kalvschnitzel, kalvstek, kalvfärs, lammkotlett,
+    helgskinka, kokt, pork, rökt, tunna, sinka, grillkorv, red, kolbasz, bratwurst, pimenton, provencale, cheddar, entrecotekorv, chimichurri,
+    sade, dilim, baharatli, dili, tavuk, mortadella, bacon, tärnat, miniskivat, leverpastej, gurka, falukorv, fuet, deliskivor, basturökt,
+    cognacs, saltrulle, pastrami, extrarökt, vitlökssalami, salami, chipotle, pepparsalami, milano, scorpion, tryffelkorv, prosiutto, crudo,
+    ölkorv, vitlök, prosciutto, arbogapastej, hots, barnens, delikatess, tjock, lördagskorv, gotler, jaktkorv, eko, eco, skinnfri, wienerkorv, kalkonbacon, medwurst,
+    gourmetskinka, mild, stekfläsk, salame, antipasti, varmkorv, sylta, kalvsylta, svea, långkokt, congacmedwurst, enris, krämig, kycklingpastej,
+    ungsbakad, svartrökt, brorm, gallerrökt, bog, mor, pepparklubb, husmorspastej, skånsk, grädd, serranolindad, pancetta, öoliver, färskostfyllda, spansk, schwarzälder, yellow, emilskinka, rimmat,
+    blodpudding, glutenfri, utan, socker, färdigstekta, prinskorv, jamon, serrano, lomo, tradicional, tapas, de, espana, kokkorv, grov, isterband,
+    vegokorv, ovo, virshle, vinmarinerad, flatrökt, kalkonbröst, macar, prinskrov, skinn, korv, skivbar, snack, parmesan, garlic, black, pepper, burkskina,
+    picnic, örtpastej, vegitarisk, vego, middagskorv, wintersalami, läckökorv, iberico, coppa, cotto, fänkål, hästkött, granrökt, kryddkorv, gildsalami,
+    pannbiffar, ravioli, köttsås, bolognese, con, carne, syrliga, saluhall, trio, tryffelsalami, wild, kryddjärpar, pilsnerkorv, lammkorv, gräddsås, färskkorv,
+    creme, västerbottenost, mango, cevivhe, rökor, vitlökspäckade, chilimarinerad, paprika, kycklingsalami, picknicbog, norrlandspölsa, vinbladsdolmar, tapenade, lunchkorv, pizza, nudja, tomatsås, soltorkade,
+    finmald, matjesill, mästermatjesill, laxfilé, kaviar, blodkorv, gravad, kallrökt, fläskfilé, torskfilé, skalade, handskalade, laxsida, torskryggfilé,
+    dansk, gräddleverpastej, kycklingklubbor, sticks, portionsbitar, tångrom, anjovis, löksill, skärgårdssill, senap, senapssill, romansallad, grön, rabarber,basilika, cocktailtomater,
+    tomater, tomatpuré, puré, lök, vatten, blåbär, babyspenat, ekologisk, lime, citron, passionfrukt, salladslök, zucchini, grape,
+    jordgubbar, hallon, potatis, mjölig, advokado, småbladmix, ruccola, påse, broccoli, röda, rädisor, bunt, kruksallat, ätmogen, isberg, dill, strut,
+    rödbeta, mangold, gräslök, ask, krispsallad, gourmetsallad, blandsallad, bakpotatis, ramiro, tranbär, hjortron, havtorn, lingon, svarta, vinbär, granatäpple,
+    kärnor, persika, kålmix, björnbär, pepparrot, schalottenlök, vit, sparris, vitkål, majskolv, majs, bladspenat, bladpersilja, rättika, smoothie, körsbär,
+    dadlar, kålrabbi, mix, mynta, sivri, fikon, surkål, jordnärtskockor, böngroddar, saltgurka, champinjoner, svartkål, färskpotatis, kvistomat, plommon, kokbanan,
+    portabello, habanero, päron, morötter, ostronskiving, kokosnöt, nektarin, rödbetsgroddar, grönkål, ingefära, riven, papaya,spetskål, förkokt, rotselleri,
+    shimej, silverlök, majrova, grukmeja, mademe, knippe, galia, satumas, chillipeppar, groddar, purjolök, palsternacka, bigarråer, organo,
+    carolina, reaper, steklök, salt, körvel, mejram, rosmarin, salvia, bifftomat, sötpotatis, bladselleri, haricots, verts, citrongräs, blomkål, aprikoser, ananas,
+    pumpa, butternut, jalapeno, pärllök, koriander, sharon, kålrot, savoykål, physalis, rödkål,  salladskål, sockerärtor, peppar, druvor, persiljerot,
+    orange, huvudsallad, cocktail, formbar, skagen, karljohansvamp, köttfri, veggi, mozzarella, parveggio, potatissallad, sweet, färs, caviar, torsk, lax,
+    mellan, stor, liten, nypressad, havredryck, juice, pulver, stång, frigående, lång, normalsaltat, kvarg, måltidsdryck, drickyoghurt,
+    laktosfri, matdeg, söt, planti, kaffe, lagrad, krossade, passerade,
+
+
+
+    okategoriserad,}

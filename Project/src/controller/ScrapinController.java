@@ -1,13 +1,15 @@
-/*package controller;
+package controller;
 
 import model.Ingredient;
 import model.WebScraper.HemköpWebScraper;
 import model.WebScraper.IcaWebScraper;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ import java.util.List;
  *
  * @author Anton Jansson
  */
-/*/*public class ScrapinController {
+public class ScrapinController {
     private IcaWebScraper icaWebScraping;
     private HemköpWebScraper hemköpWebScraper;
 
@@ -26,7 +28,7 @@ import java.util.List;
      *
      * @author Anton Jansson
      */
-   /* public ScrapinController() {
+    public ScrapinController() {
         this.icaWebScraping = new IcaWebScraper();
         this.hemköpWebScraper = new HemköpWebScraper();
     }
@@ -36,38 +38,26 @@ import java.util.List;
      *
      * @author Anton Jansson
      */
-   /* public ArrayList<Ingredient> scrapeAllStores() {
-        //TODo skapa en tråd för varje butik?
+    public ArrayList<Ingredient> scrapeAllStores() {
         ArrayList<Ingredient> allScrapedProducts = new ArrayList<>();
-        allScrapedProducts.addAll(scrapeIca());
-        allScrapedProducts.addAll(scrapeHemköp());
+        ChromeDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        allScrapedProducts.addAll(scrapeHemköp(driver));
+        allScrapedProducts.addAll(scrapeIca(driver));
+        driver.quit();
         return allScrapedProducts;
     }
 
-    private List<Ingredient> scrapeHemköp() {
+    private List<Ingredient> scrapeHemköp(ChromeDriver driver) {
         String fileName = "Project\\resources\\Hemköp_Links.txt"; //Where the file is stored
-        ArrayList<String> hemköpLinks = new ArrayList<>();
+        List<String> hemköpLinks = readLinksFromFile(fileName);
         ArrayList<Ingredient> productsScraped = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String linkFromFile;
-            while ((linkFromFile = bufferedReader.readLine()) != null) {
-                hemköpLinks.add(linkFromFile);
-            }
-        } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
-            System.out.println("File:" + fileName + " not found");
-        } catch (IOException e) {
-            System.out.println(e);
-            throw new RuntimeException(e);
-        }
+
         //Goes through every link in the file and fetches ingredients names and prices (with 100 milli sec delay)
         for (String link : hemköpLinks) {
-            ArrayList<Ingredient> productsFromLink = hemköpWebScraper.scrapeHemköp(link);
-            //TOdo kan kanske ersättas med addAll() @jansson
-            for (Ingredient ingredient : productsFromLink) {
-                System.out.println(ingredient);
-                productsScraped.add(ingredient);
-            }
+            ArrayList<Ingredient> productsFromLink = hemköpWebScraper.scrapeHemköp(driver,link);
+            productsScraped.addAll(productsFromLink);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
@@ -77,39 +67,38 @@ import java.util.List;
         return productsScraped;
     }
 
-    private List<Ingredient> scrapeIca() {
+    private List<Ingredient> scrapeIca(ChromeDriver driver) {
         String fileName = "Project\\resources\\Ica_Links.txt"; //Where the file is stored
-        ArrayList<String> icaLinks = new ArrayList<>();
+        List<String> icaLinks = readLinksFromFile(fileName);
         ArrayList<Ingredient> productsScraped = new ArrayList<>();
+        //Goes through every link in the file and fetches ingredients names and prices (with 100 milli sec delay)
+        for (String link : icaLinks) {
+            List<Ingredient> productsFromLink = icaWebScraping.scrapeICAForNameAndPrice(link,driver);
+            productsScraped.addAll(productsFromLink);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        }
+        return productsScraped;
+    }
+
+
+    private List<String> readLinksFromFile(String fileName) {
+        List<String> links = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String linkFromFile;
             while ((linkFromFile = bufferedReader.readLine()) != null) {
-                icaLinks.add(linkFromFile);
+                links.add(linkFromFile);
             }
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
             System.out.println("File:" + fileName + " not found");
         } catch (IOException e) {
-            System.out.println(e);
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Error reading file: " + fileName);
         }
-
-        //Goes through every link in the file and fetches ingredients names and prices (with 100 milli sec delay)
-        for (String link : icaLinks) {
-            ArrayList productsFromLink = icaWebScraping.scrapeICAForNameAndPrice(link);
-            for (Object ingredient : productsFromLink) {
-                System.out.println(ingredient);
-                productsScraped.add((Ingredient) ingredient);
-            }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-        }
-
-        return productsScraped;
+        return links;
     }
-
-
-}*/
+}
