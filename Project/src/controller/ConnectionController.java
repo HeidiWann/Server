@@ -36,6 +36,7 @@ public class ConnectionController {
         this.recipeController = recipeController;
         this.connectedClients = new ConnectedClients();
         new ConnectionListener(2343, this);
+        new ConnectionListener(780, this);
     }
 
     /**
@@ -107,6 +108,7 @@ public class ConnectionController {
             clientConnection.sendObject(object);
         }
     }
+
     public void sendIngredientsAtStartup(ClientConnection clientConnection) throws SQLException {
         ArrayList<Object> ingredientsToSend = recipeController.getIngredientsStartup();
         clientConnection.sendIntention(S_SEND_ALL_INGREDIENTS);
@@ -124,7 +126,7 @@ public class ConnectionController {
      * @author Anton Persson
      * @author Heidi Wännmann
      */
-    public synchronized void revealClientIntention(ClientConnection clientConnection, int intention) throws IOException, ClassNotFoundException, SQLException {
+    public synchronized void revealClientIntention(ClientConnection clientConnection, int intention) {
         switch (intention) {
             case C_WANTS_TO_DISCONNECT:
                 clientConnection.setListenForObject(false);
@@ -152,7 +154,7 @@ public class ConnectionController {
      * @author Anton Persson
      * @author Heidi Wänmann
      */
-    public void packUpObject(ClientConnection clientConnection, int intention, Object object) throws SQLException {
+    public synchronized void packUpObject(ClientConnection clientConnection, int intention, Object object) throws SQLException {
         switch (intention) {
             case C_WANT_TO_REGISTER:
                 User user = (User) object;

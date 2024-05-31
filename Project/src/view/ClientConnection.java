@@ -91,7 +91,7 @@ public class ClientConnection implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Connection was closed");
+        System.out.println("Client Connection was closed");
     }
 
     /**
@@ -107,6 +107,7 @@ public class ClientConnection implements Runnable {
         } catch (IOException e) {
             System.out.println("Could not send the intention");
             throw new RuntimeException(e);
+            // TODO Här kan servern krascha så när detta händer så ska vi ta väck klienten från uppkopplade klienter
         }
     }
 
@@ -143,5 +144,15 @@ public class ClientConnection implements Runnable {
      */
     public void setListenForObject(boolean listenForObject) {
         this.listenForObject = listenForObject;
+    }
+
+    public boolean isAlive () {
+        try {
+            oos.writeInt(0);
+            oos.flush();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

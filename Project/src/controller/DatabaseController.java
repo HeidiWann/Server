@@ -389,7 +389,6 @@ public class DatabaseController {
             }
         }
         return measureId;
-
     }
 
     public int getUserID(String userName) throws SQLException {
@@ -406,6 +405,7 @@ public class DatabaseController {
         }
         return userID;
     }
+
     public ArrayList<Object> getAllIngredient() throws SQLException{
         String sql = "select ingredientname, ingredientcost, store from ingredients";
         ArrayList<Ingredient> ingredients = new ArrayList<>();
@@ -428,6 +428,4 @@ public class DatabaseController {
         System.out.println(ingredientsToSend.toString());
         return ingredientsToSend;
     }
-
-
 }

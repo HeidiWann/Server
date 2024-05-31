@@ -2,11 +2,13 @@ package model;
 
 import view.ClientConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectedClients {
     private ArrayList<ClientConnection> connectedClients;
-    private ReentrantLock lock;
+    private final ReentrantLock lock;
+    private Iterator<ClientConnection> iterator;
 
     public ConnectedClients() {
         this.connectedClients = new ArrayList<>();
@@ -16,11 +18,15 @@ public class ConnectedClients {
     public void addClient(ClientConnection client) {
         try {
             lock.lock();
-            connectedClients.add(client);
-            for (ClientConnection connectedClient : connectedClients) {
-                System.out.println(connectedClient);
+            iterator = connectedClients.iterator();
+            while (iterator.hasNext()) {
+                if (!iterator.next().isAlive()) {
+                    System.out.println("SOCKET VAR INTE ONLINE 0.0");
+                    iterator.remove();
+                }
             }
-            System.out.println("-----------------------------------------------------------------");
+
+            connectedClients.add(client);
         } finally {
             lock.unlock();
         }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Clas responsible for handling logic related to recipes
+ * Class responsible for handling logic related to recipes
  *
  * @author Anton Jansson
  * @author Heidi Wännman
@@ -22,7 +22,7 @@ public class RecipeController {
     private ArrayList<Recipe> recipes;
 
     /**
-     * Clas constructor
+     * Class constructor
      *
      * @param databaseController
      * @author Anton Jansson
