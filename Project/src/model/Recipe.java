@@ -95,4 +95,12 @@ public class Recipe implements Serializable { // -------------------------------
     public String getAuthor() {
         return author;
     }
+
+    public int getRecipeID() {
+        return recipeID;
+    }
+
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
+    }
 }

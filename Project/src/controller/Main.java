@@ -26,7 +26,6 @@ public class Main {
         ServerController serverController = new ServerController();
 
 
-
         //TODO endast för testing .. behövöer ett bättre sätt att starta scraping @jansson
         /*ScrapinController scrapinController=new ScrapinController();
         scrapinController.scrapeAllStores();
