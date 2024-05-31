@@ -1,8 +1,9 @@
 package controller;
 
 import model.DatabaseCommunicator;
-import view.ClientConnection;
 import model.User;
+import model.Recipe;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,6 +78,17 @@ public class UserController {
             System.out.println("addUser fel");
         }
         System.out.println("Hit fungerar det");
+    }
+    public ArrayList<Recipe> getUserFavoriteRecipes(User user){
+        ArrayList<Recipe> recipes = databaseController.getFavoriteRecipes(user);
+        return recipes;
+    }
+    public ArrayList<Recipe> getOwnRecipes(User user){
+        ArrayList<Recipe> recipes = databaseController.getOwnRecipes(user);
+        return recipes;
+    }
+    public void addFavoriteRecipe(Recipe recipe, User user){
+        databaseController.addFavoriteRecipe(user, recipe);
     }
 
 }

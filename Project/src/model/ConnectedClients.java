@@ -25,7 +25,6 @@ public class ConnectedClients {
                     iterator.remove();
                 }
             }
-
             connectedClients.add(client);
         } finally {
             lock.unlock();

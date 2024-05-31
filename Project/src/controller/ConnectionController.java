@@ -3,13 +3,17 @@ package controller;
 import model.Recipe;
 import model.User;
 
+import java.util.HashMap;
+
 import view.ClientConnection;
 import model.ConnectedClients;
 import view.ConnectionListener;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import static controller.Constants.*;
 
 /**
@@ -78,7 +82,6 @@ public class ConnectionController {
     }
 
 
-
     /**
      * This method gets an {@link ArrayList} of {@link User} from the {@link UserController} and converts it into an
      * ArrayList of {@link Object} and later returns it.
@@ -115,6 +118,18 @@ public class ConnectionController {
         clientConnection.sendObject(ingredientsToSend);
     }
 
+    public void sendFavoriteRecipes(ArrayList<Recipe> recipes, int intention, ClientConnection clientConnection) {
+        ArrayList<Object> recipesToSend = new ArrayList<>(recipes);
+        clientConnection.sendIntention(C_USER_WANT_FAVORITES);
+        clientConnection.sendObject(recipesToSend);
+    }
+
+    public void sendOwnRecipes(ArrayList<Recipe> recipes, int intention, ClientConnection clientConnection) {
+        ArrayList<Object> recipesToSend = new ArrayList<>(recipes);
+        clientConnection.sendIntention(intention);
+        clientConnection.sendObject(recipesToSend);
+    }
+
     /**
      * This method reveals the intention of a client and then does something based on the intention.
      *
@@ -142,6 +157,13 @@ public class ConnectionController {
                 clientConnection.setListenForIntention(false);
                 clientConnection.setListenForObject(true);
                 break;
+            case C_USER_WANT_FAVORITES:
+                clientConnection.setListenForIntention(false);
+                clientConnection.setListenForObject(true);
+                break;
+            case C_USER_WANT_OWN_RECIPES:
+                clientConnection.setListenForIntention(false);
+                clientConnection.setListenForObject(true);
         }
     }
 
@@ -164,11 +186,29 @@ public class ConnectionController {
             case C_CREATE_RECIPE:
                 Recipe recipe = (Recipe) object;
                 System.out.println(recipe.getRecipeName() + recipe.getInstructions() + recipe.getAuthor() + recipe.getImageOfRecipe() + recipe.getDish().getTypeOfFood());
-                if(recipe.getImageOfRecipe() == null){
+                if (recipe.getImageOfRecipe() == null) {
                     System.out.println("Bilden följde inte med");
                 }
                 recipeController.createRecipe(recipe);
                 break;
+            case C_USER_WANT_FAVORITES:
+                user = (User) object;
+                ArrayList<Recipe> favoriteRecipes = userController.getUserFavoriteRecipes(user);
+                sendFavoriteRecipes(favoriteRecipes, C_USER_WANT_FAVORITES, clientConnection);
+                for (Recipe rrecipe : favoriteRecipes) {
+                    System.out.println(rrecipe.getRecipeName());
+                }
+                break;
+            case C_WANTS_TO_ADD_FAVORITE:
+                HashMap<String, Object> favoriteRecipe = (HashMap<String, Object>) object;
+                user = (User) favoriteRecipe.get("user");
+                recipe = (Recipe) favoriteRecipe.get("recipe");
+                userController.addFavoriteRecipe(recipe, user);
+                break;
+            case C_USER_WANT_OWN_RECIPES:
+                user = (User) object;
+                ArrayList<Recipe> ownRecipes = userController.getOwnRecipes(user);
+                sendOwnRecipes(ownRecipes, C_USER_WANT_OWN_RECIPES, clientConnection);
 
         }
         clientConnection.setListenForObject(false);

@@ -1,9 +1,5 @@
 package model;
 
-
-
-
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -94,5 +90,12 @@ public class Recipe implements Serializable { // -------------------------------
 
     public String getAuthor() {
         return author;
+    }
+    public int getRecipeID() {
+        return recipeID;
+    }
+
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
     }
 }

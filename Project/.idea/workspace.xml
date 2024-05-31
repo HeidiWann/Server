@@ -7,11 +7,12 @@
     <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="Ändringar för att få databas att fungera">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConnectionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ScrapinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ScrapinController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/UserController.java" afterDir="false" />      <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Recipe.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +202,9 @@
       <workItem from="1716898753429" duration="211000" />
       <workItem from="1716899084538" duration="998000" />
       <workItem from="1716900303572" duration="17000" />
-      <workItem from="1716900667701" duration="20484000" />
+      <workItem from="1716900667701" duration="22425000" />
+      <workItem from="1716974688021" duration="6000" />
+      <workItem from="1717060477086" duration="22552000" />
     </task>
     <task id="LOCAL−00001" summary="Databaskontroll ändringar">
       <option name="closed" value="true" />
@@ -224,7 +227,14 @@
       <option name="presentableId" value="LOCAL−00003" />
       <updated>1716189802651</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL−00004" summary="Ändringar för att få databas att fungera">
+      <option name="closed" value="true" />
+      <created>1716964550450</created>
+      <option name="number" value="LOCAL−00004" />
+      <option name="presentableId" value="LOCAL−00004" />
+      <updated>1716964550450</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
