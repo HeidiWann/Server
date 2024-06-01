@@ -70,14 +70,14 @@ public class ClientConnection implements Runnable {
                     try {
                         Thread.sleep(100);
                     } catch (Exception e) {
-                        System.out.println("Blev fel på grund av hur sleep fungerar");
+                        System.out.println("Something went wrong in the sleeping process ");
                     }
                 }
             }
         } catch (IOException | SQLException e) {
-            System.out.println("Något blev fel i kommukationen: " + e.getMessage());
+            System.out.println("Something went wrong in the communication: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            System.out.println("Fel uppstod ");
+            System.out.println("Something went wrong ");
             throw new RuntimeException(e);
         } finally {
             closeConnection();
@@ -100,7 +100,7 @@ public class ClientConnection implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Client Connection var stängd");
+        System.out.println("Client Connection was closed");
     }
 
     /**
@@ -114,7 +114,7 @@ public class ClientConnection implements Runnable {
             oos.writeInt(intention);
             oos.flush();
         } catch (IOException e) {
-            System.out.println("Kunde inte skicka intention");
+            System.out.println("Could not send any intention");
             throw new RuntimeException(e);
             // TODO Här kan servern krascha så när detta händer så ska vi ta väck klienten från uppkopplade klienter
         }
@@ -131,7 +131,7 @@ public class ClientConnection implements Runnable {
             oos.writeObject(object);
             oos.flush();
         } catch (Exception e) {
-            System.out.println("Något gick fel när objektet skulle skickas " + e.getMessage());
+            System.out.println("Something went wrong when sending an object " + e.getMessage());
         }
     }
 
