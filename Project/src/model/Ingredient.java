@@ -124,6 +124,11 @@ public class Ingredient implements Serializable {
     public double getAmountOfIngredient(){
         return amountOfIngredient;
     }
+    public ProductCategory getCategory(){
+        return category;
+    }public ProductSubCategory getSubCategory(){
+        return subCategory;
+    }
 
     public String toString() {
         return String.format("%s    |    %skr   |   %s%s", ingredientName, price, amountOfIngredient, measure);

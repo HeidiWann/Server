@@ -41,6 +41,11 @@ public class ServerController {
 
     public void startWebScrapingAndAddToDatabase(){
         ArrayList<Ingredient> scrapedIngredients=scrapinController.scrapeAllStores();
+
+        //TODO en test print loop
+        for (Ingredient ingredient:scrapedIngredients){
+            System.out.println(ingredient.getIngredientName()+" "+ingredient.getIngredientCost() + " "+ ingredient.getCategory()+" "+ ingredient.getSubCategory());
+        }
         /*
         for (Ingredient ingredient:scrapedIngredients){
             databaseController.addIngredient(ingredient);
@@ -49,7 +54,7 @@ public class ServerController {
     }
 
     private void terminalDialog(){
-        System.out.println("Start scraping?");
+        System.out.println("Start scraping? (type \"yes\" to start)");
         Scanner scanner = new Scanner(System.in);
         String input=scanner.nextLine();
         input.toLowerCase();
