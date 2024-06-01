@@ -35,8 +35,8 @@ public class ServerController {
         this.userController = new UserController(databaseCommunicator, databaseController);
         this.recipeController = new RecipeController(databaseController);
         this.connectionController = new ConnectionController(userController, recipeController);
-        this. scrapinController=new ScrapinController();
-        terminalDialog();
+        //this. scrapinController=new ScrapinController();
+        //terminalDialog();
     }
 
     public void startWebScrapingAndAddToDatabase(){

@@ -74,8 +74,8 @@ public class ConnectionController {
      */
     public void sendRecipesOnStartUp(ClientConnection clientConnection) throws SQLException {
         recipeController.updateAllRecipes();
-        ArrayList<Recipe> recipes = recipeController.getRecipes(); // Collect the recipes
-        ArrayList<Object> recipesToSend = new ArrayList<>(recipes); // Convert to object list
+        ArrayList<Recipe> recipes = recipeController.getRecipes();
+        ArrayList<Object> recipesToSend = new ArrayList<>(recipes);
 
         clientConnection.sendIntention(S_SEND_ALL_RECIPES);
         clientConnection.sendObject(recipesToSend);
@@ -112,6 +112,12 @@ public class ConnectionController {
         }
     }
 
+    /**
+     * A method to send all the {@link Object} representing ingredients in form of a {@link ArrayList} from the database to the client on connection established by the client.
+     * @param clientConnection The {@link ClientConnection} to which the array is sent.
+     * @throws SQLException if database error occurs.
+     * @author Christoffer Salomonsson
+     */
     public void sendIngredientsAtStartup(ClientConnection clientConnection) throws SQLException {
         ArrayList<Object> ingredientsToSend = recipeController.getIngredientsStartup();
         clientConnection.sendIntention(S_SEND_ALL_INGREDIENTS);
@@ -120,7 +126,7 @@ public class ConnectionController {
 
     public void sendFavoriteRecipes(ArrayList<Recipe> recipes, int intention, ClientConnection clientConnection) {
         ArrayList<Object> recipesToSend = new ArrayList<>(recipes);
-        clientConnection.sendIntention(C_USER_WANT_FAVORITES);
+        clientConnection.sendIntention(intention);
         clientConnection.sendObject(recipesToSend);
     }
 

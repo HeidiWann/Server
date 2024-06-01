@@ -1,5 +1,6 @@
 package controller;
 
+import model.Ingredient;
 import view.ClientConnection;
 import model.DatabaseCommunicator;
 import model.Recipe;
@@ -45,7 +46,9 @@ public class RecipeController {
         this.recipes = databaseController.getRecipes();
     }
     public ArrayList<Object> getIngredientsStartup() throws SQLException {
-        return databaseController.getAllIngredient();
+        ArrayList<Ingredient> ingredients = databaseController.getAllIngredient();
+        ArrayList<Object> ingredientsStartup = new ArrayList<>(ingredients);
+        return ingredientsStartup;
     }
 
 }

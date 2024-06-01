@@ -7,12 +7,9 @@
     <list default="true" id="8cd324ab-e4cb-4756-9217-3c30e9293540" name="Changes" comment="Ändringar för att få databas att fungera">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConnectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/DatabaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/UserController.java" afterDir="false" />      <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/WebScraper/HemköpWebScraper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Recipe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/RecipeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/RecipeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DatabaseConnection.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,43 +51,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.DatabaseConnection.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;JAR Application.postgresql-42.7.3.jar (1).executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.postgresql-42.7.3.jar (2).executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.postgresql-42.7.3.jar.executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/JavaFX/javafx-sdk-21.0.2/lib&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DatabaseConnection.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JAR Application.postgresql-42.7.3.jar (1).executor": "Run",
+    "JAR Application.postgresql-42.7.3.jar (2).executor": "Run",
+    "JAR Application.postgresql-42.7.3.jar.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/chris/Downloads/selenium-java-4.21.0.zip",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="model" />
@@ -234,7 +231,14 @@
       <option name="presentableId" value="LOCAL−00004" />
       <updated>1716964550450</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL−00005" summary="Ändringar för att få favoritrecept och egna recept att fungera">
+      <option name="closed" value="true" />
+      <created>1717150977480</created>
+      <option name="number" value="LOCAL−00005" />
+      <option name="presentableId" value="LOCAL−00005" />
+      <updated>1717150977480</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,7 +261,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Databaskontroll ändringar" />
     <MESSAGE value="Ändringar för att få databas att fungera" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ändringar för att få databas att fungera" />
+    <MESSAGE value="Ändringar för att få favoritrecept och egna recept att fungera" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ändringar för att få favoritrecept och egna recept att fungera" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
