@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Project/src/postgresql-42.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Project/src/jsoup-1.17.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Project/src/json-20140107.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
