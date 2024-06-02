@@ -75,18 +75,22 @@ public class UserController {
         try {
             databaseController.addUser(user);
         } catch (Exception e) {
-            System.out.println("addUser fel");
+            System.out.println("Something went wrong in addUser");
+            e.printStackTrace();
         }
-        System.out.println("Hit fungerar det");
+        System.out.println("It works here");
     }
+
     public ArrayList<Recipe> getUserFavoriteRecipes(User user){
         ArrayList<Recipe> recipes = databaseController.getFavoriteRecipes(user);
         return recipes;
     }
+
     public ArrayList<Recipe> getOwnRecipes(User user){
         ArrayList<Recipe> recipes = databaseController.getOwnRecipes(user);
         return recipes;
     }
+
     public void addFavoriteRecipe(Recipe recipe, User user){
         databaseController.addFavoriteRecipe(user, recipe);
     }

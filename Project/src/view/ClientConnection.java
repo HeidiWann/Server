@@ -1,13 +1,13 @@
 package view;
 
 import controller.ConnectionController;
+import static controller.Constants.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
-import static controller.Constants.*;
-
 
 /**
  * This class holds the logic behind the communication of the Server and Client
@@ -70,19 +70,28 @@ public class ClientConnection implements Runnable {
                     try {
                         Thread.sleep(100);
                     } catch (Exception e) {
-                        System.out.println("Blev fel på grund av hur sleep fungerar");
+                        System.out.println("Something went wrong in the sleeping process ");
                     }
                 }
             }
         } catch (IOException | SQLException e) {
             System.out.println("Something went wrong in the communication: " + e.getMessage());
         } catch (ClassNotFoundException e) {
+            System.out.println("Something went wrong ");
             throw new RuntimeException(e);
         } finally {
             closeConnection();
         }
     }
 
+    /**
+     * Closes the client connection by shutting down the ObjectOutputStream, ObjectInputStream, and socket.
+     *
+     * @throws RuntimeException if an IOException occurs while closing any of the resources
+     *
+     * @author Heidi Wännman
+     * @author Salma Omar
+     */
     public void closeConnection() {
         try {
             oos.close();
@@ -105,7 +114,7 @@ public class ClientConnection implements Runnable {
             oos.writeInt(intention);
             oos.flush();
         } catch (IOException e) {
-            System.out.println("Could not send the intention");
+            System.out.println("Could not send any intention");
             throw new RuntimeException(e);
             // TODO Här kan servern krascha så när detta händer så ska vi ta väck klienten från uppkopplade klienter
         }
@@ -122,7 +131,7 @@ public class ClientConnection implements Runnable {
             oos.writeObject(object);
             oos.flush();
         } catch (Exception e) {
-            System.out.println("Something went wrong when sending object " + e.getMessage());
+            System.out.println("Something went wrong when sending an object " + e.getMessage());
         }
     }
 
@@ -146,6 +155,13 @@ public class ClientConnection implements Runnable {
         this.listenForObject = listenForObject;
     }
 
+    /**
+     * Checks if the client connection is alive by writing an integer to the ObjectOutputStream.
+     *
+     * @return {@code true} if the connection is alive, {@code false} otherwise
+     *
+     * @author Anton Persson
+     */
     public boolean isAlive () {
         try {
             oos.writeInt(0);
