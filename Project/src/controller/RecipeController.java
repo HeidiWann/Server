@@ -1,15 +1,10 @@
 package controller;
 
 import model.Ingredient;
-import view.ClientConnection;
-import model.DatabaseCommunicator;
 import model.Recipe;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Class responsible for handling logic related to recipes
@@ -25,16 +20,17 @@ public class RecipeController {
     /**
      * Class constructor
      *
-     * @param databaseController
+     * @param databaseController An instance of {@link DatabaseController}
      * @author Anton Jansson
      */
     public RecipeController(DatabaseController databaseController) {
         this.databaseController = databaseController;
     }
 
-    public void createRecipe(Recipe recipe) throws SQLException {
+    public void createRecipe(Recipe recipe)  {
         databaseController.userAddRecipe(recipe);
     }
+
     public void setRecipes(ArrayList<Recipe> recipe) {
         this.recipes = recipe;
     }
@@ -42,9 +38,11 @@ public class RecipeController {
     public ArrayList<Recipe> getRecipes() {
         return recipes;
     }
+
     public void updateAllRecipes() throws SQLException {
         this.recipes = databaseController.getRecipes();
     }
+
     public ArrayList<Object> getIngredientsStartup() throws SQLException {
         ArrayList<Ingredient> ingredients = databaseController.getAllIngredient();
         ArrayList<Object> ingredientsStartup = new ArrayList<>(ingredients);

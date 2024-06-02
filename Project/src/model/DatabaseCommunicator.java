@@ -15,7 +15,7 @@ public class DatabaseCommunicator {
     }
 
     public Connection getDatabaseconnection() throws SQLException {
-        return databaseConnection.getDatabaseconnection();
+        return databaseConnection.getDatabaseConnection();
     }
 
     /**
@@ -26,7 +26,7 @@ public class DatabaseCommunicator {
      * @author Anton Jansson
      */
     public void executeUpdate(String query, Object[] params) throws SQLException {
-        try (Connection connection = databaseConnection.getDatabaseconnection();
+        try (Connection connection = databaseConnection.getDatabaseConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
                 preparedStatement.setObject(i + 1, params[i]);
@@ -43,7 +43,7 @@ public class DatabaseCommunicator {
      * @author Anton Jansson
      */
     public ResultSet getResultSet(String query) throws SQLException {
-        try (Connection connection = databaseConnection.getDatabaseconnection();
+        try (Connection connection = databaseConnection.getDatabaseConnection();
              Statement statement = connection.createStatement()) {
             return statement.executeQuery(query);
         } finally {

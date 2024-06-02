@@ -126,7 +126,8 @@ public class Ingredient implements Serializable {
     }
     public ProductCategory getCategory(){
         return category;
-    }public ProductSubCategory getSubCategory(){
+    }
+    public ProductSubCategory getSubCategory(){
         return subCategory;
     }
 

@@ -4,7 +4,7 @@ public enum FoodCategory {
     Fisk,
     Vegan,
     Nöt,
-    Gris,
+    Fläsk,
     Vegetarian,
     Kyckling,
 }

@@ -1,6 +1,6 @@
 package model;
-import java.sql.*;
 
+import java.sql.*;
 
 /**
  * Class that starts the connection to the database
@@ -12,20 +12,20 @@ public class DatabaseConnection {
     private Connection connection;
     private DatabaseCommunicator databaseCommunicator;
 
-
     /**
      * @author Heidi Wännman
      */
     public DatabaseConnection(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
+
     /**
      * Method used for establishing a connection to the database
      *
      * @return Connection
      * @author Heidi Wännman
      */
-    public Connection getDatabaseconnection() throws SQLException {
+    public Connection getDatabaseConnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
             String user = "";
             String password = "";

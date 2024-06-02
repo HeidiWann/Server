@@ -3,8 +3,8 @@ package controller;
 import model.Ingredient;
 import model.WebScraper.HemköpWebScraper;
 import model.WebScraper.IcaWebScraper;
-import org.openqa.selenium.chrome.ChromeDriver;
 
+import org.openqa.selenium.chrome.ChromeDriver;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -56,7 +56,7 @@ public class ScrapinController {
 
         //Goes through every link in the file and fetches ingredients names and prices (with 100 milli sec delay)
         for (String link : hemköpLinks) {
-            ArrayList<Ingredient> productsFromLink = hemköpWebScraper.scrapeHemköp(driver,link);
+            ArrayList<Ingredient> productsFromLink = hemköpWebScraper.scrapeHemköp(driver, link);
             productsScraped.addAll(productsFromLink);
             try {
                 Thread.sleep(100);
@@ -73,7 +73,7 @@ public class ScrapinController {
         ArrayList<Ingredient> productsScraped = new ArrayList<>();
         //Goes through every link in the file and fetches ingredients names and prices (with 100 milli sec delay)
         for (String link : icaLinks) {
-            List<Ingredient> productsFromLink = icaWebScraping.scrapeICAForNameAndPrice(link,driver);
+            List<Ingredient> productsFromLink = icaWebScraping.scrapeICAForNameAndPrice(link, driver);
             productsScraped.addAll(productsFromLink);
             try {
                 Thread.sleep(100);

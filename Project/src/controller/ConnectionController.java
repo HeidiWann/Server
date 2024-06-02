@@ -2,17 +2,15 @@ package controller;
 
 import model.Recipe;
 import model.User;
-
-import java.util.HashMap;
-
-import view.ClientConnection;
 import model.ConnectedClients;
+import view.ClientConnection;
 import view.ConnectionListener;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static controller.Constants.*;
 
@@ -31,8 +29,8 @@ public class ConnectionController {
     /**
      * This constructor initiates instance variables
      *
-     * @param userController
-     * @param recipeController
+     * @param userController An instance of {@link UserController}
+     * @param recipeController An instance of {@link RecipeController}
      * @author Anton Jansson
      */
     public ConnectionController(UserController userController, RecipeController recipeController) {
@@ -81,7 +79,6 @@ public class ConnectionController {
         clientConnection.sendObject(recipesToSend);
     }
 
-
     /**
      * This method gets an {@link ArrayList} of {@link User} from the {@link UserController} and converts it into an
      * ArrayList of {@link Object} and later returns it.
@@ -114,6 +111,7 @@ public class ConnectionController {
 
     /**
      * A method to send all the {@link Object} representing ingredients in form of a {@link ArrayList} from the database to the client on connection established by the client.
+     *
      * @param clientConnection The {@link ClientConnection} to which the array is sent.
      * @throws SQLException if database error occurs.
      * @author Christoffer Salomonsson
@@ -140,10 +138,7 @@ public class ConnectionController {
      * This method reveals the intention of a client and then does something based on the intention.
      *
      * @param clientConnection {@link ClientConnection} that the intention came from
-     * @param intention        int that decides what happens
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @param intention         An int that decides what happens
      * @author Anton Persson
      * @author Heidi Wännmann
      */
@@ -155,21 +150,10 @@ public class ConnectionController {
                 clientConnection.closeConnection();
                 connectedClients.removeClient(clientConnection);
                 break;
-            case C_WANT_TO_REGISTER:
+            case C_WANT_TO_REGISTER, C_CREATE_RECIPE, C_USER_WANT_FAVORITES, C_USER_WANT_OWN_RECIPES:
                 clientConnection.setListenForIntention(false);
                 clientConnection.setListenForObject(true);
                 break;
-            case C_CREATE_RECIPE:
-                clientConnection.setListenForIntention(false);
-                clientConnection.setListenForObject(true);
-                break;
-            case C_USER_WANT_FAVORITES:
-                clientConnection.setListenForIntention(false);
-                clientConnection.setListenForObject(true);
-                break;
-            case C_USER_WANT_OWN_RECIPES:
-                clientConnection.setListenForIntention(false);
-                clientConnection.setListenForObject(true);
         }
     }
 
@@ -215,7 +199,6 @@ public class ConnectionController {
                 user = (User) object;
                 ArrayList<Recipe> ownRecipes = userController.getOwnRecipes(user);
                 sendOwnRecipes(ownRecipes, C_USER_WANT_OWN_RECIPES, clientConnection);
-
         }
         clientConnection.setListenForObject(false);
         clientConnection.setListenForIntention(true);

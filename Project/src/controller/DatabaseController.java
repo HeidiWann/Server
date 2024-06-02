@@ -1,9 +1,13 @@
 package controller;
+
 import model.*;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 /**
  * Clas that is responsible for handling the logic behind handling the database.
  *
@@ -12,15 +16,18 @@ import java.util.Map;
  */
 public class DatabaseController {
     private DatabaseCommunicator databaseCommunicator;
+
     /**
      * Clas constructor
      *
+     * @param databaseCommunicator An instance of {@link DatabaseCommunicator}
      * @author Anton Jansson
      * @author Heidi Wännman
      */
     public DatabaseController(DatabaseCommunicator databaseCommunicator) {
         this.databaseCommunicator = databaseCommunicator;
     }
+
     /**
      * Takes in a recipe, adds parts of the recipe object to the Food table in the database by passing the recipe name to
      * the method "addFood". Then, the recipe is created with the method "addRecipe". After this we use the method "getFoodID"
@@ -48,6 +55,7 @@ public class DatabaseController {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * Takes in a recipe object, prepares an SQL query with 5 not determined input parameters for the database.
      * Takes the 5 different parameters needed to create a row in the database for the recipe,
@@ -77,12 +85,13 @@ public class DatabaseController {
             throw e;
         }
     }
+
     /**
      * Takes in the category for the recipe as well as the recipe name. Then uses the methods "getCategoryId" and "getRecipeId"
-     * to get the IDs for the recipe and category in the database. It then links these in the recipescategories table.
+     * to get the IDs for the recipe and category in the database. It then links these in the recipes categories table.
      *
      * @param foodCategory The {@link FoodCategory} we want to add to a recipe in the database.
-     * @param recipeName The name of the recipe we want to add the food category to.
+     * @param recipeName   The name of the recipe we want to add the food category to.
      * @author Christoffer Salomonsson
      */
     public void addCategoryForRecipe(FoodCategory foodCategory, String recipeName) {
@@ -98,6 +107,7 @@ public class DatabaseController {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * Takes in the recipename from a recipe object. Then look for matches in the database, if match is found it returns
      * a recipeid in form of a int.
@@ -121,6 +131,7 @@ public class DatabaseController {
         }
         return recipeID;
     }
+
     /**
      * Takes in a categoryname to look for a match in the database, if match is found it returns a categoryid in form
      * of a int.
@@ -144,6 +155,7 @@ public class DatabaseController {
         }
         return categoryID;
     }
+
     /**
      * Takes in foodname which is the same as recipename from the recipe object. Then adds it to the datebase where the row
      * in table Food also gets a foodid.
@@ -160,6 +172,7 @@ public class DatabaseController {
             stmt.execute();
         }
     }
+
     /**
      * Takes in a string foodname and try to match it to a row in the database table Food. If match is found it returns
      * that rows foodid.
@@ -183,34 +196,49 @@ public class DatabaseController {
         }
         return foodId;
     }
+
     /**
      * This method is used for we want to add new ingredients to the table ingredients. It takes in an object of Ingredient.
-     * The sql query has 3 non decided parameters which we set with the variables from the ingredient that we need in the table ingredients
+     * The sql query has 3 non-decided parameters which we set with the variables from the ingredient that we need in the table ingredients
      * in the database.
      *
      * @param ingredient The {@link Ingredient} we want to add to the database.
-     * @throws SQLException if database error occurs.
      * @author Heidi Wännman
      * @author Christoffer Salomonsson
      */
-    public void addIngredient(Ingredient ingredient) throws SQLException {
-        String sql = "CALL insertingredient(?,?,?)";
-        String nameOfIngredient = ingredient.getIngredientName();
-        Store nameOfStore = ingredient.getStore();
-        Double costOfIngredient = ingredient.getIngredientCost();
-        try (Connection connection = databaseCommunicator.getDatabaseconnection();
-             CallableStatement stmt = connection.prepareCall(sql)) {
-            stmt.setString(1, nameOfIngredient);
-            stmt.setString(2, nameOfStore.toString());
-            stmt.setDouble(3, costOfIngredient);
-            stmt.execute();
-        } catch (SQLException sqlException) {
-            throw new RuntimeException(sqlException);
+    public void addIngredient(Ingredient ingredient) {
+        if (ingredient.getIngredientName() != null && ingredient.getStore() != null) {
+            ArrayList<Ingredient> test = getAllIngredient();
+            boolean nameExists = false;
+            for (Ingredient ingredientFromDataBase : test) {
+                if (Objects.equals(ingredientFromDataBase.getIngredientName(), ingredient.getIngredientName())) {
+                    nameExists = true;
+                    break;
+                }
+            }
+            if (!nameExists) {
+
+                String sql = "CALL insertingredient(?,?,?)";
+                String nameOfIngredient = ingredient.getIngredientName();
+                Store nameOfStore = ingredient.getStore();
+                Double costOfIngredient = ingredient.getIngredientCost();
+                try (Connection connection = databaseCommunicator.getDatabaseconnection();
+                     CallableStatement stmt = connection.prepareCall(sql)) {
+                    stmt.setString(1, nameOfIngredient);
+                    stmt.setString(2, nameOfStore.toString());
+                    stmt.setDouble(3, costOfIngredient);
+                    stmt.execute();
+                } catch (SQLException sqlException) {
+                    throw new RuntimeException(sqlException);
+                }
+            }
         }
     }
+
     /**
      * Takes in ingredientname from an ingredient object. Searches for match in the database table ingredients. If match
      * is found it returns a ingredientid from the matching row.
+     *
      * @param ingredientName The name of the ingredient we want to get the id from.
      * @return The ingredient id of the ingredient name.
      * @throws SQLException if database error occurs.
@@ -230,13 +258,14 @@ public class DatabaseController {
         }
         return ingredientId;
     }
+
     /**
      * Takes in an Ingredient object and a foodId in form of int. It then calls the procedure "addingredienttofood" which
      * inputs the amount of the ingredient, what type of measurement, ingredientid and foodid.
      *
      * @param ingredient The {@link Ingredient} object we want to add to a recipe in the database.
-     * @param foodId The foodId of the {@link Food} object we want to connect the ingredient to in the database.
-     * @throws SQLException if a database erorr occurs.
+     * @param foodId     The foodId of the {@link Food} object we want to connect the ingredient to in the database.
+     * @throws SQLException if a database error occurs.
      * @author Christoffer Salomonsson
      */
     public void addIngredientToRecipe(Ingredient ingredient, int foodId) throws SQLException {
@@ -253,11 +282,13 @@ public class DatabaseController {
             stmt.execute();
         }
     }
+
     /**
      * This method is used when a client connection is established to the server. It sends all the {@link Recipe}  from the database
      * to the connected client. In the query we select everything that is needed for a recipe that will be used on the client side.
      * After the selects are stated the function "getrecipealldetails" is called. The tables users, food, ingredientsinfood, ingredients,
      * measures, recipescategories, categories are joined to get the right data.
+     *
      * @return A {@link ArrayList} with all the {@link Recipe} in the database.
      * @throws SQLException if database error occurs.
      * @author Heidi Wännman
@@ -303,15 +334,16 @@ public class DatabaseController {
         }
         return recipes;
     }
+
     /**
      * Takes in a user object that is sent indirectly from the client. Calls on the procedure "registernewuser" in the database.
      * Sets the parameters for the procedure with username and password from the user object.
+     *
      * @param user The {@link User} object we want to add to the database.
-     * @throws SQLException if database error occurs.
      * @author Heidi Wännman
      * @author Christoffer Salomonsson
      */
-    public void addUser(User user) throws SQLException {
+    public void addUser(User user) {
         String userName = user.getUserName();
         String password = user.getPassword();
         String query = "CALL registernewuser(?, ?)";
@@ -325,9 +357,12 @@ public class DatabaseController {
             e.printStackTrace();
         }
     }
+
     /**
      * Method used for fetching users from the database.
+     *
      * @return An {@link ArrayList} of all users in the database.
+     * @throws SQLException if database error occurs.
      * @author Anton Jansson
      * @author Christoffer Salomonsson
      */
@@ -349,8 +384,10 @@ public class DatabaseController {
         }
         return users;
     }
+
     /**
      * Method to get measure id of a specific measurement.
+     *
      * @param measurement The {@link Measurement} which we want to get the measurement id of.
      * @return The measurement of the specified measurement.
      * @throws SQLException if a database error occurs.
@@ -371,10 +408,12 @@ public class DatabaseController {
         }
         return measureId;
     }
+
     /**
      * Method to get userId on a user in the database.
+     *
      * @param userName The username of the {@link User} that we want the id on.
-     * @return the user id of the user or -1 if user id isnt found.
+     * @return the user id of the user or -1 if user id isn't found.
      * @throws SQLException if a database error occurs.
      * @author Christoffer Salomonsson
      */
@@ -392,14 +431,16 @@ public class DatabaseController {
         }
         return userID;
     }
+
     /**
      * Method to get all ingredients that are currently in the database. It then puts every ingredient in
-     * a arraylist that is returned.
+     * an arraylist that is returned.
+     *
      * @return A {@link ArrayList} which has all {@link Ingredient} in the database.
      * @throws SQLException if a database error occurs.
      * @author Christoffer Salomonsson
      */
-    public ArrayList<Ingredient> getAllIngredient() throws SQLException {
+    public ArrayList<Ingredient> getAllIngredient() {
         String sql = "select ingredientname, ingredientcost, store from ingredients";
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         try (Connection connection = databaseCommunicator.getDatabaseconnection();
@@ -413,13 +454,17 @@ public class DatabaseController {
                     ingredients.add(ingredient);
                 }
             }
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
         }
         return ingredients;
     }
+
     /**
-     * Adds a users favorite recipe to the datebase table. The method takes in a user object and a recipe object then
+     * Adds a users favorite recipe to the database table. The method takes in a user object and a recipe object then
      * uses the id from each object to put it in the database.
-     * @param user The {@link User} which represent the user that wants to add a favorite recipe.
+     *
+     * @param user   The {@link User} which represent the user that wants to add a favorite recipe.
      * @param recipe The{@link Recipe} that the user wants to add to favorites.
      * @author Christoffer Salomonsson
      */
@@ -436,13 +481,15 @@ public class DatabaseController {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * A method to get a users own recipes. It takes in a {@link User} object, then takes the userid from said object and put it
      * into the sql question which calls on a database function. A {@link HashMap} is used so that there will only be one {@link Recipe} of each
-     * that is created and put into the arraylist which then is returned. First it checks the hashmap to see there isnt already
-     * a recipe with the same name, then if there isnt a match it gets all the relevant info towards creating a recipe.
+     * that is created and put into the arraylist which then is returned. First it checks the hashmap to see there isn't already
+     * a recipe with the same name, then if there isn't a match it gets all the relevant info towards creating a recipe.
      * Then it goes through the ingredients that is in said recipe and creates an array of them and adds each ingredient
      * to the recipe.food.
+     *
      * @param user The{@link User} object representing what user the sql query should look after in favorite recipes.
      * @return An {@link ArrayList} which contains {@link Recipe} of the users favorite recipes.
      * @author Christoffer Salomonsson
@@ -491,13 +538,15 @@ public class DatabaseController {
         }
         return recipes;
     }
+
     /**
      * A method to get a users own recipes. It takes in a {@link User} object, then takes the userid from said object and put it
      * into the sql question which calls on a database function. A {@link HashMap} is used so that there will only be one {@link Recipe} of each
-     * that is created and put into the arraylist which then is returned. First it checks the hashmap to see there isnt already
-     * a recipe with the same name, then if there isnt a match it gets all the relevant info towards creating a recipe.
+     * that is created and put into the arraylist which then is returned. First it checks the hashmap to see there isn't already
+     * a recipe with the same name, then if there isn't a match it gets all the relevant info towards creating a recipe.
      * Then it goes through the ingredients that is in said recipe and creates an array of them and adds each ingredient
      * to the recipe.food.
+     *
      * @param user The{@link User} object representing the user to be able to search for created recipes that the user is author to.
      * @return An {@link ArrayList} which contains {@link Recipe} of the users created recipes.
      * @author Christoffer Salomonsson
